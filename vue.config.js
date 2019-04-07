@@ -31,14 +31,24 @@ module.exports = {
         */
     },
     // webpack配置
-    configureWebpack: {
-        name: name,
-        resolve: {
-            alias: {
-                '@': resolve('src'),
-                '@c': resolve('./src/components')
-            }
+    configureWebpack: (config) => {
+        if (process.env.NODE_ENV === 'production') {
+            // 为生产环境修改配置...
+            config.mode = 'production'
+        } else {
+            // 为开发环境修改配置...
+            config.mode = 'development'
         }
+        Object.assign(config, {
+            // 开发生产共同配置
+            name: name,
+            resolve: {
+              alias: {
+                '@':resolve('src'),
+                '@c':resolve('./src/components'),
+              } // 别名配置
+            }
+          })
     },
     chainWebpack(config) {
         config
