@@ -1,13 +1,27 @@
 <template>
   <div class="login">
     <div class="loginform">
-      <h2>Enroll后台审核系统</h2>
-      <el-form ref="adminLoginForm" :model="adminLoginForm" :rules="adminRules" label-width="95px">
+      <h2 style="cursor: pointer;">Enroll后台审核系统</h2>
+      <el-form
+        ref="adminLoginForm"
+        :model="adminLoginForm"
+        :rules="adminLoginRules"
+        label-width="95px"
+      >
         <el-form-item label="AdminName" prop="adminname" class="whiteItem">
-          <el-input v-model="adminLoginForm.adminname"></el-input>
+          <el-input v-model="adminLoginForm.adminname" ref="adminname"></el-input>
         </el-form-item>
         <el-form-item label="Password" prop="password" class="whiteItem">
-          <el-input v-model="adminLoginForm.password" type="password"></el-input>
+          <el-input
+            :key="passwordType"
+            v-model="adminLoginForm.password"
+            :type="passwordType"
+            ref="password"
+            @keyup.enter.native="submitAdminFrom('adminLoginForm')"
+          ></el-input>
+          <span class="show-pwd" @click="showPwd">
+            <i class="el-icon-view"></i>
+          </span>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitAdminFrom('adminLoginForm')">登录</el-button>
@@ -39,8 +53,8 @@
 
 <script>
 export default {
-  name: "login",
-  data() {
+  name: 'login',
+  data () {
     const validateAdminName = (rule, value, callback) => {
       if (!value) {
         callback(new Error('管理员用户名不能为空'))
@@ -59,67 +73,88 @@ export default {
     }
     return {
       adminLoginForm: {
-        adminname: "",
-        password: ""
+        adminname: '',
+        password: ''
       },
+      adminLoginRules: {
+        adminname: [
+          { required: true, trigger: 'blur', validator: validateAdminName }
+        ],
+        password: [
+          { required: true, trigger: 'blur', validator: validatePassword }
+        ]
+      },
+      passwordType: 'password',
       vedioCanPlay: false,
-      fixStyle: "",
-      adminRules: {
-        adminname: [{ required: true, trigger: "blur", validator: validateAdminName }],
-        password: [{ required: true, trigger: "blur", validator: validatePassword }]
-      }
-    };
-  },
-  methods: {
-    canplay() {
-      this.vedioCanPlay = true;
-    },
-    submitAdminFrom(form) {
-      this.$refs[form].validate(valid => {
-        if (valid) {
-          alert("submit!");
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
-    resetForm(form) {
-      this.$refs[form].resetFields();
+      fixStyle: ''
     }
   },
-  mounted: function() {
-    window.onresize = () => {
-      const windowWidth = document.body.clientWidth;
-      const windowHeight = document.body.clientHeight;
-      const windowAspectRatio = windowHeight / windowWidth;
-      let videoWidth;
-      let videoHeight;
-      if (windowAspectRatio < 0.5625) {
-        videoWidth = windowWidth;
-        videoHeight = videoWidth * 0.5625;
-        this.fixStyle = {
-          height: windowWidth * 0.5625 + "px",
-          width: windowWidth + "px",
-          "margin-bottom": (windowHeight - videoHeight) / 2 + "px",
-          "margin-left": "initial",
-          left: "0px"
-        };
+  methods: {
+    canplay () {
+      this.vedioCanPlay = true
+    },
+    showPwd () {
+      if (this.passwordType === 'password') {
+        this.passwordType = ''
       } else {
-        videoHeight = windowHeight;
-        videoWidth = videoHeight / 0.5625;
-        this.fixStyle = {
-          height: windowHeight + "px",
-          width: windowHeight / 0.5625 + "px",
-          "margin-left": (windowWidth - videoWidth) / 2 + "px",
-          "margin-bottom": "initial",
-          left: "0px"
-        };
+        this.passwordType = 'password'
       }
+      this.$nextTick(() => {
+        this.$refs.password.focus()
+      })
+    },
+    submitAdminFrom (form) {
+      this.$refs[form].validate(valid => {
+        if (valid) {
+          alert('submit!')
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    resetForm (form) {
+      this.$refs[form].resetFields()
+    }
+  },
+  mounted: function () {
+    window.onresize = () => {
+      const windowWidth = document.body.clientWidth
+      const windowHeight = document.body.clientHeight
+      const windowAspectRatio = windowHeight / windowWidth
+      let videoWidth
+      let videoHeight
+      if (windowAspectRatio < 0.5625) {
+        videoWidth = windowWidth
+        videoHeight = videoWidth * 0.5625
+        this.fixStyle = {
+          height: windowWidth * 0.5625 + 'px',
+          width: windowWidth + 'px',
+          'margin-bottom': (windowHeight - videoHeight) / 2 + 'px',
+          'margin-left': 'initial',
+          left: '0px'
+        }
+      } else {
+        videoHeight = windowHeight
+        videoWidth = videoHeight / 0.5625
+        this.fixStyle = {
+          height: windowHeight + 'px',
+          width: windowHeight / 0.5625 + 'px',
+          'margin-left': (windowWidth - videoWidth) / 2 + 'px',
+          'margin-bottom': 'initial',
+          left: '0px'
+        }
+      }
+    }
+    window.onresize()
+    // 数据渲染后自动聚焦到输入框
+    if (this.adminLoginForm.adminname === '') {
+      this.$refs.adminname.focus()
+    } else if (this.adminLoginForm.password === '') {
+      this.$refs.password.focus()
     };
-    window.onresize();
   }
-};
+}
 </script>
 
 <style scoped>
@@ -142,6 +177,14 @@ export default {
 .el-form {
   margin-right: 27%;
   margin-left: 13%;
+}
+
+.show-pwd {
+  position: absolute;
+  right: 10px;
+  font-size: 16px;
+  color: black;
+  cursor: pointer;
 }
 
 .homepage-hero-module,

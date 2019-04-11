@@ -2,7 +2,7 @@ const path = require('path')
 const pkg = require('./package.json')
 const name = pkg.name || 'enroll'
 
-function resolve(dir) {
+function resolve (dir) {
   return path.join(__dirname, dir)
 }
 
@@ -42,7 +42,7 @@ module.exports = {
         ]
       }
     }
-  },*/
+  }, */
   // webpack配置
   configureWebpack: (config) => {
     if (process.env.NODE_ENV === 'production') {
@@ -63,7 +63,7 @@ module.exports = {
       }
     })
   },
-  chainWebpack(config) {
+  chainWebpack (config) {
     config
       .when(process.env.NODE_ENV === 'development',
         config => config.devtool('cheap-source-map')

@@ -5,6 +5,9 @@ import Test from '../views/test.vue'
 import ParticipantLogin from '../views/participant/login.vue'
 import OrganizerLogin from '../views/organizer/login.vue'
 import AdminLogin from '../views/admin/login.vue'
+import ParticipantHome from '../views/participant/home.vue'
+import OrganizerHome from '../views/organizer/home.vue'
+import AdminHome from '../views/admin/home.vue'
 
 Vue.use(Router)
 
@@ -28,14 +31,29 @@ export default new Router({
       component: ParticipantLogin
     },
     {
+      path: '/participantHome',
+      name: 'participanthome',
+      component: ParticipantHome
+    },
+    {
       path: '/organizer',
       name: 'organizer',
       component: OrganizerLogin
     },
     {
+      path: '/organizerHome',
+      name: 'organizerhome',
+      component: OrganizerHome
+    },
+    {
       path: '/admin',
       name: 'admin',
       component: AdminLogin
+    },
+    {
+      path: '/adminHome',
+      name: 'adminhome',
+      component: AdminHome
     }
   ]
 })
