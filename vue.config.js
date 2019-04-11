@@ -2,7 +2,7 @@ const path = require('path')
 const pkg = require('./package.json')
 const name = pkg.name || 'enroll'
 
-function resolve (dir) {
+function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
@@ -29,6 +29,20 @@ module.exports = {
       }
     } // 代理转发配置，用于调试环境
   },
+  /*
+  css: {
+    loaderOptions: {
+      postcss: {
+        plugins: [
+          require('postcss-pxtorem')({
+            rootValue: 40, // 换算的基数
+            selectorBlackList: ['element-ui'], // 忽略转换正则匹配项
+            propList: ['*'],
+          }),
+        ]
+      }
+    }
+  },*/
   // webpack配置
   configureWebpack: (config) => {
     if (process.env.NODE_ENV === 'production') {
@@ -49,7 +63,7 @@ module.exports = {
       }
     })
   },
-  chainWebpack (config) {
+  chainWebpack(config) {
     config
       .when(process.env.NODE_ENV === 'development',
         config => config.devtool('cheap-source-map')
