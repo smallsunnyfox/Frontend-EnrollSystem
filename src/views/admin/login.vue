@@ -74,7 +74,8 @@ export default {
     return {
       adminLoginForm: {
         adminname: '',
-        password: ''
+        password: '',
+        role: 'admin'
       },
       adminLoginRules: {
         adminname: [
@@ -106,7 +107,15 @@ export default {
     submitAdminFrom (form) {
       this.$refs[form].validate(valid => {
         if (valid) {
-          alert('submit!')
+          this.$store.dispatch('user/adminlogin', form)
+            .then(() => {
+              this.$router.push('adminHome')
+              console.log(this.$store.getters.name)
+              console.log(this.$store.getters.phonenumber)
+            })
+            .catch(error => {
+              console.log(error)
+            })
         } else {
           console.log('error submit!!')
           return false
