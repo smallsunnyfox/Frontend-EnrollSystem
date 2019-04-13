@@ -54,13 +54,7 @@ module.exports = {
     }
     Object.assign(config, {
       // 开发生产共同配置
-      name: name,
-      resolve: {
-        alias: {
-          '@': resolve('src'),
-          '@c': resolve('./src/components')
-        } // 别名配置
-      }
+      name: name
     })
   },
   chainWebpack (config) {
