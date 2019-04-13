@@ -1,5 +1,6 @@
 <template>
   <div class="login">
+    <!--登录表格-->
     <div class="loginform">
       <h2 style="cursor: pointer;">Enroll后台审核系统</h2>
       <el-form
@@ -29,6 +30,7 @@
         </el-form-item>
       </el-form>
     </div>
+    <!--背景视频-->
     <div class="homepage-hero-module">
       <div class="video-container">
         <div :style="fixStyle" class="filter"></div>
@@ -55,6 +57,7 @@
 export default {
   name: 'login',
   data () {
+    //Name的校验方法
     const validateAdminName = (rule, value, callback) => {
       if (!value) {
         callback(new Error('管理员用户名不能为空'))
@@ -62,6 +65,7 @@ export default {
         callback()
       }
     }
+    //Password的校验方法
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
         callback(new Error('密码不能小于6位数'))
@@ -72,11 +76,13 @@ export default {
       }
     }
     return {
+      //登录表单
       adminLoginForm: {
         adminname: '',
         password: '',
         role: 'admin'
       },
+      //登陆表单的校验规则
       adminLoginRules: {
         adminname: [
           { required: true, trigger: 'blur', validator: validateAdminName }
@@ -85,15 +91,17 @@ export default {
           { required: true, trigger: 'blur', validator: validatePassword }
         ]
       },
-      passwordType: 'password',
+      passwordType: 'password',//控制密码输入框类型，用于显示密码
       vedioCanPlay: false,
       fixStyle: ''
     }
   },
   methods: {
+    //检测浏览器是否支持播放背景视频
     canplay () {
       this.vedioCanPlay = true
     },
+    //控制密码是否显示的方法
     showPwd () {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -104,14 +112,13 @@ export default {
         this.$refs.password.focus()
       })
     },
+    //提交登录表单方法
     submitAdminFrom (form) {
       this.$refs[form].validate(valid => {
         if (valid) {
           this.$store.dispatch('user/adminlogin', form)
             .then(() => {
-              this.$router.push('adminHome')
-              console.log(this.$store.getters.name)
-              console.log(this.$store.getters.phonenumber)
+              this.$router.push('admin')
             })
             .catch(error => {
               console.log(error)
@@ -122,11 +129,13 @@ export default {
         }
       })
     },
+    //重置登录表单方法
     resetForm (form) {
       this.$refs[form].resetFields()
     }
   },
   mounted: function () {
+    //随着窗口的改变控制视频的长宽
     window.onresize = () => {
       const windowWidth = document.body.clientWidth
       const windowHeight = document.body.clientHeight

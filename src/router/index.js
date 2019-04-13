@@ -1,13 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '../views/Home.vue'
-import Test from '../views/test.vue'
 import ParticipantLogin from '../views/participant/login.vue'
 import OrganizerLogin from '../views/organizer/login.vue'
 import AdminLogin from '../views/admin/login.vue'
-import ParticipantHome from '../views/participant/home.vue'
-import OrganizerHome from '../views/organizer/home.vue'
-import AdminHome from '../views/admin/home.vue'
+import Participant from '../views/participant/home.vue'
+import Organizer from '../views/organizer/home.vue'
+import Admin from '../views/admin/home.vue'
 
 Vue.use(Router)
 
@@ -21,39 +20,34 @@ export default new Router({
       component: Home
     },
     {
-      path: '/test',
-      name: 'test',
-      component: Test
-    },
-    {
-      path: '/participant',
+      path: '/participantLogin',
       name: 'participant',
       component: ParticipantLogin
     },
     {
-      path: '/participantHome',
-      name: 'participanthome',
-      component: ParticipantHome
+      path: '/participant',
+      name: 'participant',
+      component: Participant
+    },
+    {
+      path: '/organizerLogin',
+      name: 'organizerLogin',
+      component: OrganizerLogin
     },
     {
       path: '/organizer',
       name: 'organizer',
-      component: OrganizerLogin
+      component: Organizer
     },
     {
-      path: '/organizerHome',
-      name: 'organizerhome',
-      component: OrganizerHome
+      path: '/adminLogin',
+      name: 'adminLogin',
+      component: AdminLogin
     },
     {
       path: '/admin',
       name: 'admin',
-      component: AdminLogin
-    },
-    {
-      path: '/adminHome',
-      name: 'adminhome',
-      component: AdminHome
+      component: Admin
     }
   ]
 })
