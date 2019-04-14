@@ -30,10 +30,11 @@ const mutations = {
 }
 
 const actions = {
-    adminlogin({ commit }, adminInfo) {
-        const { adminname, password } = adminInfo
+    //登录action
+    adminlogin({ commit }, form) {
         return new Promise((resolve, reject) => {
-            adminLogin({ adminname: adminname, password: password })
+            const {adminname, password} = form
+            adminLogin(adminname,password)
                 .then(response => {
                     const { data } = response
                     const { name, role } = data
@@ -46,6 +47,11 @@ const actions = {
                 })
         })
     },
+    /*getInfo({ commit }) {
+        return new Promise((resolve,reject) =>{
+            getUserInfo(state.name,state.role)
+        })
+    }*/
 }
 
 export default {

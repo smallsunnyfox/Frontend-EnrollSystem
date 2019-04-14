@@ -14,7 +14,7 @@ router.beforeEach((to, from, next) => {
     const currentTokenName = getName()
     //获取cookie中的role
     const currentTokenRole = getRole()
-    if (currentTokenName!=='' && currentTokenRole!=='') {
+    if (currentTokenName!=='' && currentTokenRole!=='' && currentTokenName!==undefined && currentTokenRole!==undefined ) {
         //cookie中存在已登录信息
         const homeUrl = '/'+ currentTokenRole
         if (to.path === '/' || to.path === '/adminLogin' || to.path === '/participantLogin' || to.path === '/organizerLogin') {     

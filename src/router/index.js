@@ -20,14 +20,14 @@ export default new Router({
       component: Home
     },
     {
-      path: '/participantLogin',
-      name: 'participant',
-      component: ParticipantLogin
+      path: '/adminLogin',
+      name: 'adminLogin',
+      component: AdminLogin
     },
     {
-      path: '/participant',
-      name: 'participant',
-      component: Participant
+      path: '/participantLogin',
+      name: 'participantLogin',
+      component: ParticipantLogin
     },
     {
       path: '/organizerLogin',
@@ -35,19 +35,19 @@ export default new Router({
       component: OrganizerLogin
     },
     {
-      path: '/organizer',
-      name: 'organizer',
-      component: Organizer
-    },
-    {
-      path: '/adminLogin',
-      name: 'adminLogin',
-      component: AdminLogin
-    },
-    {
       path: '/admin',
       name: 'admin',
       component: Admin
+    },
+    {
+      path: '/participant',
+      name: 'participant',
+      component: Participant
+    },
+    {
+      path: '/organizer',
+      name: 'organizer',
+      component: Organizer
     }
   ]
 })

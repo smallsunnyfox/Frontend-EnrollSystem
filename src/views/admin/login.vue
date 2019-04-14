@@ -18,15 +18,15 @@
             v-model="adminLoginForm.password"
             :type="passwordType"
             ref="password"
-            @keyup.enter.native="submitAdminFrom('adminLoginForm')"
+            @keyup.enter.native="submitAdminFrom"
           ></el-input>
           <span class="show-pwd" @click="showPwd">
             <i class="el-icon-view"></i>
           </span>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitAdminFrom('adminLoginForm')">登录</el-button>
-          <el-button @click="resetForm('adminLoginForm')">重置</el-button>
+          <el-button type="primary" @click="submitAdminFrom">登录</el-button>
+          <el-button @click="resetForm">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -79,8 +79,7 @@ export default {
       //登录表单
       adminLoginForm: {
         adminname: '',
-        password: '',
-        role: 'admin'
+        password: ''
       },
       //登陆表单的校验规则
       adminLoginRules: {
@@ -113,10 +112,10 @@ export default {
       })
     },
     //提交登录表单方法
-    submitAdminFrom (form) {
-      this.$refs[form].validate(valid => {
+    submitAdminFrom () {
+      this.$refs.adminLoginForm.validate(valid => {
         if (valid) {
-          this.$store.dispatch('user/adminlogin', form)
+          this.$store.dispatch('user/adminlogin', this.adminLoginForm)
             .then(() => {
               this.$router.push('admin')
             })
@@ -130,8 +129,8 @@ export default {
       })
     },
     //重置登录表单方法
-    resetForm (form) {
-      this.$refs[form].resetFields()
+    resetForm () {
+      this.$refs.adminLoginForm.resetFields()
     }
   },
   mounted: function () {

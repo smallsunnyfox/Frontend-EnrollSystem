@@ -1,11 +1,11 @@
 import Cookies from 'js-cookie'
 
-const Username = "name"
-const Userrole = "role"
+const Username = 'name'
+const Userrole = 'role'
 
 export function initToken () {
-  Cookies.set(Username, '', { expires: 1 })
-  Cookies.set(Userrole, '', { expires: 1 })
+  Cookies.set(Username, '', { expires: 0.1 })
+  Cookies.set(Userrole, '', { expires: 0.1 })
 }
 
 export function getName () {
@@ -15,12 +15,12 @@ export function getRole () {
   return Cookies.get(Userrole)
 }
 
-export function setToken (name,role) {
-  Cookies.set(Username, name, { expires: 1 })
-  Cookies.set(Userrole, role, { expires: 1 })
+export function setToken (name, role) {
+  Cookies.set(Username, name, { expires: 0.1 })
+  Cookies.set(Userrole, role, { expires: 0.1 })
 }
 
 export function removeToken () {
-  Cookies.remove(Username) 
-  Cookies.remove(Userrole) 
+  Cookies.remove(Username)
+  Cookies.remove(Userrole)
 }
