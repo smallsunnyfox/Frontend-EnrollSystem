@@ -54,6 +54,7 @@
 </template>
 
 <script>
+import { Message } from 'element-ui'
 export default {
   name: 'login',
   data () {
@@ -117,6 +118,11 @@ export default {
         if (valid) {
           this.$store.dispatch('user/adminlogin', this.adminLoginForm)
             .then(() => {
+              Message({
+                showClose: true,
+                message: '登录成功了哦！',
+                type: 'success'
+              })
               this.$router.push('admin')
             })
             .catch(error => {

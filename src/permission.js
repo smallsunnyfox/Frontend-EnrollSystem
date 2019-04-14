@@ -22,8 +22,8 @@ router.beforeEach((to, from, next) => {
             next({path:homeUrl})
             Message({
                 showClose: true,
-                message: '您已经登录过了哦！',//点击确定退出MessageBox
-                type: 'warning'
+                message: '您已经登录过了哦！已为您自动登录！',//点击确定退出MessageBox
+                type: 'success'
             });
             NProgress.done()
         } else {
