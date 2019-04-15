@@ -21,7 +21,7 @@
             @keyup.enter.native="submitAdminFrom"
           ></el-input>
           <span class="show-pwd" @click="showPwd">
-            <i class="el-icon-view"></i>
+            <ricon :name="passwordType === 'password' ? 'eye-slash' : 'regular/eye'" :title="passwordType === 'password' ? '显示密码' : '隐藏密码'"></ricon>
           </span>
         </el-form-item>
         <el-form-item>
@@ -54,131 +54,131 @@
 </template>
 
 <script>
-import { Message } from "element-ui";
+import { Message } from 'element-ui'
 export default {
-  name: "login",
-  data() {
-    //Name的校验方法
+  name: 'login',
+  data () {
+    // Name的校验方法
     const validateAdminName = (rule, value, callback) => {
       if (!value) {
-        callback(new Error("管理员用户名不能为空"));
+        callback(new Error('管理员用户名不能为空'))
       } else {
-        callback();
+        callback()
       }
-    };
-    //Password的校验方法
+    }
+    // Password的校验方法
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error("密码不能小于6位数"));
+        callback(new Error('密码不能小于6位数'))
       } else if (!value) {
-        callback(new Error("密码不能为空"));
+        callback(new Error('密码不能为空'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
-      //登录表单
+      // 登录表单
       adminLoginForm: {
-        adminname: "",
-        password: ""
+        adminname: '',
+        password: ''
       },
-      //登陆表单的校验规则
+      // 登陆表单的校验规则
       adminLoginRules: {
         adminname: [
-          { required: true, trigger: "blur", validator: validateAdminName }
+          { required: true, trigger: 'blur', validator: validateAdminName }
         ],
         password: [
-          { required: true, trigger: "blur", validator: validatePassword }
+          { required: true, trigger: 'blur', validator: validatePassword }
         ]
       },
-      passwordType: "password", //控制密码输入框类型，用于显示密码
+      passwordType: 'password', // 控制密码输入框类型，用于显示密码
       vedioCanPlay: false,
-      fixStyle: ""
-    };
+      fixStyle: ''
+    }
   },
   methods: {
-    //检测浏览器是否支持播放背景视频
-    canplay() {
-      this.vedioCanPlay = true;
+    // 检测浏览器是否支持播放背景视频
+    canplay () {
+      this.vedioCanPlay = true
     },
-    //控制密码是否显示的方法
-    showPwd() {
-      if (this.passwordType === "password") {
-        this.passwordType = "";
+    // 控制密码是否显示的方法
+    showPwd () {
+      if (this.passwordType === 'password') {
+        this.passwordType = ''
       } else {
-        this.passwordType = "password";
+        this.passwordType = 'password'
       }
       this.$nextTick(() => {
-        this.$refs.password.focus();
-      });
+        this.$refs.password.focus()
+      })
     },
-    //提交登录表单方法
-    submitAdminFrom() {
+    // 提交登录表单方法
+    submitAdminFrom () {
       this.$refs.adminLoginForm.validate(valid => {
         if (valid) {
           this.$store
-            .dispatch("user/adminlogin", this.adminLoginForm)
+            .dispatch('user/adminlogin', this.adminLoginForm)
             .then(() => {
               Message({
                 showClose: true,
-                message: "登录成功了哦！",
-                type: "success"
-              });
-              this.$router.push("admin");
+                message: '登录成功了哦！',
+                type: 'success'
+              })
+              this.$router.push('admin')
             })
             .catch(error => {
-              console.log(error);
-            });
+              console.log(error)
+            })
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
-    //重置登录表单方法
-    resetForm() {
-      this.$refs.adminLoginForm.resetFields();
+    // 重置登录表单方法
+    resetForm () {
+      this.$refs.adminLoginForm.resetFields()
     }
   },
-  mounted: function() {
-    //随着窗口的改变控制视频的长宽
+  mounted: function () {
+    // 随着窗口的改变控制视频的长宽
     window.onresize = () => {
-      const windowWidth = document.body.clientWidth;
-      const windowHeight = document.body.clientHeight;
-      const windowAspectRatio = windowHeight / windowWidth;
-      let videoWidth;
-      let videoHeight;
+      const windowWidth = document.body.clientWidth
+      const windowHeight = document.body.clientHeight
+      const windowAspectRatio = windowHeight / windowWidth
+      let videoWidth
+      let videoHeight
       if (windowAspectRatio < 0.5625) {
-        videoWidth = windowWidth;
-        videoHeight = videoWidth * 0.5625;
+        videoWidth = windowWidth
+        videoHeight = videoWidth * 0.5625
         this.fixStyle = {
-          height: windowWidth * 0.5625 + "px",
-          width: windowWidth + "px",
-          "margin-bottom": (windowHeight - videoHeight) / 2 + "px",
-          "margin-left": "initial",
-          left: "0px"
-        };
+          height: windowWidth * 0.5625 + 'px',
+          width: windowWidth + 'px',
+          'margin-bottom': (windowHeight - videoHeight) / 2 + 'px',
+          'margin-left': 'initial',
+          left: '0px'
+        }
       } else {
-        videoHeight = windowHeight;
-        videoWidth = videoHeight / 0.5625;
+        videoHeight = windowHeight
+        videoWidth = videoHeight / 0.5625
         this.fixStyle = {
-          height: windowHeight + "px",
-          width: windowHeight / 0.5625 + "px",
-          "margin-left": (windowWidth - videoWidth) / 2 + "px",
-          "margin-bottom": "initial",
-          left: "0px"
-        };
+          height: windowHeight + 'px',
+          width: windowHeight / 0.5625 + 'px',
+          'margin-left': (windowWidth - videoWidth) / 2 + 'px',
+          'margin-bottom': 'initial',
+          left: '0px'
+        }
       }
-    };
-    window.onresize();
+    }
+    window.onresize()
     // 数据渲染后自动聚焦到输入框
-    if (this.adminLoginForm.adminname === "") {
-      this.$refs.adminname.focus();
-    } else if (this.adminLoginForm.password === "") {
-      this.$refs.password.focus();
+    if (this.adminLoginForm.adminname === '') {
+      this.$refs.adminname.focus()
+    } else if (this.adminLoginForm.password === '') {
+      this.$refs.password.focus()
     }
   }
-};
+}
 </script>
 
 <style scoped>
@@ -207,7 +207,7 @@ export default {
   position: absolute;
   right: 10px;
   font-size: 16px;
-  color: black;
+  color: gray;
   cursor: pointer;
 }
 
