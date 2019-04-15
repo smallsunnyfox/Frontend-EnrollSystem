@@ -5,6 +5,12 @@ import store from './store/index' // vuex 核心仓库
 import './plugins/element.js' // element-ui
 import 'lib-flexible' // 移动端适配工具
 import './permission' // permission control
+// vue-awesome
+import 'vue-awesome/icons/regular/eye.js'
+import 'vue-awesome/icons/eye-slash'
+import Icon from 'vue-awesome/components/Icon.vue'
+
+Vue.component('ricon', Icon)
 
 Vue.config.productionTip = false
 
