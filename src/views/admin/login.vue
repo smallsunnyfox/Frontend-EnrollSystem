@@ -9,7 +9,7 @@
         :rules="adminLoginRules"
         label-width="95px"
       >
-        <el-form-item label="AdminName" prop="adminname" class="whiteItem">
+        <el-form-item label="Adminname" prop="adminname" class="whiteItem">
           <el-input v-model="adminLoginForm.adminname" ref="adminname"></el-input>
         </el-form-item>
         <el-form-item label="Password" prop="password" class="whiteItem">
@@ -43,10 +43,10 @@
           class="fillWidth"
           v-on:canplay="canplay"
         >
-          <source src="../../assets/admin/Mp4/Night_market.mp4" type="video/mp4">浏览器不支持 video 标签，建议升级浏览器。
+          <source src="../../assets/admin/Berlin-Underground.mp4" type="video/mp4">浏览器不支持 video 标签，建议升级浏览器。
         </video>
         <div class="poster hidden" v-if="!vedioCanPlay">
-          <img :style="fixStyle" src="..\..\assets\admin\Photo\Night_market.jpg" alt="Night_Market">
+          <img :style="fixStyle" src="..\..\assets\admin\Berlin-Underground.jpg" alt="Night_Market">
         </div>
       </div>
     </div>

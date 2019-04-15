@@ -8,6 +8,8 @@ import './permission' // permission control
 // vue-awesome
 import 'vue-awesome/icons/regular/eye.js'
 import 'vue-awesome/icons/eye-slash'
+import 'vue-awesome/icons/user'
+import 'vue-awesome/icons/lock'
 import Icon from 'vue-awesome/components/Icon.vue'
 
 Vue.component('ricon', Icon)
