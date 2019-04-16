@@ -1,13 +1,16 @@
 <template>
   <div class="home">
+    <!-- 首页header -->
     <div class="home_header">
       <div class="home_logobar">
         <img src="../assets/logoicon.png" alt height="70px" width="70px">
         <img src="../assets/logotext.png" alt class="logotext">
       </div>
     </div>
+    <!-- 首页swiper -->
     <div class="home_swiper">
       <swiper :options="swiperOption">
+        <!-- 首页swiper_slide for participant -->
         <swiper-slide>
           <div class="home_swiper_slide">
             <div class="slide_image"><img src="..\assets\participant\Tel-Aviv-Beach.jpg" alt="" width="1000px" height="550px"></div>
@@ -18,13 +21,14 @@
               </div>
               <div class="slide_content_bottom">
                 <div class="slide_content_bottom_button">
-                  <el-button plain>登录</el-button>
-                  <el-button plain>注册</el-button>
+                  <router-link to="/participantLogin"><el-button plain class="login_button">登录</el-button></router-link>
+                  <router-link to="/participantRegister"><el-button plain>注册</el-button></router-link>
                 </div>
               </div>
             </div>
           </div>
         </swiper-slide>
+        <!-- 首页swiper_slide for organizer -->
         <swiper-slide>
           <div class="home_swiper_slide">
             <div class="slide_image"><img src="..\assets\organizer\Live-Music.jpg" alt="" width="1000px" height="550px"></div>
@@ -35,13 +39,14 @@
               </div>
               <div class="slide_content_bottom">
                 <div class="slide_content_bottom_button">
-                  <el-button plain>登录</el-button>
-                  <el-button plain>注册</el-button>
+                  <router-link to="/organizerLogin"><el-button plain class="login_button">登录</el-button></router-link>
+                  <router-link to="/organizerRegister"><el-button plain>注册</el-button></router-link>
                 </div>
               </div>
             </div>
           </div>
         </swiper-slide>
+        <!-- 首页swiper_slide for admin -->
         <swiper-slide>
           <div class="home_swiper_slide">
             <div class="slide_image"><img src="..\assets\admin\Berlin-Underground.jpg" alt="" width="1000px" height="550px"></div>
@@ -67,12 +72,12 @@
 </template>
 
 <script>
-import { initToken } from "../utils/auth";
-import "swiper/dist/css/swiper.css";
-import { swiper, swiperSlide } from "vue-awesome-swiper";
+import { initToken } from '../utils/auth'
+import 'swiper/dist/css/swiper.css'
+import { swiper, swiperSlide } from 'vue-awesome-swiper'
 export default {
-  name: "home",
-  data() {
+  name: 'home',
+  data () {
     return {
       swiperOption: {
         // some swiper options/callbacks
@@ -92,18 +97,18 @@ export default {
         },
         loop: true
       },
-      swiperSlides: [1,2,3]
-    };
+      swiperSlides: [1, 2, 3]
+    }
   },
   components: {
     swiper,
     swiperSlide
   },
-  created() {
+  created () {
     // 登录主页面创建时初始化cookie
-    initToken();
+    initToken()
   }
-};
+}
 </script>
 
 <style scoped>
@@ -166,6 +171,9 @@ export default {
 .slide_content_bottom_button {
   margin-top: 65px;
   margin-left: 650px;
+}
+.login_button {
+  margin-right: 20px;
 }
 </style>
 <style>

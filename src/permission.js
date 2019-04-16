@@ -17,7 +17,7 @@ router.beforeEach((to, from, next) => {
   if (currentTokenName !== '' && currentTokenRole !== '' && currentTokenName !== undefined && currentTokenRole !== undefined) {
     // cookie中存在已登录信息
     const homeUrl = '/' + currentTokenRole
-    if (to.path === '/' || to.path === '/adminLogin' || to.path === '/participantLogin' || to.path === '/organizerLogin') {
+    if (to.path === '/' || to.path === '/adminLogin' || to.path === '/participantLogin' || to.path === '/organizerLogin' || to.path === '/participantRegister' || to.path === '/organizerRegister') {
       // cookie中存在已登录信息，无需再次登录
       next({ path: homeUrl })
       Message({
@@ -42,7 +42,7 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else {
-    if (to.path === '/' || to.path === '/adminLogin' || to.path === '/participantLogin' || to.path === '/organizerLogin') {
+    if (to.path === '/' || to.path === '/adminLogin' || to.path === '/participantLogin' || to.path === '/organizerLogin' || to.path === '/participantRegister' || to.path === '/organizerRegister') {
       // 不需要cookie的页面放行
       next()
       NProgress.done()

@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <!--登录表格-->
+    <!-- 登录表格 -->
     <div class="loginform">
       <h2 style="cursor: pointer;">Enroll后台审核系统</h2>
       <el-form
@@ -30,7 +30,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <!--背景视频-->
+    <!-- 背景视频 -->
     <div class="homepage-hero-module">
       <div class="video-container">
         <div :style="fixStyle" class="filter"></div>
