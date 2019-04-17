@@ -1,6 +1,6 @@
 /* eslint-disable prefer-promise-reject-errors */
 import { Promise } from 'q'
-import { adminLogin } from '../../api/user'
+import { login } from '../../api/user'
 import { setToken } from '../../utils/auth'
 import { Message } from 'element-ui'
 const state = {
@@ -32,10 +32,10 @@ const mutations = {
 
 const actions = {
   // 登录action
-  adminlogin ({ commit }, form) {
+  login ({ commit }, form) {
     return new Promise((resolve, reject) => {
-      const { adminname, password } = form
-      adminLogin(adminname, password)
+      const { name, password, role } = form
+      login(name, password, role)
         .then(response => {
           const { data } = response
           const { status, name, role } = data

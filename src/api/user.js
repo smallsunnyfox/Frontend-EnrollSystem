@@ -7,15 +7,29 @@ export function test () {
   })
 }
 
-export function adminLogin (adminname, password) {
-  // 对参数进行处理
+export function login (name, password, role) {
   let postData = qs.stringify({
-    name: adminname,
+    name: name,
     psw: password
   })
-  return request({
-    url: '/admin/login',
-    method: 'post',
-    data: postData
-  })
+  switch (role) {
+    case 'participant':
+      return request({
+        url: '/participant/login',
+        method: 'post',
+        data: postData
+      })
+    case 'organizer':
+      return request({
+        url: '/organizer/login',
+        method: 'post',
+        data: postData
+      })
+    case 'admin':
+      return request({
+        url: '/admin/login',
+        method: 'post',
+        data: postData
+      })
+  }
 }
