@@ -1,7 +1,7 @@
 <template>
   <div class="loginform">
     <h2 style="cursor: pointer;">{{" "+title}}</h2>
-    <el-form ref="LoginForm" :model="LoginForm" :rules="LoginRules" label-width="100px">
+    <el-form ref="LoginForm" :model="LoginForm" :rules="LoginRules" label-width="95px">
       <el-form-item label="用户名" prop="name" class="whiteItem">
         <el-input v-model="LoginForm.name" ref="name"></el-input>
       </el-form-item>
@@ -21,8 +21,10 @@
         </span>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitFrom">登录</el-button>
-        <el-button @click="resetForm">重置</el-button>
+        <el-button type="primary" @click="submitFrom" size="small">登录</el-button>
+        <el-button @click="resetForm" size="small">重置</el-button>
+        <el-button @click="passToRegister" v-show="!isAdmin" size="small">注册</el-button>
+        <el-button @click="passToHome" size="small">首页</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -31,34 +33,33 @@
 <script>
 import { Message } from 'element-ui'
 export default {
-  name: "loginForm",
-  data() {
+  name: 'loginForm',
+  data () {
     // Name的校验方法
-    const namepattern = /^[A-Za-z\u4e00-\u9fa5]+$/;
-    const pswpattern = /^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$/;
+    const namepattern = /^[A-Za-z\u4e00-\u9fa5]+$/
     const validateName = (rule, value, callback) => {
       if (!value) {
-        callback(new Error("用户名不能为空"));
-      } else if (value.length < 3){
-        callback(new Error("用户名不能小于三个字符"));
-      }else if (value.indexOf(" ") != -1){
-        callback(new Error("用户名不能包含空格"));
-      } else if (!namepattern.test(value)){
-        callback(new Error("用户名只能为汉字或者英文字母的混合"));
+        callback(new Error('用户名不能为空'))
+      } else if (value.length < 3) {
+        callback(new Error('用户名不能小于三个字符'))
+      } else if (value.indexOf(' ') !== -1) {
+        callback(new Error('用户名不能包含空格'))
+      } else if (!namepattern.test(value)) {
+        callback(new Error('用户名只能为汉字或者英文字母的混合'))
       } else {
-        callback();
+        callback()
       }
     }
     // Password的校验方法
     const validatePassword = (rule, value, callback) => {
       if (!value) {
-        callback(new Error("密码不能为空"));
+        callback(new Error('密码不能为空'))
       } else if (value.length < 6) {
-        callback(new Error("密码不能小于6位数"));
-      } else if (value.indexOf(" ") != -1){
-        callback(new Error("密码不能包含空格"));
-      }else {
-        callback();
+        callback(new Error('密码不能小于6位数'))
+      } else if (value.indexOf(' ') !== -1) {
+        callback(new Error('密码不能包含空格'))
+      } else {
+        callback()
       }
     }
     return {
@@ -71,65 +72,76 @@ export default {
       // 登陆表单的校验规则
       LoginRules: {
         name: [
-          { required: true, trigger: "blur", validator: validateName }
+          { required: true, trigger: 'blur', validator: validateName }
         ],
         password: [
-          { required: true, trigger: "blur", validator: validatePassword }
+          { required: true, trigger: 'blur', validator: validatePassword }
         ]
       },
-      passwordType: "password" // 控制密码输入框类型，用于显示密码
+      passwordType: 'password', // 控制密码输入框类型，用于显示密码
+      isAdmin: false
     }
   },
   props: ['roleofuser', 'title'],
   methods: {
     // 控制密码是否显示的方法
-    showPwd() {
-      if (this.passwordType === "password") {
-        this.passwordType = "";
+    showPwd () {
+      if (this.passwordType === 'password') {
+        this.passwordType = ''
       } else {
-        this.passwordType = "password";
+        this.passwordType = 'password'
       }
       this.$nextTick(() => {
-        this.$refs.password.focus();
-      });
+        this.$refs.password.focus()
+      })
     },
     // 提交登录表单方法
-    submitFrom() {
+    submitFrom () {
       this.$refs.LoginForm.validate(valid => {
         if (valid) {
           console.log('submit success!!')
           this.$store
-            .dispatch("user/login", this.LoginForm)
+            .dispatch('user/login', this.LoginForm)
             .then(() => {
               Message({
                 showClose: true,
-                message: "登录成功了哦！",
-                type: "success"
-              });
-              this.$router.push(this.roleofuser);
+                message: '登录成功了哦！',
+                type: 'success'
+              })
+              this.$router.push(this.roleofuser)
             })
             .catch(error => {
-              console.log(error);
-            });
+              console.log(error)
+            })
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
     // 重置登录表单方法
-    resetForm() {
-      this.$refs.LoginForm.resetFields();
+    resetForm () {
+      this.$refs.LoginForm.resetFields()
+    },
+    passToRegister () {
+      this.$router.push({ path: `/${this.roleofuser}Register` })
+    },
+    passToHome () {
+      this.$router.push({ path: '/' })
     }
   },
-  mounted() {
+  mounted () {
     if (this.LoginForm.name === '') {
       this.$refs.name.focus()
     } else if (this.LoginForm.password === '') {
       this.$refs.password.focus()
     }
-  },
-};
+
+    if (this.roleofuser === 'admin') {
+      this.isAdmin = true
+    }
+  }
+}
 </script>
 
 <style scoped>
