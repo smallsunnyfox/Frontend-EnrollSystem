@@ -72,62 +72,61 @@ export default {
   name: 'register',
   data () {
     // Name的校验方法
-    const namepattern = /^[A-Za-z\u4e00-\u9fa5]+$/;
-    const pswpattern = /^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z]).*$/;
-    const phonepattern = /^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\d{8}$/;
+    const namepattern = /^[A-Za-z\u4e00-\u9fa5]+$/
+    const pswpattern = /^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z]).*$/
+    const phonepattern = /^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\d{8}$/
     const validateParticipantName = (rule, value, callback) => {
       if (!value) {
-        callback(new Error("用户名不能为空"));
-      } else if (value.length < 3){
-        callback(new Error("用户名不能小于3位数"));
-      } else if (value.length > 8){
-        callback(new Error("用户名不能大于8位数"));
-      } else if (value.indexOf(" ") != -1){
-        callback(new Error("用户名不能包含空格"));
-      } else if (!namepattern.test(value)){
-        callback(new Error("用户名只能为汉字和英文字母的混合"));
+        callback(new Error('用户名不能为空'))
+      } else if (value.length < 3) {
+        callback(new Error('用户名不能小于3位数'))
+      } else if (value.length > 8) {
+        callback(new Error('用户名不能大于8位数'))
+      } else if (value.indexOf(' ') !== -1) {
+        callback(new Error('用户名不能包含空格'))
+      } else if (!namepattern.test(value)) {
+        callback(new Error('用户名只能为汉字和英文字母的混合'))
       } else {
-        callback();
+        callback()
       }
     }
     // Password的校验方法
     const validatePassword = (rule, value, callback) => {
       if (!value) {
-        callback(new Error("密码不能为空"));
+        callback(new Error('密码不能为空'))
       } else if (value.length < 6) {
-        callback(new Error("密码不能小于6位数"));
+        callback(new Error('密码不能小于6位数'))
       } else if (value.length > 14) {
-        callback(new Error("密码不能小于14位数"));
-      } else if (value.indexOf(" ") != -1){
-        this.$refs.password.value = '';
-        callback(new Error("密码不能包含空格"));
-      } else if (!pswpattern.test(value)){
-        callback(new Error("密码必须包括至少1个大写字母1个小写字母1个数字"));
+        callback(new Error('密码不能小于14位数'))
+      } else if (value.indexOf(' ') !== -1) {
+        this.$refs.password.value = ''
+        callback(new Error('密码不能包含空格'))
+      } else if (!pswpattern.test(value)) {
+        callback(new Error('密码必须包括至少1个大写字母1个小写字母1个数字'))
       } else {
-        callback();
+        callback()
       }
     }
-    //确认密码的校验
+    // 确认密码的校验
     const validatePasswordtwo = (rule, value, callback) => {
       if (!value) {
-        callback(new Error("请再次确认密码"));
-      }else if (value !== this.$refs.password.value) {
-        console.log(this.$refs.password.value)
-        callback(new Error("两次输入的密码不一致"));
+        callback(new Error('请再次确认密码'))
+      } else if (value !== this.$refs.password.value) {
+        callback(new Error('两次输入的密码不一致'))
       } else {
-        callback();
+        callback()
       }
     }
-    //手机号码的校验
+    // 手机号码的校验
     const validatePhonenumber = (rule, value, callback) => {
       if (!value) {
-        callback(new Error("手机号码不能为空"));
-      } else if (value.indexOf(" ") != -1){
-        callback(new Error("号码不能包含空格"));
+        callback(new Error('手机号码不能为空'))
+      } else if (value.indexOf(' ') !== -1) {
+        callback(new Error('号码不能包含空格'))
       } else if (!phonepattern.test(value)) {
-        callback(new Error("号码格式错误"));
+        callback(new Error('号码格式错误'))
       } else {
-        callback();
+        callback()
       }
     }
     return {
@@ -194,7 +193,7 @@ export default {
             .then(() => {
               Message({
                 showClose: true,
-                message: '注册成功了哦！可以登录了哦！',
+                message: '注册成功！可以登录了哦！',
                 type: 'success'
               })
               this.$router.push('participantLogin')
@@ -247,8 +246,6 @@ export default {
     // 数据渲染后自动聚焦到输入框
     if (this.participantRegisterForm.participantname === '') {
       this.$refs.participantname.focus()
-    } else if (this.participantRegisterForm.password === '') {
-      this.$refs.password.focus()
     }
   }
 }

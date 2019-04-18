@@ -1,8 +1,9 @@
 /* eslint-disable prefer-promise-reject-errors */
 import { Promise } from 'q'
-import { login, participantRegister } from '../../api/user'
+import { login, participantRegister, organizerRegister } from '../../api/user'
 import { setToken } from '../../utils/auth'
 import { Message } from 'element-ui'
+import router from '../../router/index'
 const state = {
   role: '',
   name: '',
@@ -51,12 +52,22 @@ const actions = {
             })
             reject()
           } else if (data.status === 'userNotFound') {
-            Message({
-              showClose: true,
-              message: '您还没注册怎么能登录呢！',
-              type: 'error'
-            })
-            reject()
+            if (role !== 'admin') {
+              Message({
+                showClose: true,
+                message: '您还没注册怎么能登录呢！',
+                type: 'error'
+              })
+              reject()
+              router.push({ path: `/${role}Register` })
+            } else {
+              Message({
+                showClose: true,
+                message: '没有登录资格，请联系超级管理员！',
+                type: 'error'
+              })
+              reject()
+            }
           } else {
             Message({
               showClose: true,
@@ -66,6 +77,11 @@ const actions = {
             reject()
           }
         }).catch(error => {
+          Message({
+            showClose: true,
+            message: '系统被外星人袭击了，请再次尝试登录！',
+            type: 'warning'
+          })
           reject(error)
         })
     })
@@ -94,6 +110,47 @@ const actions = {
               reject()
             }
           }).catch(error => {
+            Message({
+              showClose: true,
+              message: '系统被外星人袭击了，请再次尝试注册！',
+              type: 'warning'
+            })
+            reject(error)
+          })
+      } else {
+        reject()
+      }
+    })
+  },
+  organizerRegister ({ commit }, form) {
+    return new Promise((resolve, reject) => {
+      const { organizername, password, passwordtwo, phonenumber } = form
+      if (password === passwordtwo) {
+        organizerRegister(organizername, password, phonenumber)
+          .then(response => {
+            if (response.data.status === 'RegisterSuccess') {
+              resolve()
+            } else if (response.data.status === 'AlreadyExist') {
+              Message({
+                showClose: true,
+                message: '该用户名已存在！请换个名字重新注册哦！',
+                type: 'error'
+              })
+              reject()
+            } else {
+              Message({
+                showClose: true,
+                message: '系统被外星人袭击了，请再次尝试注册！',
+                type: 'warning'
+              })
+              reject()
+            }
+          }).catch(error => {
+            Message({
+              showClose: true,
+              message: '系统被外星人袭击了，请再次尝试注册！',
+              type: 'warning'
+            })
             reject(error)
           })
       } else {

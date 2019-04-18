@@ -45,3 +45,16 @@ export function participantRegister (name, password, phonenumber) {
     data: postData
   })
 }
+
+export function organizerRegister (name, password, phonenumber) {
+  let postData = qs.stringify({
+    name: name,
+    psw: password,
+    phone: phonenumber
+  })
+  return request({
+    url: '/login/organizerRegister',
+    method: 'post',
+    data: postData
+  })
+}
