@@ -3,8 +3,26 @@
     <!-- 首页header -->
     <div class="home_header">
       <div class="home_logobar">
-        <img src="../assets/logoicon.png" alt height="70px" width="70px">
+        <img src="../assets/logoicon.png" alt class="logoicon">
         <img src="../assets/logotext.png" alt class="logotext">
+        <div class="home_header_buttons">
+          <el-dropdown split-button type="primary">
+          登录
+            <el-dropdown-menu slot="dropdown">
+              <router-link to="/participantLogin" style="text-decoration:none;"><el-dropdown-item>as participant</el-dropdown-item></router-link>
+              <router-link to="/organizerLogin" style="text-decoration:none;"><el-dropdown-item>as organizer</el-dropdown-item></router-link>
+              <router-link to="/adminLogin" style="text-decoration:none;"><el-dropdown-item>as admin</el-dropdown-item></router-link>
+            </el-dropdown-menu>
+          </el-dropdown>
+          &nbsp;
+          <el-dropdown split-button type="primary">
+          注册
+            <el-dropdown-menu slot="dropdown">
+              <router-link to="participantRegister" style="text-decoration:none;"><el-dropdown-item>as participant</el-dropdown-item></router-link>
+              <router-link to="organizerRegister" style="text-decoration:none;"><el-dropdown-item>as organizer</el-dropdown-item></router-link>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
       </div>
     </div>
     <!-- 首页swiper -->
@@ -85,7 +103,7 @@
         </div>
       </div>
       <div class="home_content_bottom">
-        <img src="../assets/content/content_text_bottom.png" style="margin:10px auto;" alt="报名需求多样化，组织流程简单化，后台审核精确化" width="550px" height="100px">
+        <img src="../assets/content/content_text_bottom.png" style="margin:10px auto;" alt="·" width="550px" height="100px">
       </div>
     </div>
 
@@ -93,7 +111,8 @@
       <div class="home_bottom_content">
         <div class="home_bottom_github">
           Github地址：<a href="https://github.com/smallsunnyfox/Backend-EnrollSystem" target="_blank">Jfinal-后端</a>&nbsp;&nbsp;&nbsp;<a href="https://github.com/smallsunnyfox/Backend-EnrollSystem" target="_blank">Vue全家桶-前端</a><br><br>
-          <a href="https://github.com/smallsunnyfox" target="_blank">Follow me in Github</a>
+          <a href="https://github.com/smallsunnyfox" target="_blank">Follow me in Github</a><br><br>
+          克己慎独
         </div>
         <div class="home_bottom_copyright">Copyright © 201577G0649 张世文</div>
       </div>
@@ -102,9 +121,14 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import { initToken } from '../utils/auth'
 import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
+import { Dropdown, DropdownMenu, DropdownItem } from 'element-ui'
+Vue.use(Dropdown)
+Vue.use(DropdownMenu)
+Vue.use(DropdownItem)
 export default {
   name: 'home',
   data () {
@@ -151,13 +175,26 @@ export default {
 .home_logobar {
   margin: 5px auto;
   padding: 5px 0;
-  width: 750px;
+  width: 1000px;
   height: 70px;
 }
 .logotext {
+  float: left;
   width: 420px;
   height: 50px;
-  margin: 10px 130px;
+  margin: 10px 125px;
+}
+.logoicon {
+  float: left;
+  width: 70px;
+  height: 70px;
+  margin: 0 10px;
+}
+.home_header_buttons {
+  float: left;
+  width: 220px;
+  height: 40px;
+  margin: 15px 10px;
 }
 .home_swiper {
   width: 1000px;
@@ -308,7 +345,7 @@ export default {
   height: 100px;
   text-align: center;
   color: rgba(255,255,255,.8);
-  font-size: 18px;
+  font-size: 16px;
 }
 .home_bottom_github a{
   color: rgba(255,255,255,.8);

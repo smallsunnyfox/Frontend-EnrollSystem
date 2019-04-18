@@ -15,21 +15,33 @@ export function login (name, password, role) {
   switch (role) {
     case 'participant':
       return request({
-        url: '/participant/login',
+        url: '/login/participant',
         method: 'post',
         data: postData
       })
     case 'organizer':
       return request({
-        url: '/organizer/login',
+        url: '/login/organizer',
         method: 'post',
         data: postData
       })
     case 'admin':
       return request({
-        url: '/admin/login',
+        url: '/login/admin',
         method: 'post',
         data: postData
       })
   }
+}
+export function participantRegister (name, password, phonenumber) {
+  let postData = qs.stringify({
+    name: name,
+    psw: password,
+    phone: phonenumber
+  })
+  return request({
+    url: '/login/participantRegister',
+    method: 'post',
+    data: postData
+  })
 }

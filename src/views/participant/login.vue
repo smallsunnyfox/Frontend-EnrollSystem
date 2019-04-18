@@ -32,7 +32,7 @@ export default {
   name: 'login',
   data () {
     return {
-      title: 'Enroll在线活动报名平台',
+      title: 'Enroll在线活动报名平台登录',
       role: 'participant',
       vedioCanPlay: false,
       fixStyle: ''

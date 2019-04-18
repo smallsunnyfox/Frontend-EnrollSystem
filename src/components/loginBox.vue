@@ -1,11 +1,11 @@
 <template>
   <div class="loginform">
-    <h2 style="cursor: pointer;">{{title}}</h2>
-    <el-form ref="LoginForm" :model="LoginForm" :rules="LoginRules" label-width="115px">
-      <el-form-item label="Name" prop="name" class="whiteItem">
+    <h2 style="cursor: pointer;">{{" "+title}}</h2>
+    <el-form ref="LoginForm" :model="LoginForm" :rules="LoginRules" label-width="100px">
+      <el-form-item label="用户名" prop="name" class="whiteItem">
         <el-input v-model="LoginForm.name" ref="name"></el-input>
       </el-form-item>
-      <el-form-item label="Password" prop="password" class="whiteItem">
+      <el-form-item label="密码 " prop="password" class="whiteItem">
         <el-input
           :key="passwordType"
           v-model="LoginForm.password"
@@ -34,20 +34,30 @@ export default {
   name: "loginForm",
   data() {
     // Name的校验方法
+    const namepattern = /^[A-Za-z\u4e00-\u9fa5]+$/;
+    const pswpattern = /^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$/;
     const validateName = (rule, value, callback) => {
       if (!value) {
         callback(new Error("用户名不能为空"));
+      } else if (value.length < 3){
+        callback(new Error("用户名不能小于三个字符"));
+      }else if (value.indexOf(" ") != -1){
+        callback(new Error("用户名不能包含空格"));
+      } else if (!namepattern.test(value)){
+        callback(new Error("用户名只能为汉字或者英文字母的混合"));
       } else {
         callback();
       }
     }
     // Password的校验方法
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error("密码不能小于6位数"));
-      } else if (!value) {
+      if (!value) {
         callback(new Error("密码不能为空"));
-      } else {
+      } else if (value.length < 6) {
+        callback(new Error("密码不能小于6位数"));
+      } else if (value.indexOf(" ") != -1){
+        callback(new Error("密码不能包含空格"));
+      }else {
         callback();
       }
     }
