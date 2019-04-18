@@ -38,8 +38,9 @@
           <el-input v-model="participantRegisterForm.phonenumber" ref="phonenumber" @keyup.enter.native="submitParticipantFrom"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitParticipantFrom">注册</el-button>
-          <el-button @click="resetForm">重置</el-button>
+          <el-button type="primary" @click="submitParticipantFrom" size="small">注册</el-button>
+          <el-button @click="resetForm" size="small">重置</el-button>
+          <el-button @click="passToHome" size="small">首页</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -210,6 +211,9 @@ export default {
     // 重置登录表单方法
     resetForm () {
       this.$refs.participantRegisterForm.resetFields()
+    },
+    passToHome () {
+      this.$router.push({ path: '/' })
     }
   },
   mounted: function () {
