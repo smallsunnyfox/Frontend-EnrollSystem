@@ -167,9 +167,13 @@ export default {
 
 <style scoped>
 .home_header {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 80px;
-  border-bottom: 2px solid lightskyblue;
+  z-index: 99;
+  background: lightskyblue;
   box-shadow: 0 1px 2px rgba(0,0,0,.08);
 }
 .home_logobar {
@@ -199,6 +203,8 @@ export default {
 .home_swiper {
   width: 1000px;
   height: 550px;
+  position: relative;
+  top: 100px;
   margin: 10px auto;
   border-radius: 5px;
   border: 1px solid #007aff;
@@ -244,6 +250,8 @@ export default {
   margin-right: 20px;
 }
 .home_content {
+  position: relative;
+  top: 100px;
   width: 1000px;
   margin: 0 auto;
 }
@@ -327,6 +335,8 @@ export default {
   box-shadow: 8px 8px 5px #888888;
 }
 .home_bottom {
+  position: relative;
+  top: 100px;
   background: #26292e;
   margin-top: 40px;
   width: 100%;
