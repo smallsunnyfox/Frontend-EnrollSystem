@@ -9,6 +9,9 @@ import './permission' // permission control
 import 'vue-awesome/icons/regular/eye.js'
 import 'vue-awesome/icons/eye-slash'
 import 'vue-awesome/icons/user'
+import 'vue-awesome/icons/user-tag'
+import 'vue-awesome/icons/user-lock'
+import 'vue-awesome/icons/sign-out-alt'
 import 'vue-awesome/icons/lock'
 import Icon from 'vue-awesome/components/Icon.vue'
 

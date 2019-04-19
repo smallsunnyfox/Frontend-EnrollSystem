@@ -121,7 +121,7 @@
 </template>
 
 <script>
-import Vue from 'vue';
+import Vue from 'vue'
 import { initToken } from '../utils/auth'
 import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'

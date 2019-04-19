@@ -58,3 +58,15 @@ export function organizerRegister (name, password, phonenumber) {
     data: postData
   })
 }
+
+export function getUserInfo (name, role) {
+  let postData = qs.stringify({
+    name: name,
+    role: role
+  })
+  return request({
+    url: '/login/getUserInfo',
+    method: 'post',
+    data: postData
+  })
+}

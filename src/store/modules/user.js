@@ -1,15 +1,14 @@
 /* eslint-disable prefer-promise-reject-errors */
 import { Promise } from 'q'
-import { login, participantRegister, organizerRegister } from '../../api/user'
-import { setToken } from '../../utils/auth'
+import { login, participantRegister, organizerRegister, getUserInfo } from '../../api/user'
+import { setToken, getRole, getName } from '../../utils/auth'
 import { Message } from 'element-ui'
 import router from '../../router/index'
 const state = {
   role: '',
   name: '',
   avatar: '',
-  phonenumber: '',
-  organization: ''
+  phonenumber: ''
 }
 
 const mutations = {
@@ -24,11 +23,7 @@ const mutations = {
   },
   SET_PHONENUMBER: (state, phonenumber) => {
     state.phonenumber = phonenumber
-  },
-  SET_ORG: (state, organization) => {
-    state.organization = organization
   }
-
 }
 
 const actions = {
@@ -40,8 +35,6 @@ const actions = {
         .then(response => {
           const { data } = response
           if (data.status === 'loginSuccess') {
-            commit('SET_ROLE', data.name)
-            commit('SET_NAME', data.role)
             setToken(data.name, data.role)
             resolve()
           } else if (data.status === 'passwordFault') {
@@ -157,12 +150,19 @@ const actions = {
         reject()
       }
     })
+  },
+  getInfo ({ commit }) {
+    return new Promise((resolve, reject) => {
+      getUserInfo(getName(), getRole())
+        .then(response => {
+          commit('SET_PHONENUMBER', response.data.phonenumber)
+          commit('SET_ROLE', getRole())
+          commit('SET_NAME', getName())
+        }).catch(error => {
+          reject(error)
+        })
+    })
   }
-  /* getInfo({ commit }) {
-          return new Promise((resolve,reject) =>{
-              getUserInfo(state.name,state.role)
-          })
-      } */
 }
 
 export default {
