@@ -133,6 +133,7 @@ export default {
   name: 'home',
   data () {
     return {
+      loading: true,
       swiperOption: {
         // some swiper options/callbacks
         // 所有的参数同 swiper 官方 api 参数

@@ -100,7 +100,6 @@ export default {
       } else if (value.length > 14) {
         callback(new Error('密码不能小于14位数'))
       } else if (value.indexOf(' ') !== -1) {
-        this.$refs.password.value = ''
         callback(new Error('密码不能包含空格'))
       } else if (!pswpattern.test(value)) {
         callback(new Error('密码必须包括至少1个大写字母1个小写字母1个数字'))
@@ -113,7 +112,6 @@ export default {
       if (!value) {
         callback(new Error('请再次确认密码'))
       } else if (value !== this.$refs.password.value) {
-        console.log(this.$refs.password.value)
         callback(new Error('两次输入的密码不一致'))
       } else {
         callback()

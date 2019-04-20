@@ -1,7 +1,7 @@
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable prefer-promise-reject-errors */
 import { Promise } from 'q'
-import { login, logout, participantRegister, organizerRegister, getUserInfo } from '../../api/user'
+import { login, logout, participantRegister, organizerRegister, getUserInfo, updatePwd, forgetPwd, updateProfile } from '../../api/user'
 import { setToken, getRole, getName, initToken } from '../../utils/auth'
 import { Message } from 'element-ui'
 import router from '../../router/index'
@@ -184,6 +184,84 @@ const actions = {
             reject()
           }
         }).catch(error => {
+          reject(error)
+        })
+    })
+  },
+  updatePwd ({ commit }, form) {
+    return new Promise((resolve, reject) => {
+      updatePwd(getName(), getRole(), form.oldpwd, form.newpwd)
+        .then(response => {
+          if (response.data.status === 'UpdateSuccess') {
+            resolve()
+          } else if (response.data.status === 'PwdFault') {
+            Message({
+              showClose: true,
+              message: '原密码错误！',
+              type: 'warning'
+            })
+            reject()
+          } else {
+            Message({
+              showClose: true,
+              message: '系统被外星人袭击了，请再次尝试修改！',
+              type: 'warning'
+            })
+            reject()
+          }
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
+    })
+  },
+  forgetPwd ({ commit }, form) {
+    return new Promise((resolve, reject) => {
+      forgetPwd(getName(), getRole(), form.fnewpwd)
+        .then(response => {
+          if (response.data.status === 'UpdateSuccess') {
+            resolve()
+          } else {
+            Message({
+              showClose: true,
+              message: '系统被外星人袭击了，请再次尝试修改！',
+              type: 'warning'
+            })
+            reject()
+          }
+        }).catch(error => {
+          Message({
+            showClose: true,
+            message: '系统被外星人袭击了，请再次尝试修改！',
+            type: 'warning'
+          })
+          reject(error)
+        })
+    })
+  },
+  updateProfile ({ commit }, form) {
+    return new Promise((resolve, reject) => {
+      updateProfile(getName(), getRole(), form.myname, form.myphone)
+        .then(response => {
+          if (response.data.status === 'UpdateSuccess') {
+            commit('SET_NAME', form.myname)
+            commit('SET_PHONENUMBER', form.myphone)
+            setToken(form.myname, getRole())
+            resolve()
+          } else {
+            Message({
+              showClose: true,
+              message: '系统被外星人袭击了，请再次尝试修改！',
+              type: 'warning'
+            })
+            reject()
+          }
+        }).catch(error => {
+          Message({
+            showClose: true,
+            message: '系统被外星人袭击了，请再次尝试修改！',
+            type: 'warning'
+          })
           reject(error)
         })
     })

@@ -2,8 +2,14 @@ import Organizer from '../views/organizer/home.vue'
 const organizerRouter = {
   path: '/organizer',
   name: 'organizer',
+  redirect: '/organizer/console',
   component: Organizer,
   children: [
+    {// 控制台
+      path: 'console',
+      component: () => import('../views/organizer/console.vue'),
+      name: 'console'
+    },
     {// 自定义报名项
       path: 'entryItem',
       component: () => import('../views/organizer/activity/entryItem.vue'),
