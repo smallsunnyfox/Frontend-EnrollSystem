@@ -26,7 +26,7 @@
           background-color="lightskyblue"
           text-color="#000"
           active-text-color="#ccffff"
-          router="true"
+          router
           :default-active="$route.path"
         >
           <el-submenu index="1">
@@ -75,7 +75,7 @@
 
 <script>
 import Vue from 'vue'
-import { Menu, Submenu, MenuItem, MenuItemGroup} from 'element-ui'
+import { Menu, Submenu, MenuItem, MessageBox, Message, MenuItemGroup} from 'element-ui'
 import { mapGetters } from 'vuex';
 Vue.use(Menu)
 Vue.use(Submenu)
@@ -112,7 +112,31 @@ export default {
       console.log('sssss');
     },
     logout () {
-      console.log('sssss');
+      MessageBox.confirm('确认要退出吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$store.dispatch('user/logout')
+            .then(() => {
+              Message({
+                showClose: true,
+                type: 'success',
+                message: '退出成功！'
+              })
+              this.$router.push({path:'/'})
+            })
+            .catch(error => {
+              console.log(error)
+            })
+        }).catch(() => {
+          Message({
+            showClose: true,
+            type: 'info',
+            message: '已取消退出'
+          })
+        })
+
     }
 
   },

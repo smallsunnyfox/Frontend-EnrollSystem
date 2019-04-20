@@ -70,3 +70,15 @@ export function getUserInfo (name, role) {
     data: postData
   })
 }
+
+export function logout (name, role) {
+  let postData = qs.stringify({
+    name: name,
+    role: role
+  })
+  return request({
+    url: '/login/logout',
+    method: 'post',
+    data: postData
+  })
+}
