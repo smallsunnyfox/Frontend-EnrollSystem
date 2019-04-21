@@ -6,9 +6,9 @@ import OrganizerLogin from '../views/organizer/login.vue'
 import AdminLogin from '../views/admin/login.vue'
 import ParticipantRegister from '../views/participant/register.vue'
 import OrganizerRegister from '../views/organizer/register.vue'
-import Admin from '../views/admin/home.vue'
 import organizerRouter from './organizer.js'
 import participantRouter from './participant.js'
+import adminRouter from './admin.js'
 
 Vue.use(Router)
 
@@ -46,11 +46,7 @@ export default new Router({
       name: 'organizerRegister',
       component: OrganizerRegister
     },
-    {
-      path: '/admin',
-      name: 'admin',
-      component: Admin
-    },
+    adminRouter,
     organizerRouter,
     participantRouter
   ]

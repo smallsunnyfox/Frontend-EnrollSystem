@@ -10,10 +10,10 @@ const participantRouter = {
       component: () => import('../views/participant/activity/index.vue'),
       name: 'index'
     },
-    {// 我的活动
-      path: 'myActivity',
-      component: () => import('../views/participant/activity/myActivity.vue'),
-      name: 'myActivity'
+    {// 我参加的的活动
+      path: 'mySignedActivity',
+      component: () => import('../views/participant/activity/mySignedActivity.vue'),
+      name: 'mySignedActivity'
     },
     {// 我的提问
       path: 'myQuestion',

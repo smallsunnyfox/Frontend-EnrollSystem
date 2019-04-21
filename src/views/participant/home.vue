@@ -14,14 +14,13 @@
               background-color="lightskyblue"
               text-color="#000"
               active-text-color="#ccffff"
-              style="broder:none;"
               router
               :default-active="$route.path"
             >
               <el-menu-item index="/participant/index" style="broder:none;">首页</el-menu-item>
-              <el-menu-item index="/participant/searchActivity" style="broder:none;">活动查找</el-menu-item>
-              <el-menu-item index="/participant/signupActivity" style="broder:none;">活动报名</el-menu-item>
-              <el-menu-item index="/participant/myActivity" style="broder:none;">我的活动</el-menu-item>
+              <el-menu-item index="/participant/searchActivity">活动查找</el-menu-item>
+              <el-menu-item index="/participant/signupActivity">活动报名</el-menu-item>
+              <el-menu-item index="/participant/mySignedActivity">我的活动</el-menu-item>
               <el-menu-item index="/participant/myQuestion" style="broder:none;">我的提问</el-menu-item>
             </el-menu>
           </div>
@@ -163,7 +162,7 @@ Vue.use(Dialog)
 Vue.use(Form)
 export default {
   name: 'home',
-  data() {
+  data () {
     // 用户名正则
     const namepattern = /^[A-Za-z\u4e00-\u9fa5]+$/
     // 密码正则
@@ -267,7 +266,7 @@ export default {
         callback()
       }
     }
-     // 修改手机号码的校验
+    // 修改手机号码的校验
     const updatePhone = (rule, value, callback) => {
       if (!value) {
         callback(new Error('手机号码不能为空'))
@@ -327,10 +326,10 @@ export default {
       },
       myProfileRules: {
         myname: [
-          { required: true, trigger: 'blur', validator: updateName}
+          { required: true, trigger: 'blur', validator: updateName }
         ],
         myphone: [
-          { required: true, trigger: 'blur', validator: updatePhone}
+          { required: true, trigger: 'blur', validator: updatePhone }
         ]
       }
     }

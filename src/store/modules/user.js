@@ -4,7 +4,6 @@ import { Promise } from 'q'
 import { login, logout, participantRegister, organizerRegister, getUserInfo, updatePwd, forgetPwd, updateProfile } from '../../api/user'
 import { setToken, getRole, getName, initToken } from '../../utils/auth'
 import { Message } from 'element-ui'
-import router from '../../router/index'
 const state = {
   role: '',
   name: '',
