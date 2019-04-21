@@ -49,11 +49,10 @@ const actions = {
             if (role !== 'admin') {
               Message({
                 showClose: true,
-                message: '您还没注册怎么能登录呢！',
+                message: '未找到该用户！请确认用户名是否正确！',
                 type: 'error'
               })
               reject()
-              router.push({ path: `/${role}Register` })
             } else {
               Message({
                 showClose: true,
@@ -156,6 +155,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       getUserInfo(getName(), getRole())
         .then(response => {
+          console.log(response.data.phonenumber)
           commit('SET_PHONENUMBER', response.data.phonenumber)
           commit('SET_ROLE', getRole())
           commit('SET_NAME', getName())
