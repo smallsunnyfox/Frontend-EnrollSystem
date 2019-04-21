@@ -9,7 +9,7 @@
       </div>
       <!-- 用户中心 -->
       <div class="home_header_usercenter">
-        <el-dropdown :hide-on-click="true" style="margin:18px 10px 0 0;">
+        <el-dropdown :hide-on-click="true" style="margin:18px 8px 0 0;">
           <span style="cursor:pointer;">
             <ricon name="user" scale="0.7"></ricon> {{name}}<i class="el-icon-arrow-down el-icon--right"></i>
           </span>
@@ -265,8 +265,8 @@ export default {
         callback(new Error('用户名不能为空'))
       } else if (value.length < 3) {
         callback(new Error('用户名不能小于3位数'))
-      } else if (value.length > 8) {
-        callback(new Error('用户名不能大于8位数'))
+      } else if (value.length > 6) {
+        callback(new Error('用户名不能大于6位数'))
       } else if (value.indexOf(' ') !== -1) {
         callback(new Error('用户名不能包含空格'))
       } else if (!namepattern.test(value)) {

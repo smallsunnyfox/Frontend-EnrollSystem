@@ -45,21 +45,20 @@ const actions = {
             })
             reject()
           } else if (data.status === 'userNotFound') {
-            if (role !== 'admin') {
+            if (role === 'admin') {
+              Message({
+                showClose: true,
+                message: '未找到该管理员！请确认管理员用户名是否正确！',
+                type: 'error'
+              })
+            } else {
               Message({
                 showClose: true,
                 message: '未找到该用户！请确认用户名是否正确！',
                 type: 'error'
               })
-              reject()
-            } else {
-              Message({
-                showClose: true,
-                message: '没有登录资格，请联系超级管理员！',
-                type: 'error'
-              })
-              reject()
             }
+            reject()
           } else {
             Message({
               showClose: true,

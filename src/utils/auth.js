@@ -4,8 +4,8 @@ const Username = 'name'
 const Userrole = 'role'
 
 export function initToken () {
-  Cookies.set(Username, '', { expires: 0.1 })
-  Cookies.set(Userrole, '', { expires: 0.1 })
+  Cookies.set(Username, '', { expires: 0.3 })
+  Cookies.set(Userrole, '', { expires: 0.3 })
 }
 
 export function getName () {
@@ -16,8 +16,8 @@ export function getRole () {
 }
 
 export function setToken (name, role) {
-  Cookies.set(Username, name, { expires: 0.1 })
-  Cookies.set(Userrole, role, { expires: 0.1 })
+  Cookies.set(Username, name, { expires: 0.3 })
+  Cookies.set(Userrole, role, { expires: 0.3 })
 }
 
 export function removeToken () {

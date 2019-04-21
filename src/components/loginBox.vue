@@ -42,6 +42,8 @@ export default {
         callback(new Error('用户名不能为空'))
       } else if (value.length < 3) {
         callback(new Error('用户名不能小于三个字符'))
+      } else if (value.length > 6) {
+        callback(new Error('用户名不能大于6位数'))
       } else if (value.indexOf(' ') !== -1) {
         callback(new Error('用户名不能包含空格'))
       } else if (!namepattern.test(value)) {

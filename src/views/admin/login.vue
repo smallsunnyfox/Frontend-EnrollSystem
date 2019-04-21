@@ -32,7 +32,7 @@ export default {
   name: 'login',
   data () {
     return {
-      title: 'Enroll在线活动组织平台登录',
+      title: 'Enroll在线活动审核平台登录',
       role: 'admin',
       vedioCanPlay: false,
       fixStyle: ''
