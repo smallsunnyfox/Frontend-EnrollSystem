@@ -3,9 +3,12 @@
     <!-- 导航栏 -->
     <div class="home_header">
       <!-- 控制台 -->
-      <div class="nav_console" @click="JumpToConsole">
+      <div class="nav_console">
         <img src="../../assets/logoicon.png" alt class="nav_console_logo">
         <div class="nav_console_text">活动组织控制台</div>
+      </div>
+      <div class="home_header_breadcrumb">
+        <breadcrumb :currentPath="breads"></breadcrumb>
       </div>
       <!-- 用户中心 -->
       <div class="home_header_usercenter">
@@ -26,46 +29,53 @@
       <!-- 左侧路由导航栏 -->
       <div class="home_content_navi" >
         <el-menu
+          ref="contentnavi"
           mode="vertical"
           class="el-menu-vertical-demo"
           background-color="lightskyblue"
           text-color="#000"
           active-text-color="#ccffff"
+          default-active="首页"
           router
-          :default-active="$route.path"
+          unique-opened
+          @select="handleMenuSelect"
         >
-          <el-submenu index="1">
+          <el-menu-item index="首页" route="/organizer/console" style="border-top: 1px solid #fff;">
+            <i class="el-icon-news" style="color:black;"></i>
+            <span slot="title">控制台</span>
+          </el-menu-item>
+          <el-submenu index="活动管理">
             <template slot="title">
               <i class="el-icon-date" style="color:black;"></i>
               <span>活动管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/organizer/launchActivity">发起活动</el-menu-item>
-              <el-menu-item index="/organizer/myActivity">我的活动</el-menu-item>
-              <el-menu-item index="/organizer/entryItem">自定义报名项</el-menu-item>
+              <el-menu-item index="发起活动" route="/organizer/launchActivity">发起活动</el-menu-item>
+              <el-menu-item index="我的活动" route="/organizer/myActivity">我的活动</el-menu-item>
+              <el-menu-item index="自定义报名项" route="/organizer/entryItem">自定义报名项</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-         <el-submenu index="2">
+          <el-submenu index="报名管理">
             <template slot="title">
               <i class="el-icon-document" style="color:black;"></i>
               <span>报名管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/organizer/signupList">报名名单</el-menu-item>
-              <el-menu-item index="/organizer/signupAudit">报名审核</el-menu-item>
+              <el-menu-item index="报名名单" route="/organizer/signupList">报名名单</el-menu-item>
+              <el-menu-item index="报名审核" route="/organizer/signupAudit">报名审核</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-         <el-submenu index="3">
+          <el-submenu index="签到管理">
             <template slot="title">
               <i class="el-icon-bell" style="color:black;"></i>
               <span>签到管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/organizer/signinList">签到名单</el-menu-item>
-              <el-menu-item index="/organizer/leaveRequest">请假条</el-menu-item>
+              <el-menu-item index="签到名单" route="/organizer/signinList">签到名单</el-menu-item>
+              <el-menu-item index="请假条" route="/organizer/leaveRequest">请假条</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-          <el-menu-item index="/organizer/question">
+          <el-menu-item index="提问栏" route="/organizer/question">
             <i class="el-icon-service" style="color:black;"></i>
             <span slot="title">提问栏</span>
           </el-menu-item>
@@ -163,6 +173,7 @@
 import Vue from 'vue'
 import { Dialog, Menu, Form, Submenu, MenuItem, MessageBox, Message, MenuItemGroup } from 'element-ui'
 import { mapGetters } from 'vuex'
+import breadcrumb from '../../components/breadcrumb.vue'
 Vue.use(Menu)
 Vue.use(Submenu)
 Vue.use(MenuItem)
@@ -275,7 +286,7 @@ export default {
         callback()
       }
     }
-     // 修改手机号码的校验
+    // 修改手机号码的校验
     const updatePhone = (rule, value, callback) => {
       if (!value) {
         callback(new Error('手机号码不能为空'))
@@ -297,6 +308,7 @@ export default {
       forgetPwdDialog: false,
       myProfileDialog: false,
       isUpdateProfile: false,
+      breads: ['首页'],
       updatePwdForm: {
         oldpwd: '',
         newpwd: '',
@@ -335,10 +347,10 @@ export default {
       },
       myProfileRules: {
         myname: [
-          { required: true, trigger: 'blur', validator: updateName}
+          { required: true, trigger: 'blur', validator: updateName }
         ],
         myphone: [
-          { required: true, trigger: 'blur', validator: updatePhone}
+          { required: true, trigger: 'blur', validator: updatePhone }
         ]
       }
     }
@@ -350,7 +362,9 @@ export default {
       'phonenumber'
     ])
   },
-  components: {},
+  components: {
+    breadcrumb
+  },
   created () {
     this.$store.dispatch('user/getInfo')
       .then(() => {
@@ -362,8 +376,13 @@ export default {
   },
   methods: {
     // 显示密码
-    JumpToConsole () {
-      this.$router.push({ path: '/organizer/console'})
+    handleMenuSelect (index, indexPath) {
+      if (index === '首页' || index === '提问栏') {
+        this.$refs.contentnavi.close('活动管理')
+        this.$refs.contentnavi.close('报名管理')
+        this.$refs.contentnavi.close('签到管理')
+      }
+      this.breads = indexPath
     },
     showPwd (val) {
       if (val === 1) {
@@ -580,7 +599,7 @@ export default {
   width: 15%;
   border-right: 1px solid #fff;
   float: left;
-  cursor: pointer;
+  cursor: default;
 }
 .nav_console:hover {
   background: #ccffff;
@@ -599,6 +618,14 @@ export default {
   float: left;
   font-size: 16px;
   font-weight: bold;
+}
+.home_header_breadcrumb {
+  height: 40%;
+  width: 350px;
+  float: left;
+  padding: 0 10px;
+  margin-top: 25px;
+  cursor: default;
 }
 .home_header_usercenter {
   height: 100%;
@@ -623,7 +650,6 @@ export default {
 }
 .el-menu-vertical-demo {
   text-align: left;
-  border-top: 1px solid #fff;
 }
 
 .dialog-title {

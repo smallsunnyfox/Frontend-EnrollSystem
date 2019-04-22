@@ -7,7 +7,6 @@ import { Message } from 'element-ui'
 const state = {
   role: '',
   name: '',
-  avatar: '',
   phonenumber: ''
 }
 
@@ -17,9 +16,6 @@ const mutations = {
   },
   SET_ROLE: (state, role) => {
     state.role = role
-  },
-  SET_AVATAR: (state, avatar) => {
-    state.avatar = avatar
   },
   SET_PHONENUMBER: (state, phonenumber) => {
     state.phonenumber = phonenumber
