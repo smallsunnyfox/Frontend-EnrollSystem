@@ -13,3 +13,11 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.entryItem {
+  margin: 10px auto;
+  width: 95%;
+
+}
+</style>

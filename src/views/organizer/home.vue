@@ -8,7 +8,7 @@
         <div class="nav_console_text">活动组织控制台</div>
       </div>
       <div class="home_header_breadcrumb">
-        <breadcrumb :currentPath="breads"></breadcrumb>
+        <breadcrumb @close-submenu="closeOtherSubMenu"></breadcrumb>
       </div>
       <!-- 用户中心 -->
       <div class="home_header_usercenter">
@@ -35,12 +35,12 @@
           background-color="lightskyblue"
           text-color="#000"
           active-text-color="#ccffff"
-          default-active="首页"
+          :default-active="$route.path"
           router
           unique-opened
           @select="handleMenuSelect"
         >
-          <el-menu-item index="首页" route="/organizer/console" style="border-top: 1px solid #fff;">
+          <el-menu-item index="/organizer/console" style="border-top: 1px solid #fff;">
             <i class="el-icon-news" style="color:black;"></i>
             <span slot="title">控制台</span>
           </el-menu-item>
@@ -50,9 +50,9 @@
               <span>活动管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="发起活动" route="/organizer/launchActivity">发起活动</el-menu-item>
-              <el-menu-item index="我的活动" route="/organizer/myActivity">我的活动</el-menu-item>
-              <el-menu-item index="自定义报名项" route="/organizer/entryItem">自定义报名项</el-menu-item>
+              <el-menu-item index="/organizer/launchActivity">发起活动</el-menu-item>
+              <el-menu-item index="/organizer/myActivity">我的活动</el-menu-item>
+              <el-menu-item index="/organizer/entryItem">自定义报名项</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
           <el-submenu index="报名管理">
@@ -61,8 +61,8 @@
               <span>报名管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="报名名单" route="/organizer/signupList">报名名单</el-menu-item>
-              <el-menu-item index="报名审核" route="/organizer/signupAudit">报名审核</el-menu-item>
+              <el-menu-item index="/organizer/signupList">报名名单</el-menu-item>
+              <el-menu-item index="/organizer/signupAudit">报名审核</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
           <el-submenu index="签到管理">
@@ -71,11 +71,11 @@
               <span>签到管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="签到名单" route="/organizer/signinList">签到名单</el-menu-item>
-              <el-menu-item index="请假条" route="/organizer/leaveRequest">请假条</el-menu-item>
+              <el-menu-item index="/organizer/signinList">签到名单</el-menu-item>
+              <el-menu-item index="/organizer/leaveRequest">请假条</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-          <el-menu-item index="提问栏" route="/organizer/question">
+          <el-menu-item index="/organizer/question" >
             <i class="el-icon-service" style="color:black;"></i>
             <span slot="title">提问栏</span>
           </el-menu-item>
@@ -308,7 +308,6 @@ export default {
       forgetPwdDialog: false,
       myProfileDialog: false,
       isUpdateProfile: false,
-      breads: ['首页'],
       updatePwdForm: {
         oldpwd: '',
         newpwd: '',
@@ -375,15 +374,20 @@ export default {
       })
   },
   methods: {
-    // 显示密码
+    //动态改变面包屑
     handleMenuSelect (index, indexPath) {
-      if (index === '首页' || index === '提问栏') {
+      if (index === '/organizer/console' || index === '提问栏') {
         this.$refs.contentnavi.close('活动管理')
         this.$refs.contentnavi.close('报名管理')
         this.$refs.contentnavi.close('签到管理')
       }
-      this.breads = indexPath
     },
+    closeOtherSubMenu () {
+      this.$refs.contentnavi.close('活动管理')
+      this.$refs.contentnavi.close('报名管理')
+      this.$refs.contentnavi.close('签到管理')
+    },
+    // 显示密码
     showPwd (val) {
       if (val === 1) {
         if (this.passwordType === 'password') {
@@ -624,7 +628,7 @@ export default {
   width: 350px;
   float: left;
   padding: 0 10px;
-  margin-top: 25px;
+  margin-top: 23px;
   cursor: default;
 }
 .home_header_usercenter {
@@ -647,6 +651,7 @@ export default {
   height: 100%;
   width: 85%;
   float: left;
+  overflow-y:auto
 }
 .el-menu-vertical-demo {
   text-align: left;
