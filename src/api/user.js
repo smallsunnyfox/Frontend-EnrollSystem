@@ -65,18 +65,6 @@ export function getUserInfo (name, role) {
     data: postData
   })
 }
-// 退出
-export function logout (name, role) {
-  let postData = qs.stringify({
-    name: name,
-    role: role
-  })
-  return request({
-    url: '/user/logout',
-    method: 'post',
-    data: postData
-  })
-}
 // 修改密码
 export function updatePwd (name, role, oldpwd, newpwd) {
   let postData = qs.stringify({

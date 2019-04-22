@@ -374,7 +374,7 @@ export default {
       })
   },
   methods: {
-    //动态改变面包屑
+    // 动态改变面包屑
     handleMenuSelect (index, indexPath) {
       if (index === '/organizer/console' || index === '提问栏') {
         this.$refs.contentnavi.close('活动管理')

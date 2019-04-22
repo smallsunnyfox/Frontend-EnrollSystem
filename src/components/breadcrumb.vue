@@ -7,10 +7,10 @@
 <script>
 import Vue from 'vue'
 import { Breadcrumb, BreadcrumbItem } from 'element-ui'
-Vue.use(Breadcrumb);
-Vue.use(BreadcrumbItem);
+Vue.use(Breadcrumb)
+Vue.use(BreadcrumbItem)
 export default {
-  data() {
+  data () {
     return {
       currentPath: ['首页']
     }
@@ -18,7 +18,7 @@ export default {
   watch: {
     '$route': 'changeCurrentPath'
   },
-  created() {
+  created () {
     this.changeCurrentPath()
   },
   methods: {
@@ -46,7 +46,6 @@ export default {
         this.currentPath = ['提问栏']
         this.$emit('close-submenu')
       }
-
     }
   }
 }

@@ -1,7 +1,7 @@
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable prefer-promise-reject-errors */
 import { Promise } from 'q'
-import { login, logout, participantRegister, organizerRegister, getUserInfo, updatePwd, forgetPwd, updateProfile } from '../../api/user'
+import { login, participantRegister, organizerRegister, getUserInfo, updatePwd, forgetPwd, updateProfile } from '../../api/user'
 import { setToken, getRole, getName, initToken } from '../../utils/auth'
 import { Message } from 'element-ui'
 const state = {
@@ -160,26 +160,12 @@ const actions = {
     })
   },
   logout ({ commit }) {
-    return new Promise((resolve, reject) => {
-      logout(getName(), getRole())
-        .then(response => {
-          if (response.data.status === 'success') {
-            commit('SET_PHONENUMBER', '')
-            commit('SET_ROLE', '')
-            commit('SET_NAME', '')
-            initToken()
-            resolve()
-          } else {
-            Message({
-              showClose: true,
-              type: 'warning',
-              message: '系统被外星人袭击了，请再次尝试退出!'
-            })
-            reject()
-          }
-        }).catch(error => {
-          reject(error)
-        })
+    return new Promise((resolve) => {
+      commit('SET_PHONENUMBER', '')
+      commit('SET_ROLE', '')
+      commit('SET_NAME', '')
+      initToken()
+      resolve()
     })
   },
   updatePwd ({ commit }, form) {
