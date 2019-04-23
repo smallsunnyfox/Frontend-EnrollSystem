@@ -360,7 +360,7 @@ export default {
       itempagesize: 7, // 每页数据数
       switchwidth: 50, // switch控件的宽度
       addEntryItemDialog: false, // 控制添加报名项Dialog的显示
-      updateEntryItemDialog: false,
+      updateEntryItemDialog: false, // 控制更新报名项Dialog的显示
       inputOptionVisible: false, // 控制报名项Dialog中的选项输入
       inputOptionValue: '', // 新增选项的value
       inputUpdateOptionVisible: false, // 在更新Dialog控制报名项Dialog中的选项输入
@@ -394,7 +394,7 @@ export default {
           { validator: validateOptions, trigger: 'blur' }
         ]
       },
-      updateEntryItemForm: {
+      updateEntryItemForm: {// 更新报名项表单
         uid: 0,
         uname: '',
         utype: '',
@@ -403,7 +403,7 @@ export default {
         ureminder: '',
         ucreator: ''
       },
-      updateEntryItemRules: {
+      updateEntryItemRules: {// 更新报名项的验证规则
         uname: [
           { required: true, trigger: 'blur', validator: validateName }
         ],
@@ -569,6 +569,7 @@ export default {
       }
       this.updateEntryItemForm.uoptions = item.options.split(',')
     },
+    // 删除报名项
     deleteEntryItem (id) {
       MessageBox.confirm('确认要删除吗？', '提示', {
         confirmButtonText: '确定',
