@@ -149,7 +149,6 @@ const actions = {
     return new Promise((resolve, reject) => {
       getUserInfo(getName(), getRole())
         .then(response => {
-          console.log(response.data.phonenumber)
           commit('SET_PHONENUMBER', response.data.phonenumber)
           commit('SET_ROLE', getRole())
           commit('SET_NAME', getName())

@@ -24,7 +24,6 @@ export default {
   methods: {
     // 监听当前路由来改变面包屑
     changeCurrentPath () {
-      console.log(this.$route.path)
       if (this.$route.path === '/organizer/console') {
         this.currentPath = ['首页']
         this.$emit('close-submenu')
