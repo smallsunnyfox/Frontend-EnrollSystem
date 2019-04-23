@@ -38,12 +38,22 @@
             <span v-else>否</span>
           </template>
         </el-table-column>
-        <el-table-column prop="options" label="选项" show-overflow-tooltip width="200" align="center"></el-table-column>
-        <el-table-column prop="reminder" label="填写提示" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="options" label="选项" show-overflow-tooltip width="200" align="center">
+          <template slot-scope="scope">
+            <span v-if="scope.row.options === ''" style="color:lightgray;">—— ——</span>
+            <span v-else>{{scope.row.options}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="reminder" label="填写提示" show-overflow-tooltip>
+          <template slot-scope="scope">
+            <span v-if="scope.row.reminder === ''" style="color:lightgray;">暂无提示</span>
+            <span v-else>{{scope.row.reminder}}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="150" align="center">
-          <template>
-            <el-button size="mini">编辑</el-button>
-            <el-button size="mini" type="danger">删除</el-button>
+          <template slot-scope="scope">
+            <el-button size="mini" @click="updateEntryItem(scope.row)">编辑</el-button>
+            <el-button size="mini" type="danger" @click="deleteEntryItem(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -171,14 +181,127 @@
         <el-button type="primary" @click="submitEntryItemForm">确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 更新报名项的dialog -->
+    <el-dialog :visible.sync="updateEntryItemDialog" width="50%" top="55px">
+      <!-- title -->
+      <div slot="title" class="dialog-title"><i class="el-icon-edit"></i>修改报名项</div>
+      <!-- form -->
+      <el-form :model="updateEntryItemForm" :rules="updateEntryItemRules" ref="updateEntryItemForm" label-width="auto" label-position="right">
+        <el-form-item label="名称" prop="uname">
+          <el-input v-model="updateEntryItemForm.uname"></el-input>
+        </el-form-item>
+        <el-form-item label="类型">
+          <el-select v-model="updateEntryItemForm.utype" disabled ref="utype" style="float:left;">
+            <el-option
+              v-for="item in typelist"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="是否必填">
+          <el-switch
+            v-model="updateEntryItemForm.uisrequired"
+            active-color="#409eff"
+            inactive-color="#dcdfe6"
+            style="float:left; margin: 10px 0;"
+            :width="switchwidth"
+          >
+          </el-switch>
+        </el-form-item>
+        <el-form-item label="填写提示" prop="ureminder">
+          <el-input v-model="updateEntryItemForm.ureminder"></el-input>
+        </el-form-item>
+        <el-form-item label="报名项配置">
+          <el-alert
+            v-if="updateEntryItemForm.utype === 'input'"
+            title="输入框支持20字以内的输入（更多字数可选择文本域）"
+            type="success"
+            :closable="false"
+          >
+          </el-alert>
+          <el-alert
+            v-if="updateEntryItemForm.utype === 'textarea'"
+            title="文本域支持140字以内的输入（较少字数可选择输入框）"
+            type="success"
+            :closable="false"
+          >
+          </el-alert>
+          <el-alert
+            v-if="updateEntryItemForm.utype === 'inputnumber'"
+            title="数字输入无多余配置"
+            type="info"
+            :closable="false"
+          >
+          </el-alert>
+          <el-alert
+            v-if="updateEntryItemForm.utype === 'radio'"
+            title="请为单选框配置选项！"
+            type="warning"
+            :closable="false"
+          >
+          </el-alert>
+          <el-alert
+            v-if="updateEntryItemForm.utype === 'checkbox'"
+            title="请为多选框配置选项！"
+            type="warning"
+            :closable="false"
+          >
+          </el-alert>
+          <el-alert
+            v-if="updateEntryItemForm.utype === 'select'"
+            title="请为下拉列表配置选项！"
+            type="warning"
+            :closable="false"
+          >
+          </el-alert>
+          <el-alert
+            v-if="updateEntryItemForm.utype === 'datepicker'"
+            title="日期选择无多余配置"
+            type="info"
+            :closable="false"
+          >
+          </el-alert>
+        </el-form-item>
+        <el-form-item label="选项" prop="uoptions" v-if="updateEntryItemForm.utype === 'select' || updateEntryItemForm.utype === 'checkbox' || updateEntryItemForm.utype === 'radio'">
+          <el-tag
+            :key="option"
+            v-for="option in updateEntryItemForm.uoptions"
+            closable
+            :disable-transitions="false"
+            @close="deleteUpdateOption(option)"
+            style="float:left;margin-top: 4px;"
+          >
+          {{option}}
+          </el-tag>
+          <el-input
+            class="input-new-tag"
+            v-if="inputUpdateOptionVisible"
+            v-model="inputUpdateOptionValue"
+            ref="saveUpdateOptionInput"
+            size="small"
+            @keyup.enter.native="handleUpdateInputOptionConfirm"
+            @blur="handleUpdateInputOptionConfirm"
+          >
+          </el-input>
+          <el-button v-else class="button-new-tag" size="small" @click="showUpdateOptionInput">+ 新增选项</el-button>
+        </el-form-item>
+      </el-form>
+      <!-- footer -->
+      <div slot="footer">
+        <el-button @click="updateEntryItemDialog = false">取 消</el-button>
+        <el-button type="primary" @click="submitUpdateEntryItemForm">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
-import { Select, Option, ButtonGroup, Switch, Alert, Tag, Message, Table, TableColumn, Pagination } from 'element-ui'
-import { addEntryItem, myEntryItems, searchItemByName } from '../../../api/activity.js'
+import { Select, Option, ButtonGroup, MessageBox, Switch, Alert, Tag, Message, Table, TableColumn, Pagination } from 'element-ui'
+import { addEntryItem, myEntryItems, searchItemByName, updateEntryItem, deleteEntryItem } from '../../../api/activity.js'
 import { getName } from '../../../utils/auth.js'
 Vue.use(Select)
 Vue.use(Option)
@@ -219,16 +342,30 @@ export default {
         callback()
       }
     }
+    const validateUpdateOptions = (rule, value, callback) => {
+      if (this.$refs.utype.value === 'radio' || this.$refs.utype.value === 'select' || this.$refs.utype.value === 'checkbox') {
+        if (this.updateEntryItemForm.uoptions.length < 2) {
+          callback(new Error('请至少添加两个选项'))
+        } else {
+          callback()
+        }
+      } else {
+        callback()
+      }
+    }
     return {
-      myEntryItemList: [],// 数据列表
-      currentPage: 1,// 当前页码
-      itemnumber: 0,// 总数据数
-      itempagesize: 7,// 每页数据数
-      switchwidth: 50,// switch控件的宽度
-      addEntryItemDialog: false,// 控制添加报名项Dialog的显示
-      inputOptionVisible: false,// 控制报名项Dialog中的选项输入
-      inputOptionValue: '',// 新增选项的value
-      searchNameValue: '',// 搜索框绑定的值
+      myEntryItemList: [], // 数据列表
+      currentPage: 1, // 当前页码
+      itemnumber: 0, // 总数据数
+      itempagesize: 7, // 每页数据数
+      switchwidth: 50, // switch控件的宽度
+      addEntryItemDialog: false, // 控制添加报名项Dialog的显示
+      updateEntryItemDialog: false,
+      inputOptionVisible: false, // 控制报名项Dialog中的选项输入
+      inputOptionValue: '', // 新增选项的value
+      inputUpdateOptionVisible: false, // 在更新Dialog控制报名项Dialog中的选项输入
+      inputUpdateOptionValue: '', // 在更新Dialog新增选项的value
+      searchNameValue: '', // 搜索框绑定的值
       typelist: [// 选择类型下拉框中的值
         { value: 'input', label: '输入框' },
         { value: 'textarea', label: '文本域' },
@@ -256,10 +393,30 @@ export default {
         options: [
           { validator: validateOptions, trigger: 'blur' }
         ]
+      },
+      updateEntryItemForm: {
+        uid: 0,
+        uname: '',
+        utype: '',
+        uisrequired: false,
+        uoptions: [],
+        ureminder: '',
+        ucreator: ''
+      },
+      updateEntryItemRules: {
+        uname: [
+          { required: true, trigger: 'blur', validator: validateName }
+        ],
+        ureminder: [
+          { required: false, trigger: 'blur', validator: validateReminder }
+        ],
+        uoptions: [
+          { validator: validateUpdateOptions, trigger: 'blur' }
+        ]
       }
     }
   },
-  created() {
+  created () {
     this.initList()
   },
   computed: {
@@ -281,7 +438,7 @@ export default {
         })
     },
     // 控制分页
-    handleCurrentChange: function(currentPage){
+    handleCurrentChange: function (currentPage) {
       this.currentPage = currentPage
     },
     // 调出新增报名项的Dialog
@@ -363,8 +520,6 @@ export default {
     },
     // 根据名称从后台搜索
     searchItemByName () {
-      console.log(this.searchNameValue)
-      console.log(this.name)
       if (this.searchNameValue !== '') {
         searchItemByName(this.searchNameValue, this.name)
           .then(response => {
@@ -381,7 +536,7 @@ export default {
             }
           }).catch(error => {
             console.log(error)
-          });
+          })
       } else {
         Message({
           showClose: true,
@@ -395,6 +550,122 @@ export default {
     resetSearch () {
       this.searchNameValue = ''
       this.initList()
+    },
+    // 调出更新的Dialog
+    updateEntryItem (item) {
+      this.updateEntryItemDialog = true
+      this.$nextTick(() => {
+        this.$refs.updateEntryItemForm.clearValidate()
+      })
+      this.updateEntryItemForm.uid = item.id
+      this.updateEntryItemForm.uname = item.name
+      this.updateEntryItemForm.utype = item.type
+      this.updateEntryItemForm.ureminder = item.reminder
+      this.updateEntryItemForm.ucreator = item.creator
+      if (item.isrequired === 'true') {
+        this.updateEntryItemForm.uisrequired = true
+      } else {
+        this.updateEntryItemForm.uisrequired = false
+      }
+      this.updateEntryItemForm.uoptions = item.options.split(',')
+    },
+    deleteEntryItem (id) {
+      MessageBox.confirm('确认要删除吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteEntryItem(id)
+        .then(response => {
+          if (response.data.status === 'deleteSuccess') {
+            Message({
+              showClose: true,
+              message: '删除报名项成功！',
+              type: 'success'
+            })
+            this.initList()
+          }
+        }).catch(error => {
+          Message({
+            showClose: true,
+            message: '系统被外星人袭击了，请再次尝试删除！',
+            type: 'warning'
+          })
+          console.log(error)
+        })
+      }).catch(() => {
+        Message({
+          showClose: true,
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    // 在更新Dialog中控制单选框 多选框 下拉列表的选项的删除
+    deleteUpdateOption (option) {
+      this.updateEntryItemForm.uoptions.splice(this.updateEntryItemForm.uoptions.indexOf(option), 1)
+    },
+    // 在更新Dialog中控制选项输入框的显示
+    showUpdateOptionInput () {
+      this.inputUpdateOptionVisible = true
+      this.$nextTick(() => {
+        this.$refs.saveUpdateOptionInput.$refs.input.focus()
+      })
+    },
+    // 在更新Dialog中控制单选框 多选框 下拉列表的选项的新增
+    handleUpdateInputOptionConfirm () {
+      let inputUpdateOptionValue = this.inputUpdateOptionValue
+      if (inputUpdateOptionValue) {
+        for (let index = 0; index < this.updateEntryItemForm.uoptions.length; index++) {
+          if (inputUpdateOptionValue === this.updateEntryItemForm.uoptions[index]) {
+            Message({
+              showClose: true,
+              message: '请勿重复添加！',
+              type: 'warning'
+            })
+            this.inputUpdateOptionValue = ''
+            return false
+          }
+        }
+        this.updateEntryItemForm.uoptions.push(inputUpdateOptionValue)
+      }
+      this.inputUpdateOptionVisible = false
+      this.inputUpdateOptionValue = ''
+    },
+    // 提交更新表单
+    submitUpdateEntryItemForm () {
+      this.$refs.updateEntryItemForm.validate(valid => {
+        if (valid) {
+          updateEntryItem(this.updateEntryItemForm)
+            .then(response => {
+              if (response.data.status === 'updateSuccess') {
+                Message({
+                  showClose: true,
+                  message: '更新报名项成功！',
+                  type: 'success'
+                })
+                this.updateEntryItemDialog = false
+                this.initList()
+              } else {
+                Message({
+                  showClose: true,
+                  message: '系统被外星人袭击了，请再次尝试更新！',
+                  type: 'warning'
+                })
+              }
+            }).catch(error => {
+              Message({
+                showClose: true,
+                message: '系统被外星人袭击了，请再次尝试更新！',
+                type: 'warning'
+              })
+              console.log(error)
+            });
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     }
   }
 }

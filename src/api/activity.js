@@ -40,3 +40,30 @@ export function searchItemByName (name, creator) {
     data: postData
   })
 }
+
+export function updateEntryItem (form) {
+  let postData = qs.stringify({
+    id: form.uid,
+    name: form.uname,
+    isrequired: form.uisrequired,
+    reminder: form.ureminder,
+    options: form.uoptions,
+    length: form.uoptions.length
+  })
+  return request({
+    url: '/entryitem/updateEntryItem',
+    method: 'post',
+    data: postData
+  })
+}
+
+export function deleteEntryItem (id) {
+  let postData = qs.stringify({
+    id: id
+  })
+  return request({
+    url: '/entryitem/deleteEntryItem',
+    method: 'post',
+    data: postData
+  })
+}
