@@ -15,11 +15,6 @@ const organizerRouter = {
       component: () => import('../views/organizer/activity/entryItem.vue'),
       name: 'entryItem'
     },
-    {// 发起活动
-      path: 'launchActivity',
-      component: () => import('../views/organizer/activity/launchActivity.vue'),
-      name: 'launchActivity'
-    },
     {// 我的活动
       path: 'myActivity',
       component: () => import('../views/organizer/activity/myActivity.vue'),

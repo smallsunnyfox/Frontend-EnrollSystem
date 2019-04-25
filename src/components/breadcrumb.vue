@@ -27,8 +27,6 @@ export default {
       if (this.$route.path === '/organizer/console') {
         this.currentPath = ['首页']
         this.$emit('close-submenu')
-      } else if (this.$route.path === '/organizer/launchActivity') {
-        this.currentPath = ['活动管理', '发起活动']
       } else if (this.$route.path === '/organizer/myActivity') {
         this.currentPath = ['活动管理', '我的活动']
       } else if (this.$route.path === '/organizer/entryItem') {

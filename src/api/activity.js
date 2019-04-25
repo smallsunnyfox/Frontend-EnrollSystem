@@ -29,6 +29,13 @@ export function myEntryItems (name) {
   })
 }
 
+export function systemEntryItems () {
+  return request({
+    url: '/entryitem/systemEntryItems',
+    method: 'post'
+  })
+}
+
 export function searchItemByName (name, creator) {
   let postData = qs.stringify({
     name: name,
@@ -63,6 +70,26 @@ export function deleteEntryItem (id) {
   })
   return request({
     url: '/entryitem/deleteEntryItem',
+    method: 'post',
+    data: postData
+  })
+}
+
+export function addActivity (form) {
+  let postData = qs.stringify({
+    name: form.name,
+    organizer: form.organizer,
+    organization: form.organization,
+    starttime: form.time[0],
+    endtime: form.time[1],
+    deadline: form.deadline,
+    site: form.site,
+    detail: form.detail,
+    entryform: form.entryform,
+    length: form.entryform.length
+  })
+  return request({
+    url: '/activity/addActivity',
     method: 'post',
     data: postData
   })

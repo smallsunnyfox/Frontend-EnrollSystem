@@ -50,7 +50,6 @@
               <span>活动管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/organizer/launchActivity">发起活动</el-menu-item>
               <el-menu-item index="/organizer/myActivity">我的活动</el-menu-item>
               <el-menu-item index="/organizer/entryItem">自定义报名项</el-menu-item>
             </el-menu-item-group>
