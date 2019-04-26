@@ -590,9 +590,11 @@ export default {
 <style scoped>
 .home {
   height: 100%;
+  min-width: 1400px;
 }
 .home_header {
   height: 8%;
+  min-height: 55px;
   width: 100%;
   background: lightskyblue;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
@@ -600,6 +602,7 @@ export default {
 .nav_console {
   height: 100%;
   width: 15%;
+  min-width: 200px;
   border-right: 1px solid #fff;
   float: left;
   cursor: default;
@@ -642,6 +645,7 @@ export default {
 }
 .home_content_navi {
   width: 15%;
+  min-width: 200px;
   height: 100%;
   background-color: lightskyblue;
   float: left;
@@ -649,6 +653,7 @@ export default {
 .home_content_view {
   height: 100%;
   width: 85%;
+  min-width: 1150px;
   float: left;
   overflow-y:auto
 }
