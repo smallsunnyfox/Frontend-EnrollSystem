@@ -28,4 +28,11 @@ html,body {
   color: #2c3e50;
   height: 100%;
 }
+body .el-table th.gutter{
+    display: table-cell!important;
+}
+
+body .el-table colgroup.gutter{
+    display: table-cell!important;
+}
 </style>
