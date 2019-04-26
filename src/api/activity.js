@@ -94,3 +94,114 @@ export function addActivity (form) {
     data: postData
   })
 }
+
+export function getUnauditActivities (name) {
+  let postData = qs.stringify({
+    name: name
+  })
+  return request({
+    url: '/activity/getUnauditActivities',
+    method: 'post',
+    data: postData
+  })
+}
+
+export function getUnfinishedActivities (name) {
+  let postData = qs.stringify({
+    name: name
+  })
+  return request({
+    url: '/activity/getUnfinishedActivities',
+    method: 'post',
+    data: postData
+  })
+}
+
+export function getFinishedActivities (name) {
+  let postData = qs.stringify({
+    name: name
+  })
+  return request({
+    url: '/activity/getFinishedActivities',
+    method: 'post',
+    data: postData
+  })
+}
+
+export function getEntryItemsOfActivity (entryform) {
+  let postData = qs.stringify({
+    entryformStr: entryform
+  })
+  return request({
+    url: '/entryitem/getEntryItemsOfActivity',
+    method: 'post',
+    data: postData
+  })
+}
+
+export function updateActivity (form) {
+  let postData = qs.stringify({
+    id: form.uid,
+    name: form.uname,
+    organization: form.uorganization,
+    starttime: form.utime[0],
+    endtime: form.utime[1],
+    deadline: form.udeadline,
+    site: form.usite,
+    detail: form.udetail,
+    entryform: form.uentryform,
+    length: form.uentryform.length
+  })
+  return request({
+    url: '/activity/updateActivity',
+    method: 'post',
+    data: postData
+  })
+}
+
+export function deleteActivity (id) {
+  let postData = qs.stringify({
+    id: id
+  })
+  return request({
+    url: '/activity/deleteActivity',
+    method: 'post',
+    data: postData
+  })
+}
+
+export function searchUnauditActivities (name, organizer) {
+  let postData = qs.stringify({
+    name: name,
+    organizer: organizer
+  })
+  return request({
+    url: '/activity/searchUnauditActivities',
+    method: 'post',
+    data: postData
+  })
+}
+
+export function searchUnfinishedActivities (name, organizer) {
+  let postData = qs.stringify({
+    name: name,
+    organizer: organizer
+  })
+  return request({
+    url: '/activity/searchUnfinishedActivities',
+    method: 'post',
+    data: postData
+  })
+}
+
+export function searchFinishedActivities (name, organizer) {
+  let postData = qs.stringify({
+    name: name,
+    organizer: organizer
+  })
+  return request({
+    url: '/activity/searchFinishedActivities',
+    method: 'post',
+    data: postData
+  })
+}
