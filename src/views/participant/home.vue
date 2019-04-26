@@ -18,7 +18,6 @@
               :default-active="$route.path"
             >
               <el-menu-item index="/participant/index" style="broder:none;">首页</el-menu-item>
-              <el-menu-item index="/participant/searchActivity">活动查找</el-menu-item>
               <el-menu-item index="/participant/signupActivity">活动报名</el-menu-item>
               <el-menu-item index="/participant/mySignedActivity">我的活动</el-menu-item>
               <el-menu-item index="/participant/myQuestion" style="broder:none;">我的提问</el-menu-item>
@@ -590,7 +589,7 @@ export default {
 }
 .home_header_navi_content {
   height: 100%;
-  width: 452px;
+  width: 356px;
   margin: 0 auto;
 }
 .home_header_usercenter {

@@ -20,11 +20,6 @@ const participantRouter = {
       component: () => import('../views/participant/activity/myQuestion.vue'),
       name: 'myQuestion'
     },
-    {// 活动查找
-      path: 'searchActivity',
-      component: () => import('../views/participant/activity/searchActivity.vue'),
-      name: 'searchActivity'
-    },
     {// 活动报名
       path: 'signupActivity',
       component: () => import('../views/participant/activity/signupActivity.vue'),

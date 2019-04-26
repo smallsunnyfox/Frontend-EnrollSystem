@@ -41,12 +41,12 @@
           @select="handleMenuSelect"
         >
           <el-menu-item index="/organizer/console" style="border-top: 1px solid #fff;">
-            <i class="el-icon-news" style="color:black;"></i>
+            <i class="el-icon-orange" style="color:black;"></i>
             <span slot="title">控制台</span>
           </el-menu-item>
           <el-submenu index="活动管理">
             <template slot="title">
-              <i class="el-icon-date" style="color:black;"></i>
+              <i class="el-icon-document" style="color:black;"></i>
               <span>活动管理</span>
             </template>
             <el-menu-item-group>
@@ -56,7 +56,7 @@
           </el-submenu>
           <el-submenu index="报名管理">
             <template slot="title">
-              <i class="el-icon-document" style="color:black;"></i>
+              <i class="el-icon-document-add" style="color:black;"></i>
               <span>报名管理</span>
             </template>
             <el-menu-item-group>
@@ -64,18 +64,12 @@
               <el-menu-item index="/organizer/signupAudit">报名审核</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-          <el-submenu index="签到管理">
-            <template slot="title">
-              <i class="el-icon-bell" style="color:black;"></i>
-              <span>签到管理</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="/organizer/signinList">签到名单</el-menu-item>
-              <el-menu-item index="/organizer/leaveRequest">请假条</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
+          <el-menu-item index="/organizer/signinList" >
+            <i class="el-icon-document-checked" style="color:black;"></i>
+            <span slot="title">签到管理</span>
+          </el-menu-item>
           <el-menu-item index="/organizer/question" >
-            <i class="el-icon-service" style="color:black;"></i>
+            <i class="el-icon-chat-dot-square" style="color:black;"></i>
             <span slot="title">提问栏</span>
           </el-menu-item>
         </el-menu>

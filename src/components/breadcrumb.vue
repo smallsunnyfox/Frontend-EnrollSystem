@@ -36,9 +36,7 @@ export default {
       } else if (this.$route.path === '/organizer/signupAudit') {
         this.currentPath = ['报名管理', '报名审核']
       } else if (this.$route.path === '/organizer/signinList') {
-        this.currentPath = ['签到管理', '签到名单']
-      } else if (this.$route.path === '/organizer/leaveRequest') {
-        this.currentPath = ['签到管理', '请假条']
+        this.currentPath = ['签到管理']
       } else if (this.$route.path === '/organizer/question') {
         this.currentPath = ['提问栏']
         this.$emit('close-submenu')

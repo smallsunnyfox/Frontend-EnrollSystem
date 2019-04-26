@@ -30,15 +30,10 @@ const organizerRouter = {
       component: () => import('../views/organizer/signup/signupList.vue'),
       name: 'signupList'
     },
-    {// 签到名单
+    {// 签到管理
       path: 'signinList',
       component: () => import('../views/organizer/signin/signinList.vue'),
       name: 'signinList'
-    },
-    {// 请假条
-      path: 'leaveRequest',
-      component: () => import('../views/organizer/signin/leaveRequest.vue'),
-      name: 'leaveRequest'
     },
     {// 提问栏
       path: 'question',
