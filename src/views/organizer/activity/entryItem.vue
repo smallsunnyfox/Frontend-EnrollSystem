@@ -16,6 +16,7 @@
       <el-table
         :data="myEntryItemList.slice((currentPage-1)*itempagesize,currentPage*itempagesize)"
         style="width:100%;"
+        v-loading="loading"
         border
         stripe
         highlight-current-row
@@ -300,7 +301,7 @@
 <script>
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
-import { Select, Option, ButtonGroup, MessageBox, Switch, Alert, Tag, Message, Table, TableColumn, Pagination } from 'element-ui'
+import { Select, Option, Loading, ButtonGroup, MessageBox, Switch, Alert, Tag, Message, Table, TableColumn, Pagination } from 'element-ui'
 import { addEntryItem, myEntryItems, searchItemByName, updateEntryItem, deleteEntryItem } from '../../../api/activity.js'
 import { getName } from '../../../utils/auth.js'
 Vue.use(Select)
@@ -312,6 +313,7 @@ Vue.use(Tag)
 Vue.use(TableColumn)
 Vue.use(Pagination)
 Vue.use(ButtonGroup)
+Vue.use(Loading.directive)
 export default {
   name: 'entryItem',
   data () {
@@ -355,6 +357,7 @@ export default {
     }
     return {
       myEntryItemList: [], // 数据列表
+      loading: true,
       currentPage: 1, // 当前页码
       itemnumber: 0, // 总数据数
       itempagesize: 7, // 每页数据数
@@ -427,7 +430,8 @@ export default {
   methods: {
     // 从后台拉取数据
     initList () {
-      myEntryItems(getName())
+      setTimeout(() => {
+        myEntryItems(getName())
         .then(response => {
           this.myEntryItemList = response.data
           this.itemnumber = this.myEntryItemList.length
@@ -436,6 +440,8 @@ export default {
           console.log(error)
           console.log('获取报名项列表失败')
         })
+        this.loading = false
+      }, 600)
     },
     // 控制分页
     handleCurrentChange: function (currentPage) {
