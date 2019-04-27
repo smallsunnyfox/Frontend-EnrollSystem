@@ -26,7 +26,6 @@
 </template>
 
 <script>
-import { Message } from 'element-ui'
 import loginBox from '../../components/loginBox'
 export default {
   name: 'login',
@@ -112,8 +111,3 @@ export default {
   width: 100%;
 }
 </style>
-
-
-
-
-
