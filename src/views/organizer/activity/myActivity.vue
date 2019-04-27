@@ -52,7 +52,10 @@
             <el-table-column label="审核状态" align="center">
               <template slot-scope="scope">
                 <span v-if="scope.row.isapproved==='tobeaudit'">审核中</span>
-                <span v-else>审核未通过--原因：{{scope.row.isapproved}}</span>
+                <el-tooltip v-else effect="dark" placement="top">
+                  <div slot="content">未通过原因：<br/>{{scope.row.isapproved}}</div>
+                  <span>审核未通过</span>
+                </el-tooltip>
               </template>
             </el-table-column>
             <el-table-column label="报名表单" align="center" width="100">
@@ -60,8 +63,9 @@
                 <el-button size="mini" @click="previewEntryform(scope.row.entryform)">预览表单</el-button>
               </template>
             </el-table-column>
-            <el-table-column label="操作" align="center" width="150">
+            <el-table-column label="操作" align="center" width="245">
               <template slot-scope="scope">
+                <el-button v-if="scope.row.isapproved!=='tobeaudit'" size="mini">重新审核</el-button>
                 <el-button size="mini" @click="updateActivity(scope.row)">编辑</el-button>
                 <el-button size="mini" type="danger" @click="deleteActivity(scope.row.id)">删除</el-button>
               </template>
@@ -412,13 +416,14 @@ import { SlickList, SlickItem } from 'vue-slicksort'
 import { mapGetters } from 'vuex'
 import { getName } from '../../../utils/auth.js'
 import { myEntryItems, systemEntryItems, addActivity, searchUnauditActivities, searchUnfinishedActivities, searchFinishedActivities, updateActivity, deleteActivity, getUnauditActivities, getUnfinishedActivities, getFinishedActivities, getEntryItemsOfActivity } from '../../../api/activity.js'
-import { Tabs, TabPane, Radio, Checkbox, CheckboxGroup, RadioGroup, Popover, Select, DatePicker, TimePicker, Option, Loading, ButtonGroup, MessageBox, Switch, Alert, Message, Table, TableColumn, Pagination } from 'element-ui'
+import { Tabs, TabPane, Radio, Checkbox, CheckboxGroup, Tooltip, RadioGroup, Popover, Select, DatePicker, TimePicker, Option, Loading, ButtonGroup, MessageBox, Switch, Alert, Message, Table, TableColumn, Pagination } from 'element-ui'
 Vue.use(Radio)
 Vue.use(RadioGroup)
 Vue.use(CheckboxGroup)
 Vue.use(Checkbox)
 Vue.use(Select)
 Vue.use(Popover)
+Vue.use(Tooltip)
 Vue.use(Option)
 Vue.use(Switch)
 Vue.use(Alert)
@@ -448,8 +453,8 @@ export default {
     const validateOrg = (rule, value, callback) => {
       if (!value) {
         callback(new Error('所属组织不能为空，若无请填写个人'))
-      } else if (value.length > 10) {
-        callback(new Error('所属组织不能超过10个字符'))
+      } else if (value.length > 20) {
+        callback(new Error('所属组织不能超过20个字符'))
       } else {
         callback()
       }
