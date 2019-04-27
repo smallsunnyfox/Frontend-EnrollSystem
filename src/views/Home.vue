@@ -110,7 +110,7 @@
     <div class="home_bottom">
       <div class="home_bottom_content">
         <div class="home_bottom_github">
-          Github地址：<a href="https://github.com/smallsunnyfox/Backend-EnrollSystem" target="_blank">Jfinal-后端</a>&nbsp;&nbsp;&nbsp;<a href="https://github.com/smallsunnyfox/Backend-EnrollSystem" target="_blank">Vue全家桶-前端</a><br><br>
+          Github地址：<a href="https://github.com/smallsunnyfox/Backend-EnrollSystem" target="_blank">Jfinal-后端</a>&nbsp;&nbsp;&nbsp;<a href="https://github.com/smallsunnyfox/Frontend-EnrollSystem" target="_blank">Vue全家桶-前端</a><br><br>
           <a href="https://github.com/smallsunnyfox" target="_blank">Follow me in Github</a><br><br>
           克己慎独
         </div>
