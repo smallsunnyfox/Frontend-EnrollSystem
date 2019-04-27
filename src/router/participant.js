@@ -24,6 +24,11 @@ const participantRouter = {
       path: 'signupActivity',
       component: () => import('../views/participant/activity/signupActivity.vue'),
       name: 'signupActivity'
+    },
+    {
+      path: '404',
+      component: () => import('../views/participant/404.vue'),
+      name: 'participant404'
     }
   ]
 }

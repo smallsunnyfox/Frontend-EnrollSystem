@@ -9,6 +9,7 @@ import OrganizerRegister from '../views/organizer/register.vue'
 import organizerRouter from './organizer.js'
 import participantRouter from './participant.js'
 import adminRouter from './admin.js'
+import page404 from '../views/404.vue'
 
 Vue.use(Router)
 
@@ -48,6 +49,11 @@ export default new Router({
     },
     adminRouter,
     organizerRouter,
-    participantRouter
+    participantRouter,
+    {
+      path: '/404',
+      component: page404,
+      name: 'page404'
+    }
   ]
 })

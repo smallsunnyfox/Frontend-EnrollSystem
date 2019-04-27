@@ -350,7 +350,7 @@ export default {
       'role',
       'phonenumber'
     ]),
-    isSuperAdmin() {
+    isSuperAdmin () {
       if (this.name.indexOf('SA') === -1) {
         return false
       } else {
@@ -563,10 +563,13 @@ export default {
 .home {
   height: 100%;
   width: 100%;
+  min-width: 1150px;
+  min-height: 700px;
 }
 .home_header {
   width: 100%;
   height: 8%;
+  min-height: 55px;
   background: lightskyblue;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 }

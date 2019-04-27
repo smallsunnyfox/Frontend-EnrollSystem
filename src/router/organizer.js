@@ -39,6 +39,11 @@ const organizerRouter = {
       path: 'question',
       component: () => import('../views/organizer/question.vue'),
       name: 'question'
+    },
+    {
+      path: '404',
+      component: () => import('../views/organizer/404.vue'),
+      name: 'organizer404'
     }
   ]
 }

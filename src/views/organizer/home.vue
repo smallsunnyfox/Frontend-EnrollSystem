@@ -369,16 +369,14 @@ export default {
   methods: {
     // 动态改变面包屑
     handleMenuSelect (index, indexPath) {
-      if (index === '/organizer/console' || index === '提问栏') {
+      if (index === '/organizer/console' || index === '/organizer/signinList' || index === '/organizer/question') {
         this.$refs.contentnavi.close('活动管理')
         this.$refs.contentnavi.close('报名管理')
-        this.$refs.contentnavi.close('签到管理')
       }
     },
     closeOtherSubMenu () {
       this.$refs.contentnavi.close('活动管理')
       this.$refs.contentnavi.close('报名管理')
-      this.$refs.contentnavi.close('签到管理')
     },
     // 显示密码
     showPwd (val) {

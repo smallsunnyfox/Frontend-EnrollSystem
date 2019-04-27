@@ -157,7 +157,7 @@ export default {
   border-radius: 3px;
   background: rgba(102, 102, 153, 0.6);
   color: #fff;
-  min-width: 415px;
+  min-width: 582px;
 }
 .el-form {
   margin-right: 27%;

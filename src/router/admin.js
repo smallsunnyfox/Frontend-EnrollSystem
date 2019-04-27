@@ -29,6 +29,11 @@ const adminRouter = {
       path: 'auditor',
       component: () => import('../views/admin/audit/auditor.vue'),
       name: 'auditor'
+    },
+    {
+      path: '404',
+      component: () => import('../views/admin/404.vue'),
+      name: 'admin404'
     }
   ]
 }

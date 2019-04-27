@@ -18,7 +18,7 @@ export default {
   watch: {
     '$route': 'changeCurrentPath'
   },
-  created () {
+  mounted () {
     this.changeCurrentPath()
   },
   methods: {
