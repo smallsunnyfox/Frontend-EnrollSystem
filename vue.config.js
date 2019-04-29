@@ -58,6 +58,10 @@ module.exports = {
     })
   },
   chainWebpack (config) {
+    config.resolve.alias
+      .set('@', resolve('src'))
+      .set('@c', resolve('src/components'))
+      .set('@a', resolve('src/assets'))
     config
       .when(process.env.NODE_ENV === 'development',
         config => config.devtool('cheap-source-map')
