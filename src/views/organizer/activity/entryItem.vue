@@ -7,10 +7,19 @@
           <i class="el-icon-circle-plus-outline"></i> 新增报名项
         </el-button>
       </div>
-      <el-input placeholder="搜索报名项名称" ref="searchName" v-model="searchNameValue" style="width:30%;float:left;margin-bottom:10px;">
+      <el-input placeholder="输入报名项名称" ref="searchName" v-model="searchNameValue" style="width:30%;float:left;margin-bottom:10px;">
       </el-input>
+      <el-select v-model="searchTypeValue" ref="searchType" style="float:left;margin-left:10px;">
+        <el-option label="所有类型" value="所有类型"></el-option>
+        <el-option
+          v-for="item in typelist"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        ></el-option>
+      </el-select>
       <el-button-group style="float:left;margin-left:10px;">
-          <el-button type="primary" @click="searchItemByName">搜索</el-button>
+          <el-button type="primary" @click="searchItem">搜索</el-button>
           <el-button type="primary" @click="resetSearch">重置</el-button>
       </el-button-group>
       <el-table
@@ -302,7 +311,7 @@
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import { Select, Option, Loading, ButtonGroup, MessageBox, Switch, Alert, Tag, Message, Table, TableColumn, Pagination } from 'element-ui'
-import { addEntryItem, myEntryItems, searchItemByName, updateEntryItem, deleteEntryItem } from '../../../api/activity.js'
+import { addEntryItem, myEntryItems, searchItem, updateEntryItem, deleteEntryItem } from '@/api/activity.js'
 import { getName } from '../../../utils/auth.js'
 Vue.use(Select)
 Vue.use(Option)
@@ -327,8 +336,8 @@ export default {
       }
     }
     const validateReminder = (rule, value, callback) => {
-      if (value.length > 30) {
-        callback(new Error('报名项填写提示不能超过30个字符'))
+      if (value.length > 20) {
+        callback(new Error('报名项填写提示不能超过20个字符'))
       } else {
         callback()
       }
@@ -369,6 +378,7 @@ export default {
       inputUpdateOptionVisible: false, // 在更新Dialog控制报名项Dialog中的选项输入
       inputUpdateOptionValue: '', // 在更新Dialog新增选项的value
       searchNameValue: '', // 搜索框绑定的值
+      searchTypeValue: '所有类型',
       typelist: [// 选择类型下拉框中的值
         { value: 'input', label: '输入框' },
         { value: 'textarea', label: '文本域' },
@@ -432,14 +442,14 @@ export default {
     initList () {
       setTimeout(() => {
         myEntryItems(getName())
-        .then(response => {
-          this.myEntryItemList = response.data
-          this.itemnumber = this.myEntryItemList.length
-          console.log('获取报名项列表成功')
-        }).catch(error => {
-          console.log(error)
-          console.log('获取报名项列表失败')
-        })
+          .then(response => {
+            this.myEntryItemList = response.data
+            this.itemnumber = this.myEntryItemList.length
+            console.log('获取报名项列表成功')
+          }).catch(error => {
+            console.log(error)
+            console.log('获取报名项列表失败')
+          })
         this.loading = false
       }, 600)
     },
@@ -525,9 +535,9 @@ export default {
       })
     },
     // 根据名称从后台搜索
-    searchItemByName () {
+    searchItem () {
       if (this.searchNameValue !== '') {
-        searchItemByName(this.searchNameValue, this.name)
+        searchItem(this.searchNameValue, this.name, this.searchTypeValue)
           .then(response => {
             if (response.data.length === 0) {
               Message({
@@ -555,6 +565,7 @@ export default {
     // 重置搜索
     resetSearch () {
       this.searchNameValue = ''
+      this.searchTypeValue = ''
       this.initList()
     },
     // 调出更新的Dialog
@@ -583,23 +594,23 @@ export default {
         type: 'warning'
       }).then(() => {
         deleteEntryItem(id)
-        .then(response => {
-          if (response.data.status === 'deleteSuccess') {
+          .then(response => {
+            if (response.data.status === 'deleteSuccess') {
+              Message({
+                showClose: true,
+                message: '删除报名项成功！',
+                type: 'success'
+              })
+              this.initList()
+            }
+          }).catch(error => {
             Message({
               showClose: true,
-              message: '删除报名项成功！',
-              type: 'success'
+              message: '系统被外星人袭击了，请再次尝试删除！',
+              type: 'warning'
             })
-            this.initList()
-          }
-        }).catch(error => {
-          Message({
-            showClose: true,
-            message: '系统被外星人袭击了，请再次尝试删除！',
-            type: 'warning'
+            console.log(error)
           })
-          console.log(error)
-        })
       }).catch(() => {
         Message({
           showClose: true,
@@ -667,7 +678,7 @@ export default {
                 type: 'warning'
               })
               console.log(error)
-            });
+            })
         } else {
           console.log('error submit!!')
           return false

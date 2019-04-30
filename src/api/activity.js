@@ -36,13 +36,14 @@ export function systemEntryItems () {
   })
 }
 
-export function searchItemByName (name, creator) {
+export function searchItem (name, creator, type) {
   let postData = qs.stringify({
     name: name,
-    creator: creator
+    creator: creator,
+    type: type
   })
   return request({
-    url: '/entryitem/searchItemByName',
+    url: '/entryitem/searchItem',
     method: 'post',
     data: postData
   })
