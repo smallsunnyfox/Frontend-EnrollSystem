@@ -26,8 +26,7 @@
 </template>
 
 <script>
-import { Message } from 'element-ui'
-import loginBox from '../../components/loginBox'
+import loginBox from '@c/loginBox'
 export default {
   name: 'login',
   data () {

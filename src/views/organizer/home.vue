@@ -166,7 +166,7 @@
 import Vue from 'vue'
 import { Dialog, Menu, Form, Submenu, MenuItem, MessageBox, Message, MenuItemGroup } from 'element-ui'
 import { mapGetters } from 'vuex'
-import breadcrumb from '../../components/breadcrumb.vue'
+import breadcrumb from '@c/breadcrumb.vue'
 Vue.use(Menu)
 Vue.use(Submenu)
 Vue.use(MenuItem)

@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import loginBox from '../../components/loginBox'
+import loginBox from '@c/loginBox'
 export default {
   name: 'login',
   data () {
