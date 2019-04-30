@@ -249,13 +249,13 @@
         </el-form-item>
         <el-form-item label="报名填写项">
           <el-popover v-model="systemEntryItemPopover" placement="right" trigger="click" style="float:left;margin-right:10px;">
-            <el-table :data="systemEntryItems" stripe @row-click="selectSystemEntryItem">
+            <el-table height="380" :data="systemEntryItems" stripe @row-click="selectSystemEntryItem">
               <el-table-column prop="name" label="报名项名称" align="center" width="160"></el-table-column>
             </el-table>
             <el-button slot="reference">添加系统报名项</el-button>
           </el-popover>
           <el-popover v-model="myEntryItemPopover" placement="right" trigger="click" style="float:left;">
-            <el-table :data="myEntryItems" stripe @row-click="selectMyEntryItem">
+            <el-table height="380" :data="myEntryItems" stripe @row-click="selectMyEntryItem">
               <el-table-column prop="name" label="报名项名称" align="center" width="160"></el-table-column>
             </el-table>
             <el-button slot="reference">添加我的报名项</el-button>
@@ -336,13 +336,13 @@
         </el-form-item>
         <el-form-item label="报名填写项">
           <el-popover v-model="usystemEntryItemPopover" placement="right" trigger="click" style="float:left;margin-right:10px;">
-            <el-table :data="systemEntryItems" stripe @row-click="uselectSystemEntryItem">
+            <el-table height="380" :data="systemEntryItems" stripe @row-click="uselectSystemEntryItem">
               <el-table-column prop="name" label="报名项名称" align="center" width="160"></el-table-column>
             </el-table>
             <el-button slot="reference">添加系统报名项</el-button>
           </el-popover>
           <el-popover v-model="umyEntryItemPopover" placement="right" trigger="click" style="float:left;">
-            <el-table :data="myEntryItems" stripe @row-click="uselectMyEntryItem">
+            <el-table height="380" :data="myEntryItems" stripe @row-click="uselectMyEntryItem">
               <el-table-column prop="name" label="报名项名称" align="center" width="160"></el-table-column>
             </el-table>
             <el-button slot="reference">添加我的报名项</el-button>
