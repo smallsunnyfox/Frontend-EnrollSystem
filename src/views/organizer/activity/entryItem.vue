@@ -7,17 +7,17 @@
           <i class="el-icon-circle-plus-outline"></i> 新增报名项
         </el-button>
       </div>
-      <el-input placeholder="输入报名项名称" ref="searchName" v-model="searchNameValue" style="width:30%;float:left;margin-bottom:10px;">
+      <el-input placeholder="输入报名项名称" ref="searchName" v-model="searchNameValue" style="width:40%;float:left;margin-bottom:10px;">
+        <el-select v-model="searchTypeValue" ref="searchType" slot="prepend" style="width:120px;">
+          <el-option label="所有类型" value="所有类型"></el-option>
+          <el-option
+            v-for="item in typelist"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
       </el-input>
-      <el-select v-model="searchTypeValue" ref="searchType" style="float:left;margin-left:10px;">
-        <el-option label="所有类型" value="所有类型"></el-option>
-        <el-option
-          v-for="item in typelist"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        ></el-option>
-      </el-select>
       <el-button-group style="float:left;margin-left:10px;">
           <el-button type="primary" @click="searchItem">搜索</el-button>
           <el-button type="primary" @click="resetSearch">重置</el-button>
@@ -565,7 +565,8 @@ export default {
     // 重置搜索
     resetSearch () {
       this.searchNameValue = ''
-      this.searchTypeValue = ''
+      this.searchTypeValue = '所有类型'
+      this.loading = true
       this.initList()
     },
     // 调出更新的Dialog

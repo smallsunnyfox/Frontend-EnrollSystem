@@ -65,7 +65,7 @@
             </el-table-column>
             <el-table-column label="操作" align="center" width="245">
               <template slot-scope="scope">
-                <el-button v-if="scope.row.isapproved!=='tobeaudit'" size="mini">重新审核</el-button>
+                <el-button v-if="scope.row.isapproved!=='tobeaudit'" size="mini" @click="reauditActivity(scope.row.id)">重新审核</el-button>
                 <el-button size="mini" @click="updateActivity(scope.row)">编辑</el-button>
                 <el-button size="mini" type="danger" @click="deleteActivity(scope.row.id)">删除</el-button>
               </template>
@@ -381,6 +381,7 @@
         <el-button type="primary" @click="submitUpdateActivityForm">确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 预览报名表单的Dialog -->
     <el-dialog :visible.sync="previewEntryformDialog" width="50%" top="55px">
       <!-- title -->
       <div slot="title" class="dialog-title"><i class="el-icon-tickets"></i>表单预览</div>
@@ -390,16 +391,18 @@
           <el-input disabled v-if="item.type === 'input'"></el-input>
           <el-input disabled v-else-if="item.type === 'textarea'" type="textarea"></el-input>
           <el-input disabled v-else-if="item.type === 'inputnumber'" type="number"></el-input>
-          <el-radio-group disabled v-else-if="item.type === 'radio'" :value="item.options.split(',')[0]" style="float:left;margin-top:15px;">
+          <el-radio-group disabled v-else-if="item.type === 'radio'" :value="item.options.split(',')[0]" style="float:left;margin-top:13px;">
             <el-radio v-for="option in item.options.split(',')" :key="option" :label="option">{{option}}</el-radio>
           </el-radio-group>
-          <el-checkbox-group disabled v-else-if="item.type === 'checkbox'" :value="[]" style="float:left;">
+          <el-checkbox-group disabled v-else-if="item.type === 'checkbox'" :value="[]" style="float:left;height:40px;">
             <el-checkbox v-for="option in item.options.split(',')" :key="option" :label="option">{{option}}</el-checkbox>
           </el-checkbox-group>
           <el-date-picker style="float:left;" disabled v-else-if="item.type === 'datepicker'" :placeholder="'选择'+item.name"></el-date-picker>
           <el-select :value="''" style="float:left;" v-else-if="item.type === 'select'" placeholder="请选择">
-            <el-option disabled v-for="option in item.options.split(',')" :key="option" :label="option"></el-option>
+            <el-option disabled v-for="option in item.options.split(',')" :key="option" :label="option" :value="option"></el-option>
           </el-select>
+          <br v-if="item.reminder!=='' && item.reminder!==null">
+          <span v-if="item.reminder!=='' && item.reminder!==null" style="font-size:12px;color:gray;float:left;">填写提示：{{item.reminder}}</span>
         </el-form-item>
       </el-form>
       <!-- footer -->
@@ -617,6 +620,7 @@ export default {
     SlickList
   },
   methods: {
+    // 初始化表格中的数据
     initActivity () {
       setTimeout(() => {
         this.getUnauditActivities()
@@ -625,16 +629,18 @@ export default {
         this.loading1 = false
       }, 600)
     },
+    // 获取审核中活动的list
     getUnauditActivities () {
       getUnauditActivities(getName())
         .then(response => {
           this.unauditActivities = response.data
-          console.log('获取未审核活动成功')
+          console.log('获取审核中活动成功')
         }).catch(error => {
           console.log(error)
-          console.log('获取未审核活动失败')
+          console.log('获取审核中活动失败')
         })
     },
+    // 获取未完成活动的list
     getUnfinishedActivities () {
       getUnfinishedActivities(getName())
         .then(response => {
@@ -645,6 +651,7 @@ export default {
           console.log('获取已完成活动失败')
         })
     },
+    // 获取已完成活动的list
     getFinishedActivities () {
       getFinishedActivities(getName())
         .then(response => {
@@ -655,6 +662,7 @@ export default {
           console.log('获取未完成活动失败')
         })
     },
+    // 对分页页码的处理
     handleCurrentChange1: function (currentpage1) {
       this.currentpage1 = currentpage1
     },
@@ -860,6 +868,7 @@ export default {
         }
       })
     },
+    // 删除活动
     deleteActivity (id) {
       MessageBox.confirm('确认要删除吗？', '提示', {
         confirmButtonText: '确定',
@@ -921,6 +930,7 @@ export default {
         this.$refs.searchNameValue1.focus()
       }
     },
+    // 审核中活动的查询重置
     resetSearch1 () {
       this.searchNameValue1 = ''
       this.getUnauditActivities()
@@ -952,6 +962,7 @@ export default {
         this.$refs.searchNameValue2.focus()
       }
     },
+    // 未完成活动的查询重置
     resetSearch2 () {
       this.searchNameValue2 = ''
       this.getUnfinishedActivities()
@@ -983,10 +994,12 @@ export default {
         this.$refs.searchNameValue3.focus()
       }
     },
+    // 已完成活动的查询重置
     resetSearch3 () {
       this.searchNameValue3 = ''
       this.getFinishedActivities()
     },
+    // 预览报名表单调用的方法
     previewEntryform (entryform) {
       console.log(entryform)
       const loading = this.$loading({
@@ -1005,6 +1018,10 @@ export default {
             console.log(error)
           })
       }, 600)
+    },
+    // 重新审核调用的方法
+    reauditActivity (id) {
+
     }
   }
 }
