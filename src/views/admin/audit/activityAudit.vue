@@ -219,7 +219,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        passActivity (id)
+        passActivity(id)
           .then(response => {
             if (response.data.status === 'passSuccess') {
               Message({
@@ -258,7 +258,7 @@ export default {
         inputValidator: inputValidate,
         inputType: 'textarea'
       }).then(({ value }) => {
-        unpassActivity (id,value)
+        unpassActivity(id, value)
           .then(response => {
             if (response.data.status === 'unpassSuccess') {
               Message({
@@ -270,7 +270,7 @@ export default {
               this.getUnauditActivities()
             }
           }).catch(error => {
-
+            console.log(error)
           })
       }).catch(() => {
         Message({
