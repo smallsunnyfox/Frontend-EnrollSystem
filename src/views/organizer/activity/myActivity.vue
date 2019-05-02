@@ -418,7 +418,7 @@ import Vue from 'vue'
 import { SlickList, SlickItem } from 'vue-slicksort'
 import { mapGetters } from 'vuex'
 import { getName } from '../../../utils/auth.js'
-import { myEntryItems, systemEntryItems, addActivity, searchUnauditActivities, searchUnfinishedActivities, searchFinishedActivities, updateActivity, deleteActivity, getUnauditActivities, getUnfinishedActivities, getFinishedActivities, getEntryItemsOfActivity } from '../../../api/activity.js'
+import { myEntryItems, systemEntryItems, addActivity, searchUnauditActivities, searchUnfinishedActivities, searchFinishedActivities, updateActivity, deleteActivity, getUnauditActivities, getUnfinishedActivities, getFinishedActivities, getEntryItemsOfActivity, reauditActivity } from '../../../api/activity.js'
 import { Tabs, TabPane, Radio, Checkbox, CheckboxGroup, Tooltip, RadioGroup, Popover, Select, DatePicker, TimePicker, Option, Loading, ButtonGroup, MessageBox, Switch, Alert, Message, Table, TableColumn, Pagination } from 'element-ui'
 Vue.use(Radio)
 Vue.use(RadioGroup)
@@ -626,7 +626,6 @@ export default {
         this.getUnauditActivities()
         this.getUnfinishedActivities()
         this.getFinishedActivities()
-        this.loading1 = false
       }, 600)
     },
     // 获取审核中活动的list
@@ -635,6 +634,7 @@ export default {
         .then(response => {
           this.unauditActivities = response.data
           console.log('获取审核中活动成功')
+          this.loading1 = false
         }).catch(error => {
           console.log(error)
           console.log('获取审核中活动失败')
@@ -1021,7 +1021,22 @@ export default {
     },
     // 重新审核调用的方法
     reauditActivity (id) {
-
+      reauditActivity(id)
+        .then(response => {
+          if (response.data.status === 'reauditSuccess') {
+            Message({
+              showClose: true,
+              type: 'success',
+              message: '申请成功'
+            })
+            this.loading1 = true
+            setTimeout(() => {
+              this.getUnauditActivities()
+            }, 300)
+          }
+        }).catch(error => {
+          console.log(error)
+        })
     }
   }
 }

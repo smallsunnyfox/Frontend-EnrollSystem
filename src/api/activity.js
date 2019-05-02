@@ -236,3 +236,14 @@ export function unpassActivity (id, reason) {
     data: postData
   })
 }
+// 重新审核
+export function reauditActivity (id) {
+  let postData = qs.stringify({
+    id: id
+  })
+  return request({
+    url: '/activity/reauditActivity',
+    method: 'post',
+    data: postData
+  })
+}
