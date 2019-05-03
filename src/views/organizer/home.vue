@@ -8,10 +8,21 @@
         <div class="nav_console_text">活动组织控制台</div>
       </div>
       <div class="home_header_breadcrumb">
-        <breadcrumb @close-submenu="closeOtherSubMenu"></breadcrumb>
+        <breadcrumb></breadcrumb>
       </div>
       <!-- 用户中心 -->
+      <!-- eslint-disable -->
       <div class="home_header_usercenter">
+        <el-popover trigger="click" placement="bottom" width="500">
+          <el-alert v-if="myNotification.length===0" title="暂无未读消息" type="info" show-icon :closable="false" style="margin-bottom:5px;"></el-alert>
+          <el-alert v-else v-for="noti in myNotification" :key="noti.id" :title="'来自管理员 '+noti.sender+' 的未读消息 --- '+noti.createtime" :description="noti.content" type="error" close-text="知道了" @close="messageHasread(noti.id)" style="margin-bottom:5px;"></el-alert>
+          <el-alert v-if="isShowHasreadNoti===true" v-for="noti in myHasreadNoti" :key="noti.id" :title="'来自管理员 '+noti.sender+' 的已读消息 --- '+noti.createtime" :description="noti.content" type="info" close-text="删除" @close="deleteHasreadNoti(noti.id)" style="margin-bottom:5px;"></el-alert>
+          <el-button v-if="!isShowHasreadNoti" type="text" size="mini" @click="isShowHasreadNoti=true"><i class="el-icon-bell"></i>显示已读消息</el-button>
+          <el-button v-if="isShowHasreadNoti" type="text" size="mini" @click="isShowHasreadNoti=false"><i class="el-icon-close-notification"></i>隐藏已读消息</el-button>
+          <el-badge :value="myNotification.length===0 ? '': myNotification.length" style="margin-right:20px;" slot="reference">
+            <el-button icon="el-icon-message-solid" type="primary" size="mini" circle></el-button>
+          </el-badge>
+        </el-popover>
         <el-dropdown :hide-on-click="true" style="margin:18px 8px 0 0;">
           <span style="cursor:pointer;">
             <ricon name="user" scale="0.7"></ricon> {{name}}<i class="el-icon-arrow-down el-icon--right"></i>
@@ -23,6 +34,7 @@
           </el-dropdown-menu>
         </el-dropdown>
       </div>
+      <!-- eslint-enable -->
     </div>
     <!-- organizer首页内容 -->
     <div class="home_content">
@@ -37,33 +49,23 @@
           active-text-color="#ccffff"
           :default-active="$route.path"
           router
-          unique-opened
-          @select="handleMenuSelect"
         >
           <el-menu-item index="/organizer/console" style="border-top: 1px solid #fff;">
             <i class="el-icon-orange" style="color:black;"></i>
             <span slot="title">控制台</span>
           </el-menu-item>
-          <el-submenu index="活动管理">
-            <template slot="title">
-              <i class="el-icon-document" style="color:black;"></i>
-              <span>活动管理</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="/organizer/myActivity">我的活动</el-menu-item>
-              <el-menu-item index="/organizer/entryItem">自定义报名项</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-          <el-submenu index="报名管理">
-            <template slot="title">
-              <i class="el-icon-document-add" style="color:black;"></i>
-              <span>报名管理</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="/organizer/signupList">报名名单</el-menu-item>
-              <el-menu-item index="/organizer/signupAudit">报名审核</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
+          <el-menu-item index="/organizer/myActivity" >
+            <i class="el-icon-document-copy" style="color:black;"></i>
+            <span slot="title">我的活动</span>
+          </el-menu-item>
+          <el-menu-item index="/organizer/entryItem" >
+            <i class="el-icon-document" style="color:black;"></i>
+            <span slot="title">自定义报名项</span>
+          </el-menu-item>
+          <el-menu-item index="/organizer/signupAudit" >
+            <i class="el-icon-document-add" style="color:black;"></i>
+            <span slot="title">报名审核</span>
+          </el-menu-item>
           <el-menu-item index="/organizer/signinList" >
             <i class="el-icon-document-checked" style="color:black;"></i>
             <span slot="title">签到管理</span>
@@ -164,15 +166,20 @@
 
 <script>
 import Vue from 'vue'
-import { Dialog, Menu, Form, Submenu, MenuItem, MessageBox, Message, MenuItemGroup } from 'element-ui'
+import { Dialog, Menu, Form, Submenu, MenuItem, MessageBox, Message, MenuItemGroup, Badge, Popover, Alert } from 'element-ui'
 import { mapGetters } from 'vuex'
 import breadcrumb from '@c/breadcrumb.vue'
+import { getNotiofOrganizer, readNotification, getHasreadNoti, deleteHasreadNoti } from '@/api/notification.js'
+import { getName } from '@/utils/auth.js'
 Vue.use(Menu)
 Vue.use(Submenu)
 Vue.use(MenuItem)
 Vue.use(MenuItemGroup)
 Vue.use(Dialog)
 Vue.use(Form)
+Vue.use(Popover)
+Vue.use(Badge)
+Vue.use(Alert)
 export default {
   name: 'home',
   data () {
@@ -292,6 +299,9 @@ export default {
       }
     }
     return {
+      isShowHasreadNoti: false,
+      myHasreadNoti: [],
+      myNotification: [],
       passwordType: 'password',
       passwordType2: 'password',
       passwordType3: 'password',
@@ -365,19 +375,10 @@ export default {
       .catch(error => {
         console.log(error)
       })
+    this.getNotiofOrganizer()
+    this.getHasreadNoti()
   },
   methods: {
-    // 动态改变面包屑
-    handleMenuSelect (index, indexPath) {
-      if (index === '/organizer/console' || index === '/organizer/signinList' || index === '/organizer/question') {
-        this.$refs.contentnavi.close('活动管理')
-        this.$refs.contentnavi.close('报名管理')
-      }
-    },
-    closeOtherSubMenu () {
-      this.$refs.contentnavi.close('活动管理')
-      this.$refs.contentnavi.close('报名管理')
-    },
     // 显示密码
     showPwd (val) {
       if (val === 1) {
@@ -574,6 +575,49 @@ export default {
           message: '已取消退出'
         })
       })
+    },
+    // 获取未读消息
+    getNotiofOrganizer () {
+      getNotiofOrganizer(getName())
+        .then(response => {
+          this.myNotification = response.data
+        }).catch(error => {
+          console.log(error)
+        })
+    },
+    // 获取已读消息
+    getHasreadNoti () {
+      getHasreadNoti(getName())
+        .then(response => {
+          this.myHasreadNoti = response.data
+        }).catch(error => {
+          console.log(error)
+        })
+    },
+    // 删除已读消息
+    deleteHasreadNoti (id) {
+      deleteHasreadNoti(id)
+        .then(response => {
+          if (response.data.status === 'deleteSuccess') {
+            this.getHasreadNoti()
+          }
+        }).catch(error => {
+          console.log(error)
+        })
+    },
+    // 消息已读
+    messageHasread (id) {
+      readNotification(id)
+        .then(response => {
+          if (response.data.status === 'readSuccess') {
+            this.getNotiofOrganizer()
+            this.getHasreadNoti()
+          } else {
+            console.log('readError')
+          }
+        }).catch(error => {
+          console.log(error)
+        })
     }
   }
 }
@@ -627,7 +671,7 @@ export default {
 }
 .home_header_usercenter {
   height: 100%;
-  width: 150px;
+  width: 240px;
   float: right;
   font-size: 16px;
 }
