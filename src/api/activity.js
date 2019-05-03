@@ -87,7 +87,8 @@ export function addActivity (form) {
     site: form.site,
     detail: form.detail,
     entryform: form.entryform,
-    length: form.entryform.length
+    length: form.entryform.length,
+    isneedaudit: form.isneedaudit
   })
   return request({
     url: '/activity/addActivity',
@@ -158,7 +159,8 @@ export function updateActivity (form) {
     site: form.usite,
     detail: form.udetail,
     entryform: form.uentryform,
-    length: form.uentryform.length
+    length: form.uentryform.length,
+    isneedaudit: form.uisneedaudit
   })
   return request({
     url: '/activity/updateActivity',
