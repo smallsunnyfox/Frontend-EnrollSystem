@@ -58,9 +58,9 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column label="报名表单" align="center" width="100">
+            <el-table-column label="报名表单" align="center" width="80">
               <template slot-scope="scope">
-                <el-button size="mini" @click="previewEntryform(scope.row.entryform)">预览表单</el-button>
+                <el-button size="mini" @click="previewEntryform(scope.row.entryform)">预览</el-button>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center" width="245">
@@ -81,7 +81,7 @@
           >
           </el-pagination>
         </el-tab-pane>
-        <el-tab-pane label="未完成活动" name="second">
+        <el-tab-pane label="未归档活动" name="second">
           <el-input placeholder="搜索活动名称" v-model="searchNameValue2" ref="searchNameValue2" style="width:30%;float:left;margin-bottom:10px;">
           </el-input>
           <el-button-group style="float:left;margin-left:10px;">
@@ -121,14 +121,25 @@
             </el-table-column>
             <el-table-column prop="name" label="活动名称" width="310"></el-table-column>
             <el-table-column prop="organization" label="所属组织"></el-table-column>
-            <el-table-column label="报名表单" align="center" width="100">
+            <el-table-column label="活动状态" align="center" width="160">
               <template slot-scope="scope">
-                <el-button size="mini" @click="previewEntryform(scope.row.entryform)">预览表单</el-button>
+                <span>{{ getActivityStatus(scope.row) }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="报名名单" width="80">
+              <el-button size="mini" >查看</el-button>
+            </el-table-column>
+            <el-table-column label="签到名单" width="80">
+              <el-button size="mini" >查看</el-button>
+            </el-table-column>
+            <el-table-column label="报名表单" align="center" width="80">
+              <template slot-scope="scope">
+                <el-button size="mini" @click="previewEntryform(scope.row.entryform)">预览</el-button>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center" width="150">
               <template slot-scope="scope">
-                <el-button size="mini" @click="updateActivity(scope.row)">编辑</el-button>
+                <el-button size="mini" >归档</el-button>
                 <el-button size="mini" type="danger" @click="deleteActivity(scope.row.id)">删除</el-button>
               </template>
             </el-table-column>
@@ -143,7 +154,7 @@
           >
           </el-pagination>
         </el-tab-pane>
-        <el-tab-pane label="已完成活动" name="third">
+        <el-tab-pane label="已归档活动" name="third">
           <el-input placeholder="搜索活动名称" v-model="searchNameValue3" ref="searchNameValue3" style="width:30%;float:left;margin-bottom:10px;">
           </el-input>
           <el-button-group style="float:left;margin-left:10px;">
@@ -183,14 +194,19 @@
             </el-table-column>
             <el-table-column prop="name" label="活动名称" width="310"></el-table-column>
             <el-table-column prop="organization" label="所属组织"></el-table-column>
-            <el-table-column label="报名表单" align="center" width="100">
+            <el-table-column label="报名名单" width="80">
+              <el-button size="mini" >查看</el-button>
+            </el-table-column>
+            <el-table-column label="签到名单" width="80">
+              <el-button size="mini" >查看</el-button>
+            </el-table-column>
+            <el-table-column label="报名表单" align="center" width="80">
               <template slot-scope="scope">
-                <el-button size="mini" @click="previewEntryform(scope.row.entryform)">预览表单</el-button>
+                <el-button size="mini" @click="previewEntryform(scope.row.entryform)">预览</el-button>
               </template>
             </el-table-column>
-            <el-table-column label="操作" align="center" width="150">
+            <el-table-column label="操作" align="center" width="80">
               <template slot-scope="scope">
-                <el-button size="mini" @click="updateActivity(scope.row)">编辑</el-button>
                 <el-button size="mini" type="danger" @click="deleteActivity(scope.row.id)">删除</el-button>
               </template>
             </el-table-column>
@@ -246,6 +262,16 @@
         </el-form-item>
         <el-form-item label="活动详情" prop="detail">
           <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 6 }" v-model="addActivityForm.detail"></el-input>
+        </el-form-item>
+        <el-form-item label="是否需要审核">
+          <el-switch
+            v-model="addActivityForm.isneedAudit"
+            active-color="#409eff"
+            inactive-color="#dcdfe6"
+            style="float:left; margin-top:12px;"
+            width="50"
+          >
+          </el-switch>
         </el-form-item>
         <el-form-item label="报名填写项">
           <el-popover v-model="systemEntryItemPopover" placement="right" trigger="click" style="float:left;margin-right:10px;">
@@ -333,6 +359,16 @@
         </el-form-item>
         <el-form-item label="活动详情" prop="udetail">
           <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 6 }" v-model="updateActivityForm.udetail"></el-input>
+        </el-form-item>
+        <el-form-item label="是否需要审核">
+          <el-switch
+            v-model="updateActivityForm.uisneedaudit"
+            active-color="#409eff"
+            inactive-color="#dcdfe6"
+            style="float:left; margin-top:12px;"
+            width="50"
+          >
+          </el-switch>
         </el-form-item>
         <el-form-item label="报名填写项">
           <el-popover v-model="usystemEntryItemPopover" placement="right" trigger="click" style="float:left;margin-right:10px;">
@@ -562,7 +598,8 @@ export default {
         deadline: '',
         site: '',
         detail: '',
-        entryform: []
+        entryform: [],
+        isneedaudit: false
       },
       addActivityRules: {// 添加活动的验证规则
         name: [{ required: true, trigger: 'blur', validator: validateName }],
@@ -582,7 +619,8 @@ export default {
         udeadline: '',
         usite: '',
         udetail: '',
-        uentryform: []
+        uentryform: [],
+        uisneedaudit: false
       },
       updateActivityRules: {// 更新活动的验证规则
         uname: [{ required: true, trigger: 'blur', validator: validateName }],
@@ -813,6 +851,7 @@ export default {
       this.updateActivityForm.uorganization = row.organization
       this.updateActivityForm.usite = row.site
       this.updateActivityForm.udetail = row.detail
+      this.updateActivityForm.uisneedaudit = row.isneedaudit === 'false' ? false : true
       var d1 = new Date(Date.parse(row.starttime.replace(/-/g, '/')))
       var d2 = new Date(Date.parse(row.endtime.replace(/-/g, '/')))
       var d3 = new Date(Date.parse(row.deadline.replace(/-/g, '/')))
@@ -1037,6 +1076,23 @@ export default {
         }).catch(error => {
           console.log(error)
         })
+    },
+    getActivityStatus (row) {
+      var today = new Date()
+      var d1 = new Date(Date.parse(row.starttime.replace(/-/g, '/')))
+      var d2 = new Date(Date.parse(row.endtime.replace(/-/g, '/')))
+      var d3 = new Date(Date.parse(row.deadline.replace(/-/g, '/')))
+      if (today < d3) {
+        return '报名中'
+      } else if (d3 <= today < d1) {
+        return '报名截止，活动未开始'
+      } else if (d1 <= today <= d2) {
+        return '活动进行中'
+      } else if (d2 < today) {
+        return '活动结束'
+      } else {
+        return 'error'
+      }
     }
   }
 }
