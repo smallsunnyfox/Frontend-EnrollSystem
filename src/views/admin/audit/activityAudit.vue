@@ -107,7 +107,9 @@
 
 <script>
 import Vue from 'vue'
+import { getName } from '@/utils/auth.js'
 import { getAllUnauditActivities, getEntryItemsOfActivity, searchUnauditActivities, passActivity, unpassActivity } from '@/api/activity.js'
+import { notiPassActivity, notiUnpassActivity } from '@/api/notification.js'
 import { Radio, RadioGroup, Checkbox, CheckboxGroup, DatePicker, MessageBox, Message, TimePicker, Select, Option, ButtonGroup, Table, TableColumn, Loading, Pagination } from 'element-ui'
 Vue.use(Radio)
 Vue.use(RadioGroup)
@@ -227,6 +229,16 @@ export default {
                 type: 'success',
                 message: '操作成功'
               })
+              notiPassActivity(id, getName())
+                .then(response => {
+                  if (response.data.status === 'addNotiSuccess') {
+                    console.log('添加通知成功')
+                  } else {
+                    console.log('添加通知失败')
+                  }
+                }).catch(error => {
+                  console.log(error)
+                })
               this.loading = true
               this.getUnauditActivities()
             }
@@ -266,6 +278,16 @@ export default {
                 type: 'success',
                 message: '操作成功'
               })
+              notiUnpassActivity(id, value, getName())
+                .then(response => {
+                  if (response.data.status === 'addNotiSuccess') {
+                    console.log('添加通知成功')
+                  } else {
+                    console.log('添加通知失败')
+                  }
+                }).catch(error => {
+                  console.log(error)
+                })
               this.loading = true
               this.getUnauditActivities()
             }
