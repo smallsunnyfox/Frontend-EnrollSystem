@@ -25,11 +25,6 @@ const organizerRouter = {
       component: () => import('../views/organizer/signup/signupAudit.vue'),
       name: 'signupAudit'
     },
-    {// 报名名单
-      path: 'signupList',
-      component: () => import('../views/organizer/signup/signupList.vue'),
-      name: 'signupList'
-    },
     {// 签到管理
       path: 'signinList',
       component: () => import('../views/organizer/signin/signinList.vue'),

@@ -26,20 +26,16 @@ export default {
     changeCurrentPath () {
       if (this.$route.path === '/organizer/console') {
         this.currentPath = ['首页']
-        this.$emit('close-submenu')
       } else if (this.$route.path === '/organizer/myActivity') {
-        this.currentPath = ['活动管理', '我的活动']
+        this.currentPath = ['我的活动']
       } else if (this.$route.path === '/organizer/entryItem') {
-        this.currentPath = ['活动管理', '自定义报名项']
-      } else if (this.$route.path === '/organizer/signupList') {
-        this.currentPath = ['报名管理', '报名名单']
+        this.currentPath = ['自定义报名项']
       } else if (this.$route.path === '/organizer/signupAudit') {
-        this.currentPath = ['报名管理', '报名审核']
+        this.currentPath = ['报名审核']
       } else if (this.$route.path === '/organizer/signinList') {
         this.currentPath = ['签到管理']
       } else if (this.$route.path === '/organizer/question') {
         this.currentPath = ['提问栏']
-        this.$emit('close-submenu')
       }
     }
   }
