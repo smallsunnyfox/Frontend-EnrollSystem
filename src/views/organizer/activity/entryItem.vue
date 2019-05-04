@@ -77,6 +77,7 @@
       >
       </el-pagination>
     </el-card>
+    <br><br><br>
     <!-- 新增报名项的dialog -->
     <el-dialog :visible.sync="addEntryItemDialog" width="50%" top="55px">
       <!-- title -->
@@ -369,7 +370,7 @@ export default {
       loading: true,
       currentPage: 1, // 当前页码
       itemnumber: 0, // 总数据数
-      itempagesize: 7, // 每页数据数
+      itempagesize: 10, // 每页数据数
       switchwidth: 50, // switch控件的宽度
       addEntryItemDialog: false, // 控制添加报名项Dialog的显示
       updateEntryItemDialog: false, // 控制更新报名项Dialog的显示

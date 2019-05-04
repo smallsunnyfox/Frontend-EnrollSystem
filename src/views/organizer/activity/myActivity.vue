@@ -265,11 +265,11 @@
         </el-form-item>
         <el-form-item label="是否需要审核">
           <el-switch
-            v-model="addActivityForm.isneedAudit"
+            v-model="addActivityForm.isneedaudit"
             active-color="#409eff"
             inactive-color="#dcdfe6"
             style="float:left; margin-top:12px;"
-            width="50"
+            :width="selectWidth"
           >
           </el-switch>
         </el-form-item>
@@ -573,6 +573,7 @@ export default {
       }
     }
     return {
+      selectWidth: 50,
       activeName: 'first', // 当前激活的Tab页
       unauditActivities: [], // 待审核的活动list
       pagesize1: 6,
@@ -851,7 +852,7 @@ export default {
       this.updateActivityForm.uorganization = row.organization
       this.updateActivityForm.usite = row.site
       this.updateActivityForm.udetail = row.detail
-      this.updateActivityForm.uisneedaudit = row.isneedaudit === 'false' ? false : true
+      this.updateActivityForm.uisneedaudit = row.isneedaudit === 'true'
       var d1 = new Date(Date.parse(row.starttime.replace(/-/g, '/')))
       var d2 = new Date(Date.parse(row.endtime.replace(/-/g, '/')))
       var d3 = new Date(Date.parse(row.deadline.replace(/-/g, '/')))
@@ -1083,7 +1084,7 @@ export default {
       var d2 = new Date(Date.parse(row.endtime.replace(/-/g, '/')))
       var d3 = new Date(Date.parse(row.deadline.replace(/-/g, '/')))
       if (today < d3) {
-        return '报名中'
+        return '报名进行中'
       } else if (d3 <= today < d1) {
         return '报名截止，活动未开始'
       } else if (d1 <= today <= d2) {
