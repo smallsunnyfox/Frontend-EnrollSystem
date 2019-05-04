@@ -249,3 +249,22 @@ export function reauditActivity (id) {
     data: postData
   })
 }
+// 获取所有可报名的活动
+export function getCouldSignupActivity () {
+  return request({
+    url: '/activity/getCouldSignupActivity',
+    method: 'get'
+  })
+}
+// 查询可报名活动
+export function searchCouldSignupActivity (select, value) {
+  let postData = qs.stringify({
+    select: select,
+    value: value
+  })
+  return request({
+    url: '/activity/searchCouldSignupActivity',
+    method: 'post',
+    data: postData
+  })
+}
