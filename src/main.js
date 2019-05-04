@@ -5,6 +5,8 @@ import store from './store/index' // vuex 核心仓库
 import './plugins/element.js' // element-ui
 import 'lib-flexible' // 移动端适配工具
 import './permission' // permission control
+import vuescroll from 'vuescroll/dist/vuescroll-native' // 引入滚动条
+import 'vuescroll/dist/vuescroll.css' // 引入滚动条css
 // vue-awesome
 import 'vue-awesome/icons/regular/eye.js'
 import 'vue-awesome/icons/eye-slash'
@@ -16,7 +18,7 @@ import 'vue-awesome/icons/lock'
 import Icon from 'vue-awesome/components/Icon.vue'
 
 Vue.component('ricon', Icon)
-
+Vue.component('v-scroll', vuescroll)
 Vue.config.productionTip = false
 
 new Vue({
