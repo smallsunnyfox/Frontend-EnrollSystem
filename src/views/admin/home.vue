@@ -285,7 +285,7 @@ export default {
         vuescroll: {
           mode: 'native',
           sizeStrategy: 'percent',
-          detectResize: true,
+          detectResize: true
         },
         bar: {
           background: 'lightskyblue',
