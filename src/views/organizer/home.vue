@@ -78,7 +78,9 @@
       </div>
       <!-- 放子路由页面的view -->
       <div class="home_content_view">
-        <router-view></router-view>
+        <v-scroll :ops="ops">
+          <router-view></router-view>
+        </v-scroll>
       </div>
     </div>
     <!-- 更新密码的dialog -->
@@ -299,6 +301,18 @@ export default {
       }
     }
     return {
+      ops: {
+        vuescroll: {
+          mode: 'native',
+          sizeStrategy: 'percent',
+          detectResize: true,
+        },
+        bar: {
+          background: 'lightskyblue',
+          size: '4px',
+          minSize: 0.3
+        }
+      },
       isShowHasreadNoti: false,
       myHasreadNoti: [],
       myNotification: [],
@@ -691,7 +705,6 @@ export default {
   width: 85%;
   min-width: 1150px;
   float: left;
-  overflow-y:auto
 }
 .el-menu-vertical-demo {
   text-align: left;

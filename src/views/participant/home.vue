@@ -48,7 +48,9 @@
     </div>
     <!-- 内容框 -->
     <div class="home_content">
-      <router-view></router-view>
+      <v-scroll :ops="ops">
+        <router-view></router-view>
+      </v-scroll>
     </div>
     <!-- 底部 -->
     <div class="home_bottom">
@@ -278,6 +280,18 @@ export default {
       }
     }
     return {
+      ops: {
+        vuescroll: {
+          mode: 'native',
+          sizeStrategy: 'percent',
+          detectResize: true,
+        },
+        bar: {
+          background: 'lightskyblue',
+          size: '4px',
+          minSize: 0.3
+        }
+      },
       passwordType: 'password',
       passwordType2: 'password',
       passwordType3: 'password',
@@ -587,7 +601,7 @@ export default {
 }
 .home_header_navi {
   height: 100%;
-  width: 653px;
+  width: 563px;
   float: left;
 }
 .home_header_navi_content {
@@ -597,14 +611,13 @@ export default {
 }
 .home_header_usercenter {
   height: 100%;
-  width: 150px;
+  width: 240px;
   float: left;
   font-size: 16px;
 }
 .home_content {
   width: 1000px;
-  min-height: 72%;
-  height: auto;
+  height: 72%;
   margin: 0 auto;
 }
 .home_bottom {
