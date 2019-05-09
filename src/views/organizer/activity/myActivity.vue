@@ -366,7 +366,7 @@
             active-color="#409eff"
             inactive-color="#dcdfe6"
             style="float:left; margin-top:12px;"
-            width="50"
+            :width="selectWidth"
           >
           </el-switch>
         </el-form-item>
@@ -616,7 +616,7 @@ export default {
         uname: '',
         uorganizer: '',
         uorganization: '',
-        utime: [],
+        utime: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
         udeadline: '',
         usite: '',
         udetail: '',
@@ -853,12 +853,10 @@ export default {
       this.updateActivityForm.usite = row.site
       this.updateActivityForm.udetail = row.detail
       this.updateActivityForm.uisneedaudit = row.isneedaudit === 'true'
-      var d1 = new Date(Date.parse(row.starttime.replace(/-/g, '/')))
-      var d2 = new Date(Date.parse(row.endtime.replace(/-/g, '/')))
-      var d3 = new Date(Date.parse(row.deadline.replace(/-/g, '/')))
-      this.updateActivityForm.utime[0] = d1
-      this.updateActivityForm.utime[1] = d2
-      this.updateActivityForm.udeadline = d3
+      this.updateActivityForm.utime = []
+      this.updateActivityForm.utime[0] = new Date(row.starttime)
+      this.updateActivityForm.utime[1] = new Date(row.endtime)
+      this.updateActivityForm.udeadline = new Date(row.deadline)
       getEntryItemsOfActivity(row.entryform)
         .then(response => {
           this.updateActivityForm.uentryform = response.data
@@ -1041,7 +1039,6 @@ export default {
     },
     // 预览报名表单调用的方法
     previewEntryform (entryform) {
-      console.log(entryform)
       const loading = this.$loading({
         lock: true,
         text: '生成预览表单中',
@@ -1079,20 +1076,22 @@ export default {
         })
     },
     getActivityStatus (row) {
-      var today = new Date()
-      var d1 = new Date(Date.parse(row.starttime.replace(/-/g, '/')))
-      var d2 = new Date(Date.parse(row.endtime.replace(/-/g, '/')))
-      var d3 = new Date(Date.parse(row.deadline.replace(/-/g, '/')))
-      if (today < d3) {
+      var now = new Date()
+      var ds = new Date(Date.parse(row.starttime))
+      var de = new Date(Date.parse(row.endtime))
+      var dd = new Date(Date.parse(row.deadline))
+      if (now < dd) {
         return '报名进行中'
-      } else if (d3 <= today < d1) {
-        return '报名截止，活动未开始'
-      } else if (d1 <= today <= d2) {
-        return '活动进行中'
-      } else if (d2 < today) {
-        return '活动结束'
       } else {
-        return 'error'
+        if (now < ds) {
+          return '报名截止，活动未开始'
+        } else {
+          if (now <= de) {
+            return '活动进行中'
+          } else {
+            return '活动结束'
+          }
+        }
       }
     }
   }
