@@ -16,6 +16,7 @@
         </el-button-group>
         <el-table
           :data="signupAudit.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+          v-loading="loading"
           border
           stripe
           highlight-current-row
@@ -69,12 +70,13 @@
 import Vue from 'vue'
 import { getName } from '@/utils/auth.js'
 import { getMySignupAudit, searchAudit } from '@/api/signupaudit.js'
-import { Select, Option, Message, ButtonGroup, Table, TableColumn, Pagination } from 'element-ui'
+import { Select, Option, Message, ButtonGroup, Table, TableColumn, Loading, Pagination } from 'element-ui'
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(ButtonGroup)
 Vue.use(Table)
 Vue.use(Pagination)
+Vue.use(Loading.directive)
 Vue.use(TableColumn)
 export default {
   name: 'signupAudit',
@@ -82,6 +84,7 @@ export default {
     return {
       pageSize: 10,
       currentPage: 1,
+      loading: true,
       searchNameValue: '',
       searchSelectValue: 'activity',
       signupAudit: [],
@@ -95,12 +98,15 @@ export default {
   },
   methods: {
     getMySignupAudit () {
-      getMySignupAudit(getName())
-        .then(response => {
-          this.signupAudit = response.data
-        }).catch(error => {
-          console.log(error)
-        })
+      setTimeout(() => {
+        getMySignupAudit(getName())
+          .then(response => {
+            this.signupAudit = response.data
+            this.loading = false
+          }).catch(error => {
+            console.log(error)
+          })
+      }, 500)
     },
     searchAudit () {
       if (this.searchNameValue !== '') {
