@@ -19,8 +19,8 @@
     >
       <div slot="header" class="activity_header">
         <span>{{activity.name}}</span>
-        <el-button type="text" @click="signupActivity(activity.entryform)" style="float:right;padding-bottom:0px;padding-top:2px;">活动报名</el-button>
-        <el-button type="text" @click="viewActivityInfo(activity)" style="float:right;padding-bottom:0px;padding-top:2px;">查看活动</el-button>
+        <el-button type="text" @click="signupActivity(activity.id, activity.entryform)" style="float:right;padding-bottom:0px;padding-top:2px;">活动报名</el-button>
+        <el-button type="text" @click="viewActivityInfo(activity)" style="float:right;padding-bottom:0px;padding-top:2px;">活动详情</el-button>
       </div>
       <div class="activity_content">
         活动组织者: <span>{{activity.organizer}}</span> 所属组织: <span>{{activity.organization}}</span>
@@ -31,7 +31,7 @@
     <br>
     <br>
     <el-alert
-      v-show="couldSignupActivities.length === 0"
+      v-show="showAlert"
       title="暂无可报名的活动"
       type="success"
       :closable="false"
@@ -62,6 +62,7 @@
       </el-form>
       <!-- footer -->
       <div slot="footer">
+        <el-button type="primary" @click="activityInfoDialog = false">活动提问</el-button>
         <el-button @click="activityInfoDialog = false">关闭查看</el-button>
       </div>
     </el-dialog>
@@ -69,8 +70,8 @@
     <el-dialog :visible.sync="signupDialog" width="50%" top="58px">
       <!-- title -->
       <div slot="title" class="dialog-title"><i class="el-icon-document-add"></i> 活动报名</div>
-      <el-form label-width="auto" label-position="right">
-        <el-form-item v-for="item in signupEntryItems" :key="item.id" :label="item.name">
+      <el-form :model="signupEntryForm" ref="signupEntryForm" :rules="signupRules" label-width="auto" label-position="right">
+        <el-form-item v-for="item in signupEntryItems" :key="item.id" :label="item.name" :prop="item.name">
           <el-input v-if="item.type === 'input'" v-model="signupEntryForm[item.name]"></el-input>
           <el-input v-else-if="item.type === 'textarea'" type="textarea" v-model="signupEntryForm[item.name]"></el-input>
           <el-input v-else-if="item.type === 'inputnumber'" type="number" v-model="signupEntryForm[item.name]"></el-input>
@@ -91,7 +92,7 @@
       <!-- footer -->
       <div slot="footer">
         <el-button @click="signupDialog = false">取消报名</el-button>
-        <el-button type="primary" @click="signupDialog = false">提交报名</el-button>
+        <el-button type="primary" @click="submitEntryForm">提交报名</el-button>
       </div>
     </el-dialog>
   </div>
@@ -99,7 +100,8 @@
 
 <script>
 import Vue from 'vue'
-import { getCouldSignupActivity, searchCouldSignupActivity, getEntryItemsOfActivity } from '@/api/activity.js'
+import { getName } from '../../../utils/auth.js'
+import { getCouldSignupActivity, searchCouldSignupActivity, getEntryItemsOfActivity, signupActivity } from '@/api/activity.js'
 import { Select, Option, Message, ButtonGroup, Alert, Radio, RadioGroup, CheckboxGroup, Checkbox, DatePicker } from 'element-ui'
 Vue.use(Select)
 Vue.use(Option)
@@ -114,33 +116,42 @@ export default {
   name: 'signupActivity',
   data () {
     return {
-      searchNameValue: '',
-      searchSelectValue: 'name',
-      couldSignupActivities: [],
-      activityInfoDialog: false,
-      signupDialog: false,
-      moreInfo: {
+      showAlert: false, // 控制是否显示无活动的Alert
+      searchNameValue: '', // 查询的类型
+      searchSelectValue: 'name', // 查询的内容
+      couldSignupActivities: [], // 可以报名的活动list
+      activityInfoDialog: false, // 控制查看活动信息的Dialog
+      signupDialog: false, // 控制报名的Dialog
+      moreInfo: { // 查看更多信息
         site: '',
         starttime: '',
         endtime: '',
         detail: ''
       },
-      signupEntryItems: [],
-      signupEntryForm: {}
+      signupEntryItems: [], // 获取报名项
+      signupEntryForm: {}, // 动态生成报名表单
+      signupRules: {} // 动态生成报名校验规则
     }
   },
   created () {
     this.getCouldSignupActivity()
   },
   methods: {
+    // 获取所有可报名活动
     getCouldSignupActivity () {
       getCouldSignupActivity()
         .then(response => {
+          if (response.data.length === 0) {
+            this.showAlert = true
+          } else {
+            this.showAlert = false
+          }
           this.couldSignupActivities = response.data
         }).catch(error => {
           console.log(error)
         })
     },
+    // 刷新数据
     refreshData () {
       const loading = this.$loading({
         lock: true,
@@ -157,6 +168,7 @@ export default {
         loading.close()
       }, 600)
     },
+    // 查询活动
     searchActivity () {
       if (this.searchNameValue !== '') {
         searchCouldSignupActivity(this.searchSelectValue, this.searchNameValue)
@@ -183,11 +195,13 @@ export default {
         this.$refs.searchNameValue.focus()
       }
     },
+    // 重置查询
     resetSearch () {
       this.searchNameValue = ''
       this.searchSelectValue = 'name'
       this.getCouldSignupActivity()
     },
+    // 查看更多活动信息
     viewActivityInfo (activity) {
       this.moreInfo.site = activity.site
       this.moreInfo.starttime = activity.starttime
@@ -195,7 +209,41 @@ export default {
       this.moreInfo.detail = activity.detail
       this.activityInfoDialog = true
     },
-    signupActivity (entryform) {
+    // 报名
+    signupActivity (id, entryform) {
+      // 报名的校验规则
+      const validateInput = (rule, value, callback) => {
+        if (!value) {
+          callback(new Error('该项为必填项'))
+        } else if (value.length > 20) {
+          callback(new Error('该项不能超过20个字符'))
+        } else {
+          callback()
+        }
+      }
+      const validateTextarea = (rule, value, callback) => {
+        if (!value) {
+          callback(new Error('该项为必填项'))
+        } else if (value.length > 140) {
+          callback(new Error('该项不能超过140个字符'))
+        } else {
+          callback()
+        }
+      }
+      const validateCheckbox = (rule, value, callback) => {
+        if (value.length === 0) {
+          callback(new Error('该项为必填项'))
+        } else {
+          callback()
+        }
+      }
+      const validateValue = (rule, value, callback) => {
+        if (!value) {
+          callback(new Error('该项为必填项'))
+        } else {
+          callback()
+        }
+      }
       const loading = this.$loading({
         lock: true,
         text: '生成报名表单中',
@@ -207,20 +255,76 @@ export default {
           .then(response => {
             this.signupEntryItems = response.data
             this.signupEntryForm = {}
+            this.$set(this.signupEntryForm, 'aid', id)
+            this.$set(this.signupEntryForm, 'pname', getName())
             for (var i = 0; i < this.signupEntryItems.length; i++) {
-              if (this.signupEntryItems[i].type === 'checkbox') {
+              if (this.signupEntryItems[i].type === 'input') {
+                this.$set(this.signupEntryForm, this.signupEntryItems[i].name, '')
+                if (this.signupEntryItems[i].isrequired === 'true') {
+                  this.$set(this.signupRules, this.signupEntryItems[i].name, [{ required: true, trigger: 'blur', validator: validateInput }])
+                }
+              } else if (this.signupEntryItems[i].type === 'textarea') {
+                this.$set(this.signupEntryForm, this.signupEntryItems[i].name, '')
+                if (this.signupEntryItems[i].isrequired === 'true') {
+                  this.$set(this.signupRules, this.signupEntryItems[i].name, [{ required: true, trigger: 'blur', validator: validateTextarea }])
+                }
+              } else if (this.signupEntryItems[i].type === 'checkbox') {
                 this.$set(this.signupEntryForm, this.signupEntryItems[i].name, [])
+                if (this.signupEntryItems[i].isrequired === 'true') {
+                  this.$set(this.signupRules, this.signupEntryItems[i].name, [{ required: true, trigger: 'blur', validator: validateCheckbox }])
+                }
               } else {
                 this.$set(this.signupEntryForm, this.signupEntryItems[i].name, '')
+                if (this.signupEntryItems[i].isrequired === 'true') {
+                  this.$set(this.signupRules, this.signupEntryItems[i].name, [{ required: true, trigger: 'blur', validator: validateValue }])
+                }
               }
             }
             loading.close()
             this.signupDialog = true
+            this.$nextTick(() => {
+              this.$refs.signupEntryForm.resetFields()// 重置表单
+            })
           }).catch(error => {
             console.log(error)
           })
       }, 500)
-      // Vue.$set([想要添加字段的对象],'字段名',字段值)
+      // Vue.$set([想要添加字段的对象],'字段名',字段值) 动态生成表单和验证规则
+    },
+    // 提交报名表单
+    submitEntryForm () {
+      this.$refs.signupEntryForm.validate(valid => {
+        if (valid) {
+          signupActivity(this.signupEntryForm)
+            .then(response => {
+              if (response.data.status === 'needAudit') {
+                Message({
+                  showClose: true,
+                  message: '报名成功，您的报名正在审核中，请等待通知哦！',
+                  type: 'success'
+                })
+              } else if (response.data.status === 'signupPassed') {
+                Message({
+                  showClose: true,
+                  message: '报名成功！请准时参加活动！',
+                  type: 'success'
+                })
+              } else if (response.data.status === 'alreadySignup') {
+                Message({
+                  showClose: true,
+                  message: '您已经报名过该活动了！无需重复报名!',
+                  type: 'warning'
+                })
+              }
+              this.signupDialog = false
+            }).catch(error => {
+              console.log(error)
+            })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     }
   }
 }

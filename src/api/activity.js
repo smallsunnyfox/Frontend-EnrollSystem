@@ -268,3 +268,12 @@ export function searchCouldSignupActivity (select, value) {
     data: postData
   })
 }
+// 活动报名
+export function signupActivity (form) {
+  let postData = qs.stringify(form)
+  return request({
+    url: '/entryformaudit/signupActivity',
+    method: 'post',
+    data: postData
+  })
+}

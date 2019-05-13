@@ -19,7 +19,7 @@
             >
               <el-menu-item index="/participant/index" style="broder:none;">首页</el-menu-item>
               <el-menu-item index="/participant/signupActivity">活动报名</el-menu-item>
-              <el-menu-item index="/participant/mySignedActivity">我的活动</el-menu-item>
+              <el-menu-item index="/participant/mySignedActivity">我的报名</el-menu-item>
               <el-menu-item index="/participant/myQuestion" style="broder:none;">我的提问</el-menu-item>
             </el-menu>
           </div>
