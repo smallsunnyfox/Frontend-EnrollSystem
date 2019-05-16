@@ -24,7 +24,19 @@
             </el-menu>
           </div>
         </div>
+        <!-- 用户中心 -->
+        <!-- eslint-disable -->
         <div class="home_header_usercenter">
+          <el-popover trigger="click" placement="bottom" width="500">
+            <el-alert v-if="myNotification.length===0" title="暂无未读消息" type="info" show-icon :closable="false" style="margin-bottom:5px;"></el-alert>
+            <el-alert v-else v-for="noti in myNotification" :key="noti.id" :title="'来自组织者 '+noti.sender+' 的未读消息 --- '+noti.createtime" :description="noti.content" type="error" close-text="知道了" @close="messageHasread(noti.id)" style="margin-bottom:5px;"></el-alert>
+            <el-alert v-if="isShowHasreadNoti===true" v-for="noti in myHasreadNoti" :key="noti.id" :title="'来自管理员 '+noti.sender+' 的已读消息 --- '+noti.createtime" :description="noti.content" type="info" close-text="删除" @close="deleteHasreadNoti(noti.id)" style="margin-bottom:5px;"></el-alert>
+            <el-button v-if="!isShowHasreadNoti" type="text" size="mini" @click="isShowHasreadNoti=true"><i class="el-icon-bell"></i>显示已读消息</el-button>
+            <el-button v-if="isShowHasreadNoti" type="text" size="mini" @click="isShowHasreadNoti=false"><i class="el-icon-close-notification"></i>隐藏已读消息</el-button>
+            <el-badge :value="myNotification.length===0 ? '': myNotification.length" style="margin-right:20px;" slot="reference">
+              <el-button icon="el-icon-message-solid" type="primary" size="mini" circle></el-button>
+            </el-badge>
+          </el-popover>
           <el-dropdown :hide-on-click="true" style="margin:18px 8px 0 0;">
             <span style="cursor:pointer;">
               <ricon name="user" scale="0.7"></ricon>
@@ -44,6 +56,7 @@
             </el-dropdown-menu>
           </el-dropdown>
         </div>
+        <!-- eslint-enable -->
       </div>
     </div>
     <!-- 内容框 -->
@@ -153,14 +166,19 @@
 
 <script>
 import Vue from 'vue'
-import { Dialog, Menu, Form, Submenu, MenuItem, MessageBox, Message, MenuItemGroup } from 'element-ui'
+import { Dialog, Menu, Form, Submenu, MenuItem, MessageBox, Message, MenuItemGroup, Badge, Popover, Alert } from 'element-ui'
+import { getNotiofParticipant, readNotificationofParticipant, getHasreadNotiofParticipant, deleteHasreadNotiofParticipant } from '@/api/notification.js'
 import { mapGetters } from 'vuex'
+import { getName } from '@/utils/auth.js'
 Vue.use(Menu)
 Vue.use(Submenu)
 Vue.use(MenuItem)
 Vue.use(MenuItemGroup)
 Vue.use(Dialog)
 Vue.use(Form)
+Vue.use(Popover)
+Vue.use(Badge)
+Vue.use(Alert)
 export default {
   name: 'home',
   data () {
@@ -292,6 +310,9 @@ export default {
           minSize: 0.3
         }
       },
+      isShowHasreadNoti: false,
+      myHasreadNoti: [],
+      myNotification: [],
       passwordType: 'password',
       passwordType2: 'password',
       passwordType3: 'password',
@@ -356,6 +377,8 @@ export default {
       .catch(error => {
         console.log(error)
       })
+    this.getNoti()
+    this.getHasreadNoti()
   },
   computed: {
     ...mapGetters([
@@ -560,6 +583,49 @@ export default {
           message: '已取消退出'
         })
       })
+    },
+    // 获取未读消息
+    getNoti () {
+      getNotiofParticipant(getName())
+        .then(response => {
+          this.myNotification = response.data
+        }).catch(error => {
+          console.log(error)
+        })
+    },
+    // 获取已读消息
+    getHasreadNoti () {
+      getHasreadNotiofParticipant(getName())
+        .then(response => {
+          this.myHasreadNoti = response.data
+        }).catch(error => {
+          console.log(error)
+        })
+    },
+    // 删除已读消息
+    deleteHasreadNoti (id) {
+      deleteHasreadNotiofParticipant(id)
+        .then(response => {
+          if (response.data.status === 'deleteSuccess') {
+            this.getHasreadNoti()
+          }
+        }).catch(error => {
+          console.log(error)
+        })
+    },
+    // 消息已读
+    messageHasread (id) {
+      readNotificationofParticipant(id)
+        .then(response => {
+          if (response.data.status === 'readSuccess') {
+            this.getNoti()
+            this.getHasreadNoti()
+          } else {
+            console.log('readError')
+          }
+        }).catch(error => {
+          console.log(error)
+        })
     }
   }
 }

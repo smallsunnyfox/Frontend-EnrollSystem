@@ -47,6 +47,7 @@
         >
         </el-pagination>
       </el-card>
+      <!-- 查看报名表单的Dialog -->
       <el-dialog :visible="entryformDialog" width="50%" top="58px">
         <div slot="title" class="dialog-title"><i class="el-icon-tickets"></i>报名表单</div>
           <el-form label-width="auto" label-position="right">
@@ -69,8 +70,9 @@
 <script>
 import Vue from 'vue'
 import { getName } from '@/utils/auth.js'
-import { getMySignupAudit, searchAudit } from '@/api/signupaudit.js'
-import { Select, Option, Message, ButtonGroup, Table, TableColumn, Loading, Pagination } from 'element-ui'
+import { getMySignupAudit, searchAudit, passSignup, unpassSignup } from '@/api/signupaudit.js'
+import { notiPassSignup, notiUnpassSignup } from '@/api/notification.js'
+import { Select, Option, Message, MessageBox, ButtonGroup, Table, TableColumn, Loading, Pagination } from 'element-ui'
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(ButtonGroup)
@@ -148,10 +150,90 @@ export default {
       this.entryformDialog = true
     },
     passSignup (id) {
-
+      MessageBox.confirm('确认要通过该报名者的审核吗?', '审核提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        passSignup(id)
+          .then(response => {
+            if (response.data.status === 'passSuccess') {
+              Message({
+                showClose: true,
+                type: 'success',
+                message: '操作成功'
+              })
+              notiPassSignup(id, getName())
+                .then(response => {
+                  if (response.data.status === 'addNotiSuccess') {
+                    console.log('添加通知成功')
+                  } else {
+                    console.log('添加通知失败')
+                  }
+                }).catch(error => {
+                  console.log(error)
+                })
+              this.loading = true
+              this.getMySignupAudit()
+            }
+          }).catch(error => {
+            console.log(error)
+          })
+      }).catch(() => {
+        Message({
+          showClose: true,
+          type: 'info',
+          message: '已取消通过'
+        })
+      })
     },
     unpassSignup (id) {
-
+      function inputValidate (value) {
+        if (!value) {
+          return '必须输入未通过理由！'
+        } else if (value.length > 20) {
+          return '审核未通过理由不能超过四十个字符！'
+        } else {
+          return true
+        }
+      }
+      MessageBox.prompt('请输入审核未通过理由', '审核提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputValidator: inputValidate,
+        inputType: 'textarea'
+      }).then(({ value }) => {
+        unpassSignup(id, value)
+          .then(response => {
+            if (response.data.status === 'unpassSuccess') {
+              Message({
+                showClose: true,
+                type: 'success',
+                message: '操作成功'
+              })
+              notiUnpassSignup(id, value, getName())
+                .then(response => {
+                  if (response.data.status === 'addNotiSuccess') {
+                    console.log('添加通知成功')
+                  } else {
+                    console.log('添加通知失败')
+                  }
+                }).catch(error => {
+                  console.log(error)
+                })
+              this.loading = true
+              this.getMySignupAudit()
+            }
+          }).catch(error => {
+            console.log(error)
+          })
+      }).catch(() => {
+        Message({
+          showClose: true,
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
     }
   }
 }

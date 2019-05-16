@@ -171,7 +171,7 @@ import Vue from 'vue'
 import { Dialog, Menu, Form, Submenu, MenuItem, MessageBox, Message, MenuItemGroup, Badge, Popover, Alert } from 'element-ui'
 import { mapGetters } from 'vuex'
 import breadcrumb from '@c/breadcrumb.vue'
-import { getNotiofOrganizer, readNotification, getHasreadNoti, deleteHasreadNoti } from '@/api/notification.js'
+import { getNotiofOrganizer, readNotificationofOrganizer, getHasreadNotiofOrganizer, deleteHasreadNotiofOrganizer } from '@/api/notification.js'
 import { getName } from '@/utils/auth.js'
 Vue.use(Menu)
 Vue.use(Submenu)
@@ -601,7 +601,7 @@ export default {
     },
     // 获取已读消息
     getHasreadNoti () {
-      getHasreadNoti(getName())
+      getHasreadNotiofOrganizer(getName())
         .then(response => {
           this.myHasreadNoti = response.data
         }).catch(error => {
@@ -610,7 +610,7 @@ export default {
     },
     // 删除已读消息
     deleteHasreadNoti (id) {
-      deleteHasreadNoti(id)
+      deleteHasreadNotiofOrganizer(id)
         .then(response => {
           if (response.data.status === 'deleteSuccess') {
             this.getHasreadNoti()
@@ -621,7 +621,7 @@ export default {
     },
     // 消息已读
     messageHasread (id) {
-      readNotification(id)
+      readNotificationofOrganizer(id)
         .then(response => {
           if (response.data.status === 'readSuccess') {
             this.getNotiofOrganizer()
