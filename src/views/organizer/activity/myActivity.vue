@@ -126,11 +126,10 @@
                 <span>{{ getActivityStatus(scope.row) }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="报名名单" width="80">
-              <el-button size="mini" >查看</el-button>
-            </el-table-column>
-            <el-table-column label="签到名单" width="80">
-              <el-button size="mini" >查看</el-button>
+            <el-table-column label="报名签到" width="80">
+              <template slot-scope="scope">
+                <el-button size="mini" @click="viewSignuplist(scope.row)">查看</el-button>
+              </template>
             </el-table-column>
             <el-table-column label="报名表单" align="center" width="80">
               <template slot-scope="scope">
@@ -139,7 +138,7 @@
             </el-table-column>
             <el-table-column label="操作" align="center" width="150">
               <template slot-scope="scope">
-                <el-button size="mini" >归档</el-button>
+                <el-button size="mini" @click="archiveActivity(scope.row.id)">归档</el-button>
                 <el-button size="mini" type="danger" @click="deleteActivity(scope.row.id)">删除</el-button>
               </template>
             </el-table-column>
@@ -194,11 +193,10 @@
             </el-table-column>
             <el-table-column prop="name" label="活动名称" width="310"></el-table-column>
             <el-table-column prop="organization" label="所属组织"></el-table-column>
-            <el-table-column label="报名名单" width="80">
-              <el-button size="mini" >查看</el-button>
-            </el-table-column>
-            <el-table-column label="签到名单" width="80">
-              <el-button size="mini" >查看</el-button>
+            <el-table-column label="报名签到" width="80">
+              <template slot-scope="scope">
+                <el-button size="mini" @click="viewSignuplist(scope.row)">查看</el-button>
+              </template>
             </el-table-column>
             <el-table-column label="报名表单" align="center" width="80">
               <template slot-scope="scope">
@@ -446,6 +444,24 @@
         <el-button type="primary" @click="previewEntryformDialog = false">关闭预览</el-button>
       </div>
     </el-dialog>
+    <el-dialog :visible.sync="signupListDialog" width="60%" top="55px">
+      <div slot="title" class="dialog-title"><i class="el-icon-tickets"></i>报名签到信息查看</div>
+      <el-table
+        :data="signupofActivity"
+        stripe
+      >
+        <el-table-column prop="participant" label="报名者"></el-table-column>
+        <el-table-column label="报名表单">
+          <el-button size="mini">查看</el-button>
+        </el-table-column>
+        <el-table-column label="签到状态" align="center">
+
+        </el-table-column>
+      </el-table>
+      <div slot="footer">
+        <el-button type="primary" @click="signupListDialog = false">关闭查看</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -453,6 +469,8 @@
 import Vue from 'vue'
 import { SlickList, SlickItem } from 'vue-slicksort'
 import { mapGetters } from 'vuex'
+import { archiveActivity } from '@/api/activity.js'
+import { getsignupAuditofActivity } from '@/api/signupaudit.js'
 import { getName } from '../../../utils/auth.js'
 import { myEntryItems, systemEntryItems, addActivity, searchUnauditActivities, searchUnfinishedActivities, searchFinishedActivities, updateActivity, deleteActivity, getUnauditActivities, getUnfinishedActivities, getFinishedActivities, getEntryItemsOfActivity, reauditActivity } from '../../../api/activity.js'
 import { Tabs, TabPane, Radio, Checkbox, CheckboxGroup, Tooltip, RadioGroup, Popover, Select, DatePicker, TimePicker, Option, Loading, ButtonGroup, MessageBox, Switch, Alert, Message, Table, TableColumn, Pagination } from 'element-ui'
@@ -591,6 +609,7 @@ export default {
       addActivityDialog: false, // 控制添加活动Dialog的显示
       updateActivityDialog: false, // 控制更新活动Dialog的显示
       previewEntryformDialog: false,
+      signupListDialog: false,
       addActivityForm: {// 添加活动的表单
         name: '',
         organizer: '',
@@ -643,7 +662,8 @@ export default {
         disabledDate (time) {
           return time.getTime() < Date.now()
         }
-      }
+      },
+      signupofActivity: []
     }
   },
   created () {
@@ -1093,6 +1113,33 @@ export default {
           }
         }
       }
+    },
+    viewSignuplist (row) {
+      this.signupofActivity = []
+      getsignupAuditofActivity(row.name, row.organizer)
+        .then(response => {
+          this.signupofActivity = response.data
+        }).catch(error => {
+          console.log(error)
+        })
+        this.signupListDialog = true
+    },
+    archiveActivity (id) {
+      archiveActivity(id)
+        .then(response => {
+          if (response.data.status === 'archiveSuccess') {
+            Message({
+              showClose: true,
+              message: '归档活动成功！',
+              type: 'success'
+            })
+            this.getUnauditActivities()
+            this.getUnfinishedActivities()
+            this.getFinishedActivities()
+          }
+        }).catch(error => {
+          console.log(error)
+        })
     }
   }
 }

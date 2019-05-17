@@ -58,3 +58,39 @@ export function getAuditOfParticipant (name) {
     data: postData
   })
 }
+// 搜索报名者的报名信息
+export function searchAuditofParticipant (participant, type, value) {
+  let postData = qs.stringify({
+    participant: participant,
+    type: type,
+    value: value
+  })
+  return request({
+    url: '/entryformaudit/searchAuditofParticipant',
+    method: 'post',
+    data: postData
+  })
+}
+
+export function cancelSignup (id) {
+  let postData = qs.stringify({
+    id: id
+  })
+  return request({
+    url: '/entryformaudit/cancelSignup',
+    method: 'post',
+    data: postData
+  })
+}
+
+export function getsignupAuditofActivity (activity, organizer) {
+  let postData = qs.stringify({
+    activity: activity,
+    organizer: organizer
+  })
+  return request({
+    url: '/entryformaudit/getsignupAuditofActivity',
+    method: 'post',
+    data: postData
+  })
+}

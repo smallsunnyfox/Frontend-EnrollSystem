@@ -277,3 +277,14 @@ export function signupActivity (form) {
     data: postData
   })
 }
+// 活动归档
+export function archiveActivity (id) {
+  let postData = qs.stringify({
+    id: id
+  })
+  return request({
+    url: '/activity/archiveActivity',
+    method: 'post',
+    data: postData
+  })
+}

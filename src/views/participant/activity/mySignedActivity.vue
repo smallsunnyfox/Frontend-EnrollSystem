@@ -7,7 +7,7 @@
       </el-select>
     </el-input>
     <el-button-group style="float:left;margin:20px 0 15px 10px;">
-      <el-button type="primary" @click="searchActivity">搜索</el-button>
+      <el-button type="primary" @click="searchAudit">搜索</el-button>
       <el-button type="primary" @click="resetSearch">重置</el-button>
     </el-button-group>
     <el-alert
@@ -26,7 +26,6 @@
       <div slot="header" class="mySignedActivity_header">
         <span>{{ audit.activity }}</span>
         <el-button type="text" @click="viewMyEntryform(audit)" style="float:right;padding-bottom:0px;padding-top:2px;margin-left:5px;">我的报名表单</el-button>
-        <el-button type="text" @click="deleteSignup(audit.id)" style="float:right;padding-bottom:0px;padding-top:2px;margin-left:5px;">删除历史活动</el-button>
         <el-button type="text" @click="cancelSignup(audit.id)" style="float:right;padding-bottom:0px;padding-top:2px;margin-left:0px;">取消报名</el-button>
       </div>
       <div class="mySignedActivity_content">
@@ -44,14 +43,31 @@
     <br>
     <br>
     <el-button icon="el-icon-refresh" type="primary" size="small" circle title="刷新活动" @click="refreshData()"></el-button>
+    <!-- 查看报名表单的Dialog -->
+    <el-dialog :visible="entryformDialog" width="50%" top="58px">
+      <div slot="title" class="dialog-title"><i class="el-icon-tickets"></i>报名表单</div>
+        <el-form label-width="auto" label-position="right">
+          <el-form-item
+            v-for="(name,index) in names"
+            :key="index"
+            :label="name+':'"
+          >
+            <span v-if="values[index]!==''" style="float:left;">{{ values[index] }}</span>
+            <span v-else style="float:left;">报名者未填写</span>
+          </el-form-item>
+        </el-form>
+      <div slot="footer">
+        <el-button type="primary" @click="entryformDialog = false">关闭查看</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
 import { getName } from '../../../utils/auth.js'
-import { getAuditOfParticipant } from '@/api/signupaudit.js'
-import { Select, Option, ButtonGroup, Alert } from 'element-ui'
+import { getAuditOfParticipant, searchAuditofParticipant, cancelSignup } from '@/api/signupaudit.js'
+import { Select, Option, ButtonGroup, Alert, MessageBox, Message } from 'element-ui'
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(ButtonGroup)
@@ -63,13 +79,17 @@ export default {
       searchNameValue: '',
       searchSelectValue: 'activity',
       mysignupAudits: [],
-      showAlert: false
+      showAlert: false,
+      entryformDialog: false,
+      names: [],
+      values: []
     }
   },
   created () {
     this.getMysignupAudit()
   },
   methods: {
+    // 获取我的报名信息
     getMysignupAudit () {
       getAuditOfParticipant(getName())
         .then(response => {
@@ -100,20 +120,78 @@ export default {
         loading.close()
       }, 600)
     },
-    searchActivity () {
-
+    // 查询我的报名信息
+    searchAudit () {
+      if (this.searchNameValue !== '') {
+        searchAuditofParticipant(getName(), this.searchSelectValue, this.searchNameValue)
+          .then(response => {
+            if (response.data.length === 0) {
+              Message({
+                showClose: true,
+                message: '未查询到相关报名信息！快去报名吧！',
+                type: 'warning'
+              })
+              this.searchNameValue = ''
+            } else {
+              this.mysignupAudits = response.data
+            }
+          }).catch(error => {
+            console.log(error)
+          })
+      } else {
+        Message({
+          showClose: true,
+          message: '请先输入您要搜索的内容！',
+          type: 'warning'
+        })
+        this.$refs.searchNameValue.focus()
+      }
     },
+    // 重置查询
     resetSearch () {
-
+      this.searchNameValue = ''
+      this.searchSelectValue = 'activity'
+      this.getMysignupAudit()
     },
-    viewMyEntryform () {
-
+    // 查看我的报名表单
+    viewMyEntryform (audit) {
+      this.names = audit.name.split(',')
+      this.values = audit.value.split(',')
+      this.entryformDialog = true
     },
-    deleteSignup () {
-
-    },
-    cancelSignup () {
-
+    // 取消活动报名
+    cancelSignup (id) {
+      MessageBox.confirm('确认要取消该活动的报名吗?', '系统提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        cancelSignup(id)
+          .then(response => {
+            if (response.data.status === 'cancelSuccess') {
+              Message({
+                showClose: true,
+                type: 'success',
+                message: '取消成功'
+              })
+              this.getMysignupAudit()
+            } else if (response.data.status === 'cannotCancel') {
+              Message({
+                showClose: true,
+                type: 'warning',
+                message: '该活动报名已经截止，无法取消报名！'
+              })
+            }
+          }).catch(error => {
+            console.log(error)
+          })
+      }).catch(() => {
+        Message({
+          showClose: true,
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
     }
   }
 }
