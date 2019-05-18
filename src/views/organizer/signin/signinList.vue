@@ -74,7 +74,7 @@ import Vue from 'vue'
 import { getName } from '@/utils/auth.js'
 import { ButtonGroup, Table, Pagination, Message, MessageBox, TableColumn, Loading } from 'element-ui'
 import { getSigninActivity } from '@/api/activity.js'
-import { getsignupAuditofActivity, signinforParticipant } from '@/api/signupaudit.js'
+import { getsignupAuditofActivity, signinforParticipant, searchSignupofActivity } from '@/api/signupaudit.js'
 Vue.use(ButtonGroup)
 Vue.use(Table)
 Vue.use(Pagination)
@@ -119,10 +119,39 @@ export default {
       this.loading = false
     },
     searchPar () {
-
+      if (this.searchParname !== '') {
+        searchSignupofActivity(this.searchParname, this.currentActivity, getName())
+          .then(response => {
+            if (response.data.length === 0) {
+              Message({
+                showClose: true,
+                message: '未查询到该报名者的报名信息！',
+                type: 'warning'
+              })
+              this.searchParname = ''
+            } else {
+              this.passedSignupofActivity = response.data
+            }
+          }).catch(error => {
+            console.log(error)
+          })
+      } else {
+        Message({
+          showClose: true,
+          message: '请先输入您要搜索的报名者名称！',
+          type: 'warning'
+        })
+        this.$refs.searchParname.focus()
+      }
     },
     resetSearch () {
-
+      this.searchParname = ''
+      getsignupAuditofActivity(this.currentActivity, getName())
+        .then(response => {
+          this.passedSignupofActivity = response.data
+        }).catch(error => {
+          console.log(error)
+        })
     },
     handleCurrentChange: function (currentPage) {
       this.currentPage = currentPage
