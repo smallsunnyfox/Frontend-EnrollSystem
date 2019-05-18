@@ -288,3 +288,14 @@ export function archiveActivity (id) {
     data: postData
   })
 }
+// 获取正在进行中的活动进行签到管理
+export function getSigninActivity (organizer) {
+  let postData = qs.stringify({
+    organizer: organizer
+  })
+  return request({
+    url: '/activity/getSigninActivity',
+    method: 'post',
+    data: postData
+  })
+}

@@ -94,3 +94,27 @@ export function getsignupAuditofActivity (activity, organizer) {
     data: postData
   })
 }
+
+export function searchSignupofActivity (participant, activity, organizer) {
+  let postData = qs.stringify({
+    participant: participant,
+    activity: activity,
+    organizer: organizer
+  })
+  return request({
+    url: '/entryformaudit/searchSignupofActivity',
+    method: 'post',
+    data: postData
+  })
+}
+
+export function signinforParticipant (id) {
+  let postData = qs.stringify({
+    id: id
+  })
+  return request({
+    url: '/entryformaudit/signinforParticipant',
+    method: 'post',
+    data: postData
+  })
+}

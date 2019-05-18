@@ -17,6 +17,7 @@
         <el-table
           :data="signupAudit.slice((currentPage-1)*pageSize,currentPage*pageSize)"
           v-loading="loading"
+          empty-text="暂无新的报名审核"
           border
           stripe
           highlight-current-row

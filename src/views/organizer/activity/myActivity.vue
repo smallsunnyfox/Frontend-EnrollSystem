@@ -138,7 +138,7 @@
             </el-table-column>
             <el-table-column label="操作" align="center" width="150">
               <template slot-scope="scope">
-                <el-button size="mini" @click="archiveActivity(scope.row.id)">归档</el-button>
+                <el-button size="mini" @click="archiveActivity(scope.row)">归档</el-button>
                 <el-button size="mini" type="danger" @click="deleteActivity(scope.row.id)">删除</el-button>
               </template>
             </el-table-column>
@@ -445,17 +445,43 @@
       </div>
     </el-dialog>
     <el-dialog :visible.sync="signupListDialog" width="60%" top="55px">
-      <div slot="title" class="dialog-title"><i class="el-icon-tickets"></i>报名签到信息查看</div>
+      <div slot="title" class="dialog-title"><i class="el-icon-tickets"></i>报名签到</div>
+      <el-input ref="searchParticipantValue" v-model="searchParticipantValue" placeholder="请输入报名者名称" style="width:600px;float:left;"></el-input>
+      <el-button-group style="float:left;margin-left:10px;">
+        <el-button type="primary" @click="searchSignupInDialog">搜索</el-button>
+        <el-button type="primary" @click="resetSearchSignupInDialog">重置</el-button>
+      </el-button-group>
       <el-table
         :data="signupofActivity"
         stripe
+        empty-text="暂无报名信息"
       >
-        <el-table-column prop="participant" label="报名者"></el-table-column>
-        <el-table-column label="报名表单">
-          <el-button size="mini">查看</el-button>
+        <el-table-column prop="participant" label="报名者" align="center"></el-table-column>
+        <el-table-column label="报名表单" align="center">
+          <template slot-scope="scope">
+            <el-popover
+              placement="right"
+              width="400"
+              trigger="click">
+              <el-form label-width="auto" label-position="right">
+                <el-form-item
+                  v-for="(name,index) in scope.row.name.split(',')"
+                  :key="index"
+                  :label="name+':'"
+                >
+                  <span v-if="scope.row.value.split(',')[index]!==''" style="float:left;">{{ scope.row.value.split(',')[index] }}</span>
+                  <span v-else style="float:left;">报名者未填写</span>
+                </el-form-item>
+              </el-form>
+              <el-button slot="reference" size="mini">查看</el-button>
+            </el-popover>
+          </template>
         </el-table-column>
         <el-table-column label="签到状态" align="center">
-
+          <template slot-scope="scope">
+            <span v-if="scope.row.signinstatus === 'yes'">已签到</span>
+            <span v-else>未签到</span>
+          </template>
         </el-table-column>
       </el-table>
       <div slot="footer">
@@ -470,7 +496,7 @@ import Vue from 'vue'
 import { SlickList, SlickItem } from 'vue-slicksort'
 import { mapGetters } from 'vuex'
 import { archiveActivity } from '@/api/activity.js'
-import { getsignupAuditofActivity } from '@/api/signupaudit.js'
+import { getsignupAuditofActivity, searchSignupofActivity } from '@/api/signupaudit.js'
 import { getName } from '../../../utils/auth.js'
 import { myEntryItems, systemEntryItems, addActivity, searchUnauditActivities, searchUnfinishedActivities, searchFinishedActivities, updateActivity, deleteActivity, getUnauditActivities, getUnfinishedActivities, getFinishedActivities, getEntryItemsOfActivity, reauditActivity } from '../../../api/activity.js'
 import { Tabs, TabPane, Radio, Checkbox, CheckboxGroup, Tooltip, RadioGroup, Popover, Select, DatePicker, TimePicker, Option, Loading, ButtonGroup, MessageBox, Switch, Alert, Message, Table, TableColumn, Pagination } from 'element-ui'
@@ -663,7 +689,9 @@ export default {
           return time.getTime() < Date.now()
         }
       },
-      signupofActivity: []
+      signupofActivity: [],
+      searchParticipantValue: '',
+      searchActivityValue: ''
     }
   },
   created () {
@@ -1116,27 +1144,84 @@ export default {
     },
     viewSignuplist (row) {
       this.signupofActivity = []
+      this.searchActivityValue = ''
       getsignupAuditofActivity(row.name, row.organizer)
         .then(response => {
           this.signupofActivity = response.data
         }).catch(error => {
           console.log(error)
         })
-        this.signupListDialog = true
+      this.searchActivityValue = row.name
+      this.signupListDialog = true
     },
-    archiveActivity (id) {
-      archiveActivity(id)
-        .then(response => {
-          if (response.data.status === 'archiveSuccess') {
-            Message({
-              showClose: true,
-              message: '归档活动成功！',
-              type: 'success'
+    archiveActivity (row) {
+      if (this.getActivityStatus(row) === '活动结束') {
+        MessageBox.confirm('确认要归档该活动吗?', '归档提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          archiveActivity(row.id)
+            .then(response => {
+              if (response.data.status === 'archiveSuccess') {
+                Message({
+                  showClose: true,
+                  message: '归档活动成功！',
+                  type: 'success'
+                })
+                this.getUnauditActivities()
+                this.getUnfinishedActivities()
+                this.getFinishedActivities()
+              }
+            }).catch(error => {
+              console.log(error)
             })
-            this.getUnauditActivities()
-            this.getUnfinishedActivities()
-            this.getFinishedActivities()
-          }
+        }).catch(() => {
+          Message({
+            showClose: true,
+            type: 'info',
+            message: '已取消归档'
+          })
+        })
+      } else {
+        Message({
+          showClose: true,
+          type: 'warning',
+          message: '该活动尚未结束，无法归档！'
+        })
+      }
+    },
+    searchSignupInDialog () {
+      if (this.searchParticipantValue !== '') {
+        searchSignupofActivity(this.searchParticipantValue, this.searchActivityValue, getName())
+          .then(response => {
+            if (response.data.length === 0) {
+              Message({
+                showClose: true,
+                message: '未查询到该报名者的报名信息！',
+                type: 'warning'
+              })
+              this.searchParticipantValue = ''
+            } else {
+              this.signupofActivity = response.data
+            }
+          }).catch(error => {
+            console.log(error)
+          })
+      } else {
+        Message({
+          showClose: true,
+          message: '请先输入您要搜索的报名者名称！',
+          type: 'warning'
+        })
+        this.$refs.searchParticipantValue.focus()
+      }
+    },
+    resetSearchSignupInDialog () {
+      this.searchParticipantValue = ''
+      getsignupAuditofActivity(this.searchActivityValue, getName())
+        .then(response => {
+          this.signupofActivity = response.data
         }).catch(error => {
           console.log(error)
         })

@@ -6,10 +6,6 @@
         <el-option label="活动组织者" value="organizer"></el-option>
       </el-select>
     </el-input>
-    <el-button-group style="float:left;margin:20px 0 15px 10px;">
-      <el-button type="primary" @click="searchAudit">搜索</el-button>
-      <el-button type="primary" @click="resetSearch">重置</el-button>
-    </el-button-group>
     <el-alert
       v-show="showAlert"
       title="您尚未报名活动"
