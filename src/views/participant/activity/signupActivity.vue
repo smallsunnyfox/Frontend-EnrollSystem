@@ -62,7 +62,6 @@
       </el-form>
       <!-- footer -->
       <div slot="footer">
-        <el-button type="primary" @click="activityInfoDialog = false">活动提问</el-button>
         <el-button @click="activityInfoDialog = false">关闭查看</el-button>
       </div>
     </el-dialog>

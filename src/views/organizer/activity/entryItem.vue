@@ -25,6 +25,7 @@
       <el-table
         :data="myEntryItemList.slice((currentPage-1)*itempagesize,currentPage*itempagesize)"
         style="width:100%;"
+        empty-text="您尚未添加报名项"
         v-loading="loading"
         border
         stripe
@@ -370,7 +371,7 @@ export default {
       loading: true,
       currentPage: 1, // 当前页码
       itemnumber: 0, // 总数据数
-      itempagesize: 10, // 每页数据数
+      itempagesize: 6, // 每页数据数
       switchwidth: 50, // switch控件的宽度
       addEntryItemDialog: false, // 控制添加报名项Dialog的显示
       updateEntryItemDialog: false, // 控制更新报名项Dialog的显示

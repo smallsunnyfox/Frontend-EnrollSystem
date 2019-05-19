@@ -13,14 +13,14 @@
       <!-- 用户中心 -->
       <!-- eslint-disable -->
       <div class="home_header_usercenter">
-        <el-popover trigger="click" placement="bottom" width="500">
+        <el-popover trigger="manual" v-model="isshowNotiPopover" placement="bottom" width="500">
           <el-alert v-if="myNotification.length===0" title="暂无未读消息" type="info" show-icon :closable="false" style="margin-bottom:5px;"></el-alert>
           <el-alert v-else v-for="noti in myNotification" :key="noti.id" :title="'来自管理员 '+noti.sender+' 的未读消息 --- '+noti.createtime" :description="noti.content" type="error" close-text="知道了" @close="messageHasread(noti.id)" style="margin-bottom:5px;"></el-alert>
           <el-alert v-if="isShowHasreadNoti===true" v-for="noti in myHasreadNoti" :key="noti.id" :title="'来自管理员 '+noti.sender+' 的已读消息 --- '+noti.createtime" :description="noti.content" type="info" close-text="删除" @close="deleteHasreadNoti(noti.id)" style="margin-bottom:5px;"></el-alert>
           <el-button v-if="!isShowHasreadNoti" type="text" size="mini" @click="isShowHasreadNoti=true"><i class="el-icon-bell"></i>显示已读消息</el-button>
           <el-button v-if="isShowHasreadNoti" type="text" size="mini" @click="isShowHasreadNoti=false"><i class="el-icon-close-notification"></i>隐藏已读消息</el-button>
           <el-badge :value="myNotification.length===0 ? '': myNotification.length" style="margin-right:20px;" slot="reference">
-            <el-button icon="el-icon-message-solid" type="primary" size="mini" circle></el-button>
+            <el-button icon="el-icon-message-solid" type="primary" size="mini" circle @click="isshowNotiPopover = !isshowNotiPopover"></el-button>
           </el-badge>
         </el-popover>
         <el-dropdown :hide-on-click="true" style="margin:18px 8px 0 0;">
@@ -70,16 +70,12 @@
             <i class="el-icon-document-checked" style="color:black;"></i>
             <span slot="title">签到管理</span>
           </el-menu-item>
-          <el-menu-item index="/organizer/question" >
-            <i class="el-icon-chat-dot-square" style="color:black;"></i>
-            <span slot="title">提问栏</span>
-          </el-menu-item>
         </el-menu>
       </div>
       <!-- 放子路由页面的view -->
       <div class="home_content_view">
         <v-scroll :ops="ops">
-          <router-view></router-view>
+          <router-view @show-noti="showNotiPopover"></router-view>
         </v-scroll>
       </div>
     </div>
@@ -313,6 +309,7 @@ export default {
           minSize: 0.3
         }
       },
+      isshowNotiPopover: false,
       isShowHasreadNoti: false,
       myHasreadNoti: [],
       myNotification: [],
@@ -393,6 +390,10 @@ export default {
     this.getHasreadNoti()
   },
   methods: {
+    showNotiPopover: function () {
+      console.log('asda')
+      this.isshowNotiPopover = !this.isshowNotiPopover
+    },
     // 显示密码
     showPwd (val) {
       if (val === 1) {

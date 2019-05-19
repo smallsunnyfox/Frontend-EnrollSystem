@@ -19,6 +19,7 @@
             :data="unauditActivities.slice((currentpage1-1)*pagesize1,currentpage1*pagesize1)"
             style="width:100%;"
             stripe
+            empty-text="暂无审核中活动"
             v-loading="loading1"
           >
             <el-table-column type="expand">
@@ -92,6 +93,7 @@
             :data="unfinishedActivities.slice((currentpage2-1)*pagesize2,currentpage2*pagesize2)"
             style="width:100%;"
             stripe
+            empty-text="暂无未归档活动"
           >
             <el-table-column type="expand">
               <template slot-scope="props">
@@ -164,6 +166,7 @@
             :data="finishedActivities.slice((currentpage3-1)*pagesize3,currentpage3*pagesize3)"
             style="width:100%;"
             stripe
+            empty-text="暂无已归档活动"
           >
             <el-table-column type="expand">
               <template slot-scope="props">

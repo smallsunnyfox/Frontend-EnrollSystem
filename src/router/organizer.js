@@ -30,11 +30,6 @@ const organizerRouter = {
       component: () => import('../views/organizer/signin/signinList.vue'),
       name: 'signinList'
     },
-    {// 提问栏
-      path: 'question',
-      component: () => import('../views/organizer/question.vue'),
-      name: 'question'
-    },
     {
       path: '404',
       component: () => import('../views/organizer/404.vue'),

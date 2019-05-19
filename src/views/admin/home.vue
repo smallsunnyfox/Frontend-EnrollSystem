@@ -17,10 +17,7 @@
               router
               :default-active="$route.path"
             >
-              <el-menu-item index="/admin/index">首页</el-menu-item>
               <el-menu-item index="/admin/activityAudit">活动审核</el-menu-item>
-              <el-menu-item index="/admin/questionAudit">提问审核</el-menu-item>
-              <el-menu-item index="/admin/answerAudit">回答审核</el-menu-item>
               <el-menu-item index="/admin/auditor" v-show="isSuperAdmin">审核员管理</el-menu-item>
             </el-menu>
           </div>
@@ -614,7 +611,7 @@ export default {
 }
 .home_header_navi_content {
   height: 100%;
-  width: 466px;
+  width: 206px;
   margin: 0 auto;
 }
 .home_header_usercenter {

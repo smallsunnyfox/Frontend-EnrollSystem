@@ -34,8 +34,6 @@ export default {
         this.currentPath = ['报名审核']
       } else if (this.$route.path === '/organizer/signinList') {
         this.currentPath = ['签到管理']
-      } else if (this.$route.path === '/organizer/question') {
-        this.currentPath = ['提问栏']
       }
     }
   }

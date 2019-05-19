@@ -92,7 +92,6 @@ export function forgetPwd (name, role, newpwd) {
     data: postData
   })
 }
-
 // 修改信息
 export function updateProfile (name, role, newname, newphone) {
   let postData = qs.stringify({
@@ -103,6 +102,60 @@ export function updateProfile (name, role, newname, newphone) {
   })
   return request({
     url: '/user/updateprofile',
+    method: 'post',
+    data: postData
+  })
+}
+// 获取admin列表
+export function adminList () {
+  return request({
+    url: '/user/adminList',
+    method: 'get'
+  })
+}
+// 添加审核员
+export function addAdmin (form) {
+  let postData = qs.stringify({
+    name: form.name,
+    phonenumber: form.phonenumber,
+    password: form.password
+  })
+  return request({
+    url: '/user/addAdmin',
+    method: 'post',
+    data: postData
+  })
+}
+// 修改审核员信息
+export function updateAdmin (form) {
+  let postData = qs.stringify({
+    id: form.uid,
+    name: form.uname,
+    phonenumber: form.uphonenumber
+  })
+  return request({
+    url: '/user/updateAdmin',
+    method: 'post',
+    data: postData
+  })
+}
+// 删除审核员
+export function deleteAdmin (id) {
+  let postData = qs.stringify({
+    id: id
+  })
+  return request({
+    url: '/user/deleteAdmin',
+    method: 'post',
+    data: postData
+  })
+}
+export function searchAdmin (name) {
+  let postData = qs.stringify({
+    name: name
+  })
+  return request({
+    url: '/user/searchAdmin',
     method: 'post',
     data: postData
   })
