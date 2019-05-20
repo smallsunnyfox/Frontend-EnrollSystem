@@ -44,6 +44,11 @@
       <div slot="title" class="dialog-title"><i class="el-icon-document"></i> 活动信息</div>
       <el-form label-position="left">
         <el-form-item>
+          <span slot="label"><i class="el-icon-money"></i>活动费用:</span>
+          <span style="color:gray;float:left;margin-right:20px;">￥{{ moreInfo.fee }}</span>
+          <span style="color:gray;float:left;">本网站暂未实现在线缴费功能，请在活动现场缴纳费用</span>
+        </el-form-item>
+        <el-form-item>
           <span slot="label"><i class="el-icon-location-outline"></i>活动地点:</span>
           <span style="color:gray;float:left;">{{ moreInfo.site }}</span>
         </el-form-item>
@@ -56,7 +61,7 @@
           <span style="color:gray;float:left;">{{ moreInfo.endtime }}</span>
         </el-form-item>
         <el-form-item>
-          <span slot="label"><i class="el-icon-collection-tag"></i>活动详情:</span>
+          <span slot="label"><i class="el-icon-collection-tag"></i>活动详情:</span><br>
           <span style="color:gray;float:left;text-align:left;">{{ moreInfo.detail }}</span>
         </el-form-item>
       </el-form>
@@ -122,6 +127,7 @@ export default {
       activityInfoDialog: false, // 控制查看活动信息的Dialog
       signupDialog: false, // 控制报名的Dialog
       moreInfo: { // 查看更多信息
+        fee: 0.00,
         site: '',
         starttime: '',
         endtime: '',
@@ -206,6 +212,7 @@ export default {
       this.moreInfo.starttime = activity.starttime
       this.moreInfo.endtime = activity.endtime
       this.moreInfo.detail = activity.detail
+      this.moreInfo.fee = activity.fee
       this.activityInfoDialog = true
     },
     // 报名

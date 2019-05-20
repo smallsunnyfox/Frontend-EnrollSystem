@@ -88,7 +88,8 @@ export function addActivity (form) {
     detail: form.detail,
     entryform: form.entryform,
     length: form.entryform.length,
-    isneedaudit: form.isneedaudit
+    isneedaudit: form.isneedaudit,
+    fee: form.fee
   })
   return request({
     url: '/activity/addActivity',
@@ -160,7 +161,8 @@ export function updateActivity (form) {
     detail: form.udetail,
     entryform: form.uentryform,
     length: form.uentryform.length,
-    isneedaudit: form.uisneedaudit
+    isneedaudit: form.uisneedaudit,
+    fee: form.ufee
   })
   return request({
     url: '/activity/updateActivity',
@@ -295,6 +297,18 @@ export function getSigninActivity (organizer) {
   })
   return request({
     url: '/activity/getSigninActivity',
+    method: 'post',
+    data: postData
+  })
+}
+// 获取活动信息
+export function getActivityInfo (activity, organizer) {
+  let postData = qs.stringify({
+    organizer: organizer,
+    activity: activity
+  })
+  return request({
+    url: '/activity/getActivityInfo',
     method: 'post',
     data: postData
   })

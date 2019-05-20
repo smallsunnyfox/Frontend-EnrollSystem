@@ -22,7 +22,8 @@
       <div slot="header" class="mySignedActivity_header">
         <span>{{ audit.activity }}</span>
         <el-button type="text" @click="viewMyEntryform(audit)" style="float:right;padding-bottom:0px;padding-top:2px;margin-left:5px;">我的报名表单</el-button>
-        <el-button type="text" @click="cancelSignup(audit.id)" style="float:right;padding-bottom:0px;padding-top:2px;margin-left:0px;">取消报名</el-button>
+        <el-button type="text" @click="cancelSignup(audit.id)" style="float:right;padding-bottom:0px;padding-top:2px;margin-left:5px;">取消报名</el-button>
+        <el-button type="text" @click="viewActivityInfo(audit.activity, audit.organizer)" style="float:right;padding-bottom:0px;padding-top:2px;margin-left:0px;">活动详情</el-button>
       </div>
       <div class="mySignedActivity_content">
         报名状态:
@@ -56,6 +57,41 @@
         <el-button type="primary" @click="entryformDialog = false">关闭查看</el-button>
       </div>
     </el-dialog>
+    <el-dialog :visible.sync="activityInfoDialog" width="50%" top="58px">
+      <!-- title -->
+      <div slot="title" class="dialog-title"><i class="el-icon-document"></i> 活动信息</div>
+      <el-form label-position="left">
+        <el-form-item>
+          <span slot="label"><i class="el-icon-money"></i>活动费用:</span>
+          <span style="color:gray;float:left;margin-right:20px;">￥{{ moreInfo.fee }}</span>
+          <span style="color:gray;float:left;">本网站暂未实现在线缴费功能，请在活动现场缴纳费用</span>
+        </el-form-item>
+        <el-form-item>
+          <span slot="label"><i class="el-icon-office-building"></i>活动组织机构:</span>
+          <span style="color:gray;float:left;">{{ moreInfo.organization }}</span>
+        </el-form-item>
+        <el-form-item>
+          <span slot="label"><i class="el-icon-location-outline"></i>活动地点:</span>
+          <span style="color:gray;float:left;">{{ moreInfo.site }}</span>
+        </el-form-item>
+        <el-form-item>
+          <span slot="label"><i class="el-icon-time"></i>活动开始时间:</span>
+          <span style="color:gray;float:left;">{{ moreInfo.starttime }}</span>
+        </el-form-item>
+        <el-form-item>
+          <span slot="label"><i class="el-icon-time"></i>活动结束时间:</span>
+          <span style="color:gray;float:left;">{{ moreInfo.endtime }}</span>
+        </el-form-item>
+        <el-form-item>
+          <span slot="label"><i class="el-icon-collection-tag"></i>活动详情:</span><br>
+          <span style="color:gray;float:left;text-align:left;">{{ moreInfo.detail }}</span>
+        </el-form-item>
+      </el-form>
+      <!-- footer -->
+      <div slot="footer">
+        <el-button @click="activityInfoDialog = false">关闭查看</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -64,6 +100,7 @@ import Vue from 'vue'
 import { getName } from '../../../utils/auth.js'
 import { getAuditOfParticipant, searchAuditofParticipant, cancelSignup } from '@/api/signupaudit.js'
 import { Select, Option, ButtonGroup, Alert, MessageBox, Message } from 'element-ui'
+import { getActivityInfo } from '../../../api/activity'
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(ButtonGroup)
@@ -77,8 +114,17 @@ export default {
       mysignupAudits: [],
       showAlert: false,
       entryformDialog: false,
+      activityInfoDialog: false,
       names: [],
-      values: []
+      values: [],
+      moreInfo: { // 查看更多信息
+        organization: '',
+        fee: 0.00,
+        site: '',
+        starttime: '',
+        endtime: '',
+        detail: ''
+      }
     }
   },
   created () {
@@ -154,6 +200,21 @@ export default {
       this.names = audit.name.split(',')
       this.values = audit.value.split(',')
       this.entryformDialog = true
+    },
+    // 查看更多活动信息
+    viewActivityInfo (activity, organizer) {
+      getActivityInfo(activity, organizer)
+        .then(response => {
+          this.moreInfo.organization = response.data.organization
+          this.moreInfo.site = response.data.site
+          this.moreInfo.starttime = response.data.starttime
+          this.moreInfo.endtime = response.data.endtime
+          this.moreInfo.detail = response.data.detail
+          this.moreInfo.fee = response.data.fee
+          this.activityInfoDialog = true
+        }).catch(error => {
+          console.log(error)
+        })
     },
     // 取消活动报名
     cancelSignup (id) {

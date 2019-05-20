@@ -26,6 +26,10 @@
               <template slot-scope="props">
                 <el-form label-position="left">
                   <el-form-item>
+                    <span slot="label"><i class="el-icon-money"></i>活动费用:</span>
+                    <span style="color:gray;">￥{{ props.row.fee }}</span>
+                  </el-form-item>
+                  <el-form-item>
                     <span slot="label"><i class="el-icon-location-outline"></i>活动地点:</span>
                     <span style="color:gray;">{{ props.row.site }}</span>
                   </el-form-item>
@@ -99,6 +103,10 @@
               <template slot-scope="props">
                 <el-form label-position="left">
                   <el-form-item>
+                    <span slot="label"><i class="el-icon-money"></i>活动费用:</span>
+                    <span style="color:gray;">￥{{ props.row.fee }}</span>
+                  </el-form-item>
+                  <el-form-item>
                     <span slot="label"><i class="el-icon-location-outline"></i>活动地点:</span>
                     <span style="color:gray;">{{ props.row.site }}</span>
                   </el-form-item>
@@ -171,6 +179,10 @@
             <el-table-column type="expand">
               <template slot-scope="props">
                 <el-form label-position="left">
+                  <el-form-item>
+                    <span slot="label"><i class="el-icon-money"></i>活动费用:</span>
+                    <span style="color:gray;">￥{{ props.row.fee }}</span>
+                  </el-form-item>
                   <el-form-item>
                     <span slot="label"><i class="el-icon-location-outline"></i>活动地点:</span>
                     <span style="color:gray;">{{ props.row.site }}</span>
@@ -257,6 +269,10 @@
             :picker-options="datetimePickerOption"
           >
           </el-date-picker>
+        </el-form-item>
+        <el-form-item label="报名费用">
+          <el-input-number v-model="addActivityForm.fee" :precision="2" :step="10" style="float:left;margin-right:5px;"></el-input-number>
+          <span style="float:left;">（默认金额为0.00即免费，默认单位为人民币）</span>
         </el-form-item>
         <el-form-item label="活动地点" prop="site">
           <el-input v-model="addActivityForm.site"></el-input>
@@ -354,6 +370,10 @@
             :picker-options="datetimePickerOption"
           >
           </el-date-picker>
+        </el-form-item>
+        <el-form-item label="报名费用">
+          <el-input-number v-model="updateActivityForm.ufee" :precision="2" :step="10" style="float:left;margin-right:5px;"></el-input-number>
+          <span style="float:left;">（默认金额为0.00即免费，默认单位为人民币）</span>
         </el-form-item>
         <el-form-item label="活动地点" prop="usite">
           <el-input v-model="updateActivityForm.usite"></el-input>
@@ -502,7 +522,7 @@ import { archiveActivity } from '@/api/activity.js'
 import { getsignupAuditofActivity, searchSignupofActivity } from '@/api/signupaudit.js'
 import { getName } from '../../../utils/auth.js'
 import { myEntryItems, systemEntryItems, addActivity, searchUnauditActivities, searchUnfinishedActivities, searchFinishedActivities, updateActivity, deleteActivity, getUnauditActivities, getUnfinishedActivities, getFinishedActivities, getEntryItemsOfActivity, reauditActivity } from '../../../api/activity.js'
-import { Tabs, TabPane, Radio, Checkbox, CheckboxGroup, Tooltip, RadioGroup, Popover, Select, DatePicker, TimePicker, Option, Loading, ButtonGroup, MessageBox, Switch, Alert, Message, Table, TableColumn, Pagination } from 'element-ui'
+import { Tabs, TabPane, InputNumber, Radio, Checkbox, CheckboxGroup, Tooltip, RadioGroup, Popover, Select, DatePicker, TimePicker, Option, Loading, ButtonGroup, MessageBox, Switch, Alert, Message, Table, TableColumn, Pagination } from 'element-ui'
 Vue.use(Radio)
 Vue.use(RadioGroup)
 Vue.use(CheckboxGroup)
@@ -514,6 +534,7 @@ Vue.use(Option)
 Vue.use(Switch)
 Vue.use(Alert)
 Vue.use(Table)
+Vue.use(InputNumber)
 Vue.use(TableColumn)
 Vue.use(Pagination)
 Vue.use(ButtonGroup)
@@ -648,7 +669,8 @@ export default {
         site: '',
         detail: '',
         entryform: [],
-        isneedaudit: false
+        isneedaudit: false,
+        fee: 0.00
       },
       addActivityRules: {// 添加活动的验证规则
         name: [{ required: true, trigger: 'blur', validator: validateName }],
@@ -669,7 +691,8 @@ export default {
         usite: '',
         udetail: '',
         uentryform: [],
-        uisneedaudit: false
+        uisneedaudit: false,
+        ufee: 0.00
       },
       updateActivityRules: {// 更新活动的验证规则
         uname: [{ required: true, trigger: 'blur', validator: validateName }],
@@ -903,6 +926,7 @@ export default {
       this.updateActivityForm.uorganization = row.organization
       this.updateActivityForm.usite = row.site
       this.updateActivityForm.udetail = row.detail
+      this.updateActivityForm.ufee = row.fee
       this.updateActivityForm.uisneedaudit = row.isneedaudit === 'true'
       this.updateActivityForm.utime = []
       this.updateActivityForm.utime[0] = new Date(row.starttime)

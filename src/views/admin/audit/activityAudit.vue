@@ -22,6 +22,10 @@
           <template slot-scope="props">
             <el-form label-position="left">
               <el-form-item>
+                <span slot="label"><i class="el-icon-money"></i>活动费用:</span>
+                <span style="color:gray;">￥{{ props.row.fee }}</span>
+              </el-form-item>
+              <el-form-item>
                 <span slot="label"><i class="el-icon-office-building"></i>活动组织机构:</span>
                 <span style="color:gray;">{{ props.row.organization }}</span>
               </el-form-item>
@@ -42,7 +46,7 @@
                 <span style="color:gray;">{{ props.row.deadline }}</span>
               </el-form-item>
               <el-form-item>
-                <span slot="label"><i class="el-icon-collection-tag"></i>活动详情:</span>
+                <span slot="label"><i class="el-icon-collection-tag"></i>活动详情:</span><br>
                 <span style="color:gray;">{{ props.row.detail }}</span>
               </el-form-item>
             </el-form>
