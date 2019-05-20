@@ -43,6 +43,9 @@ export default {
       newNoti: 0
     }
   },
+  created () {
+    this.getConsoleNumber()
+  },
   methods: {
     goAduit () {
       this.$router.push('/organizer/signupAudit')
@@ -61,6 +64,7 @@ export default {
       getNotiofOrganizer(getName())
         .then(response => {
           this.newNoti = response.data.length
+          console.log(this.newNoti)
         }).catch(error => {
           console.log(error)
         })
