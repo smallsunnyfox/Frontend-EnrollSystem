@@ -45,6 +45,7 @@ export default {
   },
   created () {
     this.getConsoleNumber()
+    setInterval(this.getConsoleNumber, 1000)
   },
   methods: {
     goAduit () {
@@ -61,10 +62,10 @@ export default {
       this.$emit('show-noti')
     },
     getConsoleNumber () {
+      console.log('重复执行')
       getNotiofOrganizer(getName())
         .then(response => {
           this.newNoti = response.data.length
-          console.log(this.newNoti)
         }).catch(error => {
           console.log(error)
         })
