@@ -45,7 +45,7 @@ export default {
   },
   created () {
     this.getConsoleNumber()
-    setInterval(this.getConsoleNumber, 1000)
+    setInterval(this.getConsoleNumber, 5000)
   },
   methods: {
     goAduit () {
