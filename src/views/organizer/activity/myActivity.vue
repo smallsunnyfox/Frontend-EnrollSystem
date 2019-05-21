@@ -30,6 +30,10 @@
                     <span style="color:gray;">￥{{ props.row.fee }}</span>
                   </el-form-item>
                   <el-form-item>
+                    <span slot="label"><i class="el-icon-grape"></i>活动人数:</span>
+                    <span style="color:gray;">{{ props.row.number }}</span>
+                  </el-form-item>
+                  <el-form-item>
                     <span slot="label"><i class="el-icon-location-outline"></i>活动地点:</span>
                     <span style="color:gray;">{{ props.row.site }}</span>
                   </el-form-item>
@@ -107,6 +111,10 @@
                     <span style="color:gray;">￥{{ props.row.fee }}</span>
                   </el-form-item>
                   <el-form-item>
+                    <span slot="label"><i class="el-icon-grape"></i>活动人数:</span>
+                    <span style="color:gray;">{{ props.row.number }}</span>
+                  </el-form-item>
+                  <el-form-item>
                     <span slot="label"><i class="el-icon-location-outline"></i>活动地点:</span>
                     <span style="color:gray;">{{ props.row.site }}</span>
                   </el-form-item>
@@ -182,6 +190,10 @@
                   <el-form-item>
                     <span slot="label"><i class="el-icon-money"></i>活动费用:</span>
                     <span style="color:gray;">￥{{ props.row.fee }}</span>
+                  </el-form-item>
+                  <el-form-item>
+                    <span slot="label"><i class="el-icon-grape"></i>活动人数:</span>
+                    <span style="color:gray;">{{ props.row.number }}</span>
                   </el-form-item>
                   <el-form-item>
                     <span slot="label"><i class="el-icon-location-outline"></i>活动地点:</span>
@@ -273,6 +285,9 @@
         <el-form-item label="报名费用">
           <el-input-number v-model="addActivityForm.fee" :precision="2" :step="10" style="float:left;margin-right:5px;"></el-input-number>
           <span style="float:left;">（默认金额为0.00即免费，默认单位为人民币）</span>
+        </el-form-item>
+        <el-form-item label="活动人数" prop="number">
+          <el-input-number v-model="addActivityForm.number" :precision="0" :step="10" style="float:left;margin-right:5px;"></el-input-number>
         </el-form-item>
         <el-form-item label="活动地点" prop="site">
           <el-input v-model="addActivityForm.site"></el-input>
@@ -374,6 +389,9 @@
         <el-form-item label="报名费用">
           <el-input-number v-model="updateActivityForm.ufee" :precision="2" :step="10" style="float:left;margin-right:5px;"></el-input-number>
           <span style="float:left;">（默认金额为0.00即免费，默认单位为人民币）</span>
+        </el-form-item>
+        <el-form-item label="活动人数" prop="unumber">
+          <el-input-number v-model="updateActivityForm.unumber" :precision="0" :step="10" style="float:left;margin-right:5px;"></el-input-number>
         </el-form-item>
         <el-form-item label="活动地点" prop="usite">
           <el-input v-model="updateActivityForm.usite"></el-input>
@@ -640,6 +658,13 @@ export default {
         callback()
       }
     }
+    const validateNumber = (rule, value, callback) => {
+      if (value === 0) {
+        callback(new Error('请输入报名人数限制'))
+      } else {
+        callback()
+      }
+    }
     return {
       selectWidth: 50,
       activeName: 'first', // 当前激活的Tab页
@@ -670,7 +695,8 @@ export default {
         detail: '',
         entryform: [],
         isneedaudit: false,
-        fee: 0.00
+        fee: 0.00,
+        number: 0
       },
       addActivityRules: {// 添加活动的验证规则
         name: [{ required: true, trigger: 'blur', validator: validateName }],
@@ -679,7 +705,8 @@ export default {
         deadline: [{ required: true, trigger: 'blur', validator: validateDeadline }],
         site: [{ required: true, trigger: 'blur', validator: validateSite }],
         detail: [{ required: true, trigger: 'blur', validator: validateDetail }],
-        entryform: [{ required: true, trigger: 'blur', validator: validateEntryform }]
+        entryform: [{ required: true, trigger: 'blur', validator: validateEntryform }],
+        number: [{ required: true, trigger: 'blur', validator: validateNumber }]
       },
       updateActivityForm: {// 更新活动的表单
         uid: 0,
@@ -692,7 +719,8 @@ export default {
         udetail: '',
         uentryform: [],
         uisneedaudit: false,
-        ufee: 0.00
+        ufee: 0.00,
+        unumber: 0
       },
       updateActivityRules: {// 更新活动的验证规则
         uname: [{ required: true, trigger: 'blur', validator: validateName }],
@@ -701,7 +729,8 @@ export default {
         udeadline: [{ required: true, trigger: 'blur', validator: validateUpdateDeadline }],
         usite: [{ required: true, trigger: 'blur', validator: validateSite }],
         udetail: [{ required: true, trigger: 'blur', validator: validateDetail }],
-        uentryform: [{ required: true, trigger: 'blur', validator: validateUpdateEntryform }]
+        uentryform: [{ required: true, trigger: 'blur', validator: validateUpdateEntryform }],
+        unumber: [{ required: true, trigger: 'blur', validator: validateNumber }]
       },
       systemEntryItems: [], // 系统报名项
       myEntryItems: [], // 我的报名项
@@ -927,6 +956,7 @@ export default {
       this.updateActivityForm.usite = row.site
       this.updateActivityForm.udetail = row.detail
       this.updateActivityForm.ufee = row.fee
+      this.updateActivityForm.unumber = row.number
       this.updateActivityForm.uisneedaudit = row.isneedaudit === 'true'
       this.updateActivityForm.utime = []
       this.updateActivityForm.utime[0] = new Date(row.starttime)

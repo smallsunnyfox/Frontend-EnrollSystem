@@ -71,7 +71,7 @@
 <script>
 import Vue from 'vue'
 import { getName } from '@/utils/auth.js'
-import { getMySignupAudit, searchAudit, passSignup, unpassSignup } from '@/api/signupaudit.js'
+import { getMySignupAudit, searchAudit, passSignup } from '@/api/signupaudit.js'
 import { notiPassSignup, notiUnpassSignup } from '@/api/notification.js'
 import { Select, Option, Message, MessageBox, ButtonGroup, Table, TableColumn, Loading, Pagination } from 'element-ui'
 Vue.use(Select)
@@ -204,30 +204,22 @@ export default {
         inputValidator: inputValidate,
         inputType: 'textarea'
       }).then(({ value }) => {
-        unpassSignup(id, value)
+        notiUnpassSignup(id, value, getName())
           .then(response => {
-            if (response.data.status === 'unpassSuccess') {
+            if (response.data.status === 'addNotiSuccess') {
               Message({
                 showClose: true,
                 type: 'success',
                 message: '操作成功'
               })
-              notiUnpassSignup(id, value, getName())
-                .then(response => {
-                  if (response.data.status === 'addNotiSuccess') {
-                    console.log('添加通知成功')
-                  } else {
-                    console.log('添加通知失败')
-                  }
-                }).catch(error => {
-                  console.log(error)
-                })
-              this.loading = true
-              this.getMySignupAudit()
+            } else {
+              console.log('添加通知失败')
             }
           }).catch(error => {
             console.log(error)
           })
+        this.loading = true
+        this.getMySignupAudit()
       }).catch(() => {
         Message({
           showClose: true,

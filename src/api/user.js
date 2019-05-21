@@ -150,12 +150,40 @@ export function deleteAdmin (id) {
     data: postData
   })
 }
+// 搜索审核员
 export function searchAdmin (name) {
   let postData = qs.stringify({
     name: name
   })
   return request({
     url: '/user/searchAdmin',
+    method: 'post',
+    data: postData
+  })
+}
+// 登录前找回密码
+export function forgetPwdBeforeLogin (form) {
+  let postData = qs.stringify({
+    username: form.username,
+    userrole: form.userrole,
+    phone: form.phonenumber,
+    newpwd: form.fnewpwd
+  })
+  return request({
+    url: '/user/forgetPwdBeforeLogin',
+    method: 'post',
+    data: postData
+  })
+}
+// 管理员修改用户密码
+export function changeUserpwd (form) {
+  let postData = qs.stringify({
+    name: form.cname,
+    role: form.crole,
+    pwd: form.cnewpwd
+  })
+  return request({
+    url: '/user/changeUserpwd',
     method: 'post',
     data: postData
   })

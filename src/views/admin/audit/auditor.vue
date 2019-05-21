@@ -248,7 +248,7 @@ export default {
       this.$refs.addAdminForm.validate(valid => {
         if (valid) {
           addAdmin(this.addAdminForm)
-            .then(response=> {
+            .then(response => {
               if (response.data.status === 'addSuccess') {
                 Message({
                   showClose: true,

@@ -26,6 +26,10 @@
                 <span style="color:gray;">￥{{ props.row.fee }}</span>
               </el-form-item>
               <el-form-item>
+                <span slot="label"><i class="el-icon-grape"></i>活动人数:</span>
+                <span style="color:gray;">{{ props.row.number }}</span>
+              </el-form-item>
+              <el-form-item>
                 <span slot="label"><i class="el-icon-office-building"></i>活动组织机构:</span>
                 <span style="color:gray;">{{ props.row.organization }}</span>
               </el-form-item>

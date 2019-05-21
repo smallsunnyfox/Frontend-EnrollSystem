@@ -24,7 +24,8 @@
         <el-button type="primary" @click="submitFrom" size="small">登录</el-button>
         <el-button @click="resetForm" size="small">重置</el-button>
         <el-button @click="passToRegister" v-show="!isAdmin" size="small">注册</el-button>
-        <el-button @click="passToHome" size="small">首页</el-button>
+        <el-button @click="passToHome" size="small">首页</el-button><br>
+        <el-button @click="forgetpwd()" size="small" type="text">忘记密码</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -130,6 +131,9 @@ export default {
     },
     passToHome () {
       this.$router.push({ path: '/' })
+    },
+    forgetpwd () {
+      this.$emit('forgetpwd')
     }
   },
   mounted () {

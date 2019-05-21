@@ -89,7 +89,8 @@ export function addActivity (form) {
     entryform: form.entryform,
     length: form.entryform.length,
     isneedaudit: form.isneedaudit,
-    fee: form.fee
+    fee: form.fee,
+    number: form.number
   })
   return request({
     url: '/activity/addActivity',
@@ -162,7 +163,8 @@ export function updateActivity (form) {
     entryform: form.uentryform,
     length: form.uentryform.length,
     isneedaudit: form.uisneedaudit,
-    fee: form.ufee
+    fee: form.ufee,
+    number: form.unumber
   })
   return request({
     url: '/activity/updateActivity',

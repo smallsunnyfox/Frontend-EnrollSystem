@@ -31,7 +31,7 @@
         stripe
         highlight-current-row
       >
-        <el-table-column prop="name" label="名称" width="160"></el-table-column>
+        <el-table-column prop="name" label="名称" width="160" show-overflow-tooltip></el-table-column>
         <el-table-column prop="type" label="类型" width="80" align="center">
           <template slot-scope="scope">
             <span v-if="scope.row.type==='input'">输入框</span>
@@ -331,8 +331,8 @@ export default {
     const validateName = (rule, value, callback) => {
       if (!value) {
         callback(new Error('报名项名称不能为空'))
-      } else if (value.length > 8) {
-        callback(new Error('报名项名称不能超过8个字符'))
+      } else if (value.length > 15) {
+        callback(new Error('报名项名称不能超过15个字符'))
       } else {
         callback()
       }

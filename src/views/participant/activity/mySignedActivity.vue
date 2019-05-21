@@ -30,7 +30,6 @@
         <span v-if="audit.status === 'tobeAudit'">待审核</span>
         <span v-else-if="audit.status === 'noneedAudit'">该活动无需审核，请准时参加活动</span>
         <span v-else-if="audit.status === 'passed'">您的报名已通过审核，请准时参加活动</span>
-        <span v-else>您的报名未通过审核，原因为：{{audit.status}}</span>
         <br><br>
         活动组织者: <span>{{ audit.organizer }}</span>
         <span style="float:right;margin-top:2.4px;"> {{audit.submittime}}</span><span style="float:right;color:black;">报名提交时间:</span>
@@ -39,7 +38,7 @@
     <br>
     <br>
     <br>
-    <el-button icon="el-icon-refresh" type="primary" size="small" circle title="刷新活动" @click="refreshData()"></el-button>
+    <el-button icon="el-icon-refresh" type="primary" size="small" circle title="刷新活动" @click="refreshData()" style="margin-bottom:20px;"></el-button>
     <!-- 查看报名表单的Dialog -->
     <el-dialog :visible="entryformDialog" width="50%" top="58px">
       <div slot="title" class="dialog-title"><i class="el-icon-tickets"></i>报名表单</div>
@@ -65,6 +64,10 @@
           <span slot="label"><i class="el-icon-money"></i>活动费用:</span>
           <span style="color:gray;float:left;margin-right:20px;">￥{{ moreInfo.fee }}</span>
           <span style="color:gray;float:left;">本网站暂未实现在线缴费功能，请在活动现场缴纳费用</span>
+        </el-form-item>
+        <el-form-item>
+          <span slot="label"><i class="el-icon-grape"></i>活动人数:</span>
+          <span style="color:gray;float:left;">{{ moreInfo.number }}</span>
         </el-form-item>
         <el-form-item>
           <span slot="label"><i class="el-icon-office-building"></i>活动组织机构:</span>
@@ -123,7 +126,8 @@ export default {
         site: '',
         starttime: '',
         endtime: '',
-        detail: ''
+        detail: '',
+        number: 0
       }
     }
   },
@@ -211,6 +215,7 @@ export default {
           this.moreInfo.endtime = response.data.endtime
           this.moreInfo.detail = response.data.detail
           this.moreInfo.fee = response.data.fee
+          this.moreInfo.number = response.data.number
           this.activityInfoDialog = true
         }).catch(error => {
           console.log(error)

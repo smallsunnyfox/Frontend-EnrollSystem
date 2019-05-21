@@ -49,6 +49,10 @@
           <span style="color:gray;float:left;">本网站暂未实现在线缴费功能，请在活动现场缴纳费用</span>
         </el-form-item>
         <el-form-item>
+          <span slot="label"><i class="el-icon-grape"></i>活动人数:</span>
+          <span style="color:gray;float:left;">{{ moreInfo.number }}</span>
+        </el-form-item>
+        <el-form-item>
           <span slot="label"><i class="el-icon-location-outline"></i>活动地点:</span>
           <span style="color:gray;float:left;">{{ moreInfo.site }}</span>
         </el-form-item>
@@ -131,7 +135,8 @@ export default {
         site: '',
         starttime: '',
         endtime: '',
-        detail: ''
+        detail: '',
+        number: 0
       },
       signupEntryItems: [], // 获取报名项
       signupEntryForm: {}, // 动态生成报名表单
@@ -213,6 +218,7 @@ export default {
       this.moreInfo.endtime = activity.endtime
       this.moreInfo.detail = activity.detail
       this.moreInfo.fee = activity.fee
+      this.moreInfo.number = activity.number
       this.activityInfoDialog = true
     },
     // 报名
@@ -319,6 +325,12 @@ export default {
                 Message({
                   showClose: true,
                   message: '您已经报名过该活动了！无需重复报名!',
+                  type: 'warning'
+                })
+              } else if (response.data.status === 'numberFull') {
+                Message({
+                  showClose: true,
+                  message: '该活动报名名额已满！报名失败！',
                   type: 'warning'
                 })
               }

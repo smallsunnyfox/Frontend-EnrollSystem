@@ -19,6 +19,7 @@
             >
               <el-menu-item index="/admin/activityAudit">活动审核</el-menu-item>
               <el-menu-item index="/admin/auditor" v-show="isSuperAdmin">审核员管理</el-menu-item>
+              <el-menu-item v-show="isSuperAdmin" @click.native="changeUserpwd">修改用户密码</el-menu-item>
             </el-menu>
           </div>
         </div>
@@ -66,10 +67,36 @@
         <div class="home_bottom_copyright">Copyright © 201577G0649 张世文</div>
       </div>
     </div>
+    <!-- 修改用户密码的dialog -->
+    <el-dialog :visible.sync="changeUserpwdDialog" width="30%">
+      <!-- title -->
+      <div slot="title" class="dialog-title"><ricon name="user-lock"></ricon> 修改用户密码</div>
+      <!-- form -->
+      <el-form :model="changeUserpwdForm" ref="changeUserpwdForm" :rules="changeUserpwdRules" label-width="100px">
+        <el-form-item label="用户名" prop="cname">
+          <el-input v-model="changeUserpwdForm.cname"></el-input>
+        </el-form-item>
+        <el-form-item label="用户角色" prop="crole" style="float:left;">
+          <el-select v-model="changeUserpwdForm.crole" placeholder="请选择用户角色">
+            <el-option label="活动报名者" value="participant"></el-option>
+            <el-option label="活动组织者" value="organizer"></el-option>
+            <el-option label="活动审核员" value="admin"></el-option>
+          </el-select>
+        </el-form-item><br>
+        <el-form-item label="新密码" prop="cnewpwd">
+          <el-input v-model="changeUserpwdForm.cnewpwd" show-password></el-input>
+        </el-form-item>
+      </el-form>
+      <!-- footer -->
+      <div slot="footer">
+        <el-button @click="changeUserpwdDialog = false">取 消</el-button>
+        <el-button type="primary" @click="submitChangeUserpwdForm">确 定</el-button>
+      </div>
+    </el-dialog>
     <!-- 更新密码的dialog -->
     <el-dialog :visible.sync="updatePwdDialog" width="30%">
       <!-- title -->
-      <div slot="title" class="dialog-title"><ricon name="user-lock"></ricon> 修改密码</div>
+      <div slot="title" class="dialog-title"><ricon name="user-lock"></ricon> 修改我的密码</div>
       <!-- form -->
       <el-form :model="updatePwdForm" ref="updatePwdForm" :rules="updatePwdRules" label-width="100px">
         <el-form-item label="原密码" prop="oldpwd">
@@ -151,14 +178,17 @@
 
 <script>
 import Vue from 'vue'
-import { Dialog, Menu, Form, Submenu, MenuItem, MessageBox, Message, MenuItemGroup } from 'element-ui'
+import { Dialog, Menu, Form, Submenu, MenuItem, MessageBox, Message, MenuItemGroup, Select, Option } from 'element-ui'
 import { mapGetters } from 'vuex'
+import { changeUserpwd } from '@/api/user.js'
 Vue.use(Menu)
 Vue.use(Submenu)
 Vue.use(MenuItem)
 Vue.use(MenuItemGroup)
 Vue.use(Dialog)
 Vue.use(Form)
+Vue.use(Select)
+Vue.use(Option)
 export default {
   name: 'home',
   data () {
@@ -277,6 +307,22 @@ export default {
         callback()
       }
     }
+    const validateCname = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('用户名不能为空'))
+      } else if (value.indexOf(' ') !== -1) {
+        callback(new Error('用户名不能包含空格'))
+      } else {
+        callback()
+      }
+    }
+    const validateCrole = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('必须选择要修改密码的用户角色'))
+      } else {
+        callback()
+      }
+    }
     return {
       ops: {
         vuescroll: {
@@ -299,6 +345,7 @@ export default {
       forgetPwdDialog: false,
       myProfileDialog: false,
       isUpdateProfile: false,
+      changeUserpwdDialog: false,
       updatePwdForm: {
         oldpwd: '',
         newpwd: '',
@@ -341,6 +388,22 @@ export default {
         ],
         myphone: [
           { required: true, trigger: 'blur', validator: updatePhone }
+        ]
+      },
+      changeUserpwdForm: {
+        crole: '',
+        cname: '',
+        cnewpwd: ''
+      },
+      changeUserpwdRules: {
+        cnewpwd: [
+          { required: true, trigger: 'blur', validator: validateFNewPwd }
+        ],
+        crole: [
+          { required: true, trigger: 'change', validator: validateCrole }
+        ],
+        cname: [
+          { required: true, trigger: 'blur', validator: validateCname }
         ]
       }
     }
@@ -565,6 +628,41 @@ export default {
           message: '已取消退出'
         })
       })
+    },
+    // 修改用户密码
+    changeUserpwd () {
+      this.changeUserpwdDialog = true
+      this.$nextTick(() => {
+        this.$refs.changeUserpwdForm.resetFields()
+      })
+    },
+    submitChangeUserpwdForm () {
+      this.$refs.changeUserpwdForm.validate(valid => {
+        if (valid) {
+          changeUserpwd(this.changeUserpwdForm)
+            .then(response => {
+              if (response.data.status === 'changeSuccess') {
+                Message({
+                  showClose: true,
+                  type: 'success',
+                  message: '修改成功'
+                })
+                this.changeUserpwdDialog = false
+              } else if (response.data.status === 'userNotFound') {
+                Message({
+                  showClose: true,
+                  type: 'warning',
+                  message: '未找到该用户，请确认用户名或用户角色是否正确！'
+                })
+              }
+            }).catch(error => {
+              console.log(error)
+            })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     }
   }
 }
@@ -606,17 +704,17 @@ export default {
 }
 .home_header_navi {
   height: 100%;
-  width: 653px;
+  width: 603px;
   float: left;
 }
 .home_header_navi_content {
   height: 100%;
-  width: 206px;
+  width: 330px;
   margin: 0 auto;
 }
 .home_header_usercenter {
   height: 100%;
-  width: 150px;
+  width: 200px;
   float: left;
   font-size: 16px;
 }
