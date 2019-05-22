@@ -133,6 +133,10 @@
           </span>
         </el-form-item>
       </el-form>
+      <p>修改说明</p>
+      <p>忘记密码时可根据用户手机号码修改密码</p>
+      <p>若忘记手机号码请联系网站超级管理员修改密码</p>
+      <p>联系方式：010-0010-0010</p>
       <!-- footer -->
       <div slot="footer">
         <el-button @click="forgetPwdDialog = false">取 消</el-button>
