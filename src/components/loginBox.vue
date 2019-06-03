@@ -59,6 +59,8 @@ export default {
         callback(new Error('密码不能为空'))
       } else if (value.length < 6) {
         callback(new Error('密码不能小于6位数'))
+      } else if (value.length > 14) {
+        callback(new Error('密码不能大于14位数'))
       } else if (value.indexOf(' ') !== -1) {
         callback(new Error('密码不能包含空格'))
       } else {

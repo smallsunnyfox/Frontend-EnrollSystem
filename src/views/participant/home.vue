@@ -515,7 +515,7 @@ export default {
             .then(() => {
               Message({
                 showClose: true,
-                message: '密码修改成功，下次修改请输入新密码哦！',
+                message: '密码修改成功，下次登录请输入新密码哦！',
                 type: 'success'
               })
               this.updatePwdDialog = false

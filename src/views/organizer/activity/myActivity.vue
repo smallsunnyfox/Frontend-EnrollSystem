@@ -669,16 +669,16 @@ export default {
       selectWidth: 50,
       activeName: 'first', // 当前激活的Tab页
       unauditActivities: [], // 待审核的活动list
-      pagesize1: 10,
+      pagesize1: 6,
       currentpage1: 1,
       searchNameValue1: '',
       loading1: true,
       unfinishedActivities: [], // 未完成活动list
-      pagesize2: 10,
+      pagesize2: 6,
       currentpage2: 1,
       searchNameValue2: '',
       finishedActivities: [], // 已完成活动list
-      pagesize3: 10,
+      pagesize3: 6,
       currentpage3: 1,
       searchNameValue3: '',
       addActivityDialog: false, // 控制添加活动Dialog的显示
@@ -870,6 +870,7 @@ export default {
         this.$refs.addActivityForm.resetFields()// 重置表单
       })
       this.getEntryItems()
+      this.addActivityForm.fee = 0.00
       this.addActivityForm.organizer = this.name
     },
     // 提交添加表单
